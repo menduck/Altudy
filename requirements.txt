@@ -13,6 +13,7 @@ django-debug-toolbar==4.1.0
 django-extensions==3.2.1
 django-imagekit==4.1.0
 django-storages==1.13.2
+django-taggit==4.0.0
 executing==1.2.0
 idna==3.4
 ipython==8.13.2

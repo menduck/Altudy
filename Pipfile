@@ -19,6 +19,7 @@ django-imagekit = "*"
 pillow = "*"
 python-dotenv = "*"
 markdown = "*"
+django-taggit = "*"
 
 [dev-packages]
 
