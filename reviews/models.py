@@ -30,7 +30,3 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f'Comment by {self.user}, on {self.solution}'
-
-
-class Tag(models.Model):
-    pass
