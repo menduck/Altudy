@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}index{% endblock title %}
+
+
+{% block content %}
+<h1 class="">모든 스터디</h1>
+
+<a href="{% url 'studies:create' %}">스터디 생성</a>
+
+<hr>
+
+{% for study in studies %}
+<a href="{% url 'studies:detail' study.pk %}">
+  <p>[{{ study.pk }}] - {{ study.title }}</p>
+</a>
+{% endfor %}
+
+{% endblock content %}
