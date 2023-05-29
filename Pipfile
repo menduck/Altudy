@@ -20,6 +20,10 @@ pillow = "*"
 python-dotenv = "*"
 markdown = "*"
 django-taggit = "*"
+django-tuieditor = "*"
+channels = "*"
+daphne = "*"
+channels-redis = "*"
 
 [dev-packages]
 
