@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ problem.title }}</h1>
+<h4>{{ problem.user }}</h4>
+<p>{{ problem.url }}</p>
+
+<ul>
+  {% for review in problem.review_set.all %}
+  <li>{{ review }}</li>
+  <ul>
+    {% for comment in review.comment_set.all %}
+    <li>{{ comment }}</li>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+</ul>
+
+리뷰 제출하러 가기
+{% endblock content %}
