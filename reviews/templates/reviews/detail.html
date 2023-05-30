@@ -8,6 +8,10 @@
 <div>
   <a href="{% url 'reviews:review_create' problem.pk %}">리뷰 작성하기</a>
 </div>
+<form action="{% url 'reviews:delete' problem.pk %}" method="post">
+  {% csrf_token %}
+  <button type="submit">문제 삭제</button>
+</form>
 
 <ul>
   {% for review in problem.review_set.all %}
@@ -17,11 +21,7 @@
     <li>{{ comment }}</li>
     {% endfor %}
   </ul>
-  <form action="{% url 'reviews:delete' problem.pk %}" method="post">
-    {% csrf_token %}
-    <button type="submit">리뷰 삭제</button>
-  </form>
-  <a href="{% url 'reviews:update' problem.pk %}">리뷰 수정</a>
+  <a href="{% url 'reviews:review_update' problem.pk review.pk %}">리뷰 수정</a>
   {% endfor %}
 </ul>
 {% endblock content %}

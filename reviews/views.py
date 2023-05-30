@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import ProblemForm, ReviewForm
-from .models import Problem
+from .models import Problem, Review
 
 
 # Create your views here.
@@ -78,6 +78,22 @@ def review_create(request, pk):
         form = ReviewForm()
     context = {
         'form': form,
-        'review_pk': pk,
+        'problem_pk': pk,
     }
     return render(request, 'reviews/review_create.html', context)
+
+
+def review_update(request, pk, review_pk):
+    problem = get_object_or_404(Problem, pk=pk)
+    review = get_object_or_404(Review, pk=review_pk)
+    if request.method == 'POST':
+        form = ReviewForm(data=request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('reviews:detail', problem.pk)
+    else:
+        form = ReviewForm(instance=review)
+    context = {
+        'form': form,
+    }
+    return render(request, 'reviews/review_update.html', context)
