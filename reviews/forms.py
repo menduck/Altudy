@@ -8,7 +8,7 @@ from .models import Problem, Review
     
 
 class ProblemForm(forms.ModelForm):
-    tags = SpaceSeparatedTagsField(widget=TagWidget(), required=True)
+    tags = SpaceSeparatedTagsField(widget=TagWidget(), required=False)
     class Meta:
         model = Problem
         fields = (
@@ -17,8 +17,9 @@ class ProblemForm(forms.ModelForm):
             'tags',
         )
 
+
 class ReviewForm(forms.ModelForm):
-    tags = SpaceSeparatedTagsField(widget=TagWidget(), required=True)
+    tags = SpaceSeparatedTagsField(widget=TagWidget(), required=False)
     content = MarkdownFormField(
         label='내용',
         widget=MarkdownEditorWidget(),
