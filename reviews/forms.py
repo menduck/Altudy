@@ -15,6 +15,7 @@ class ProblemForm(forms.ModelForm):
             'title',
             'url',
             'tags',
+            'description',
         )
 
 

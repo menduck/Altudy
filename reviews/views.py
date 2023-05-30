@@ -41,11 +41,13 @@ def create(request):
 
 def update(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
+    print(problem.description)
     if request.method == 'POST':
         form = ProblemForm(data=request.POST, instance=problem)
         if form.is_valid():
             form.save()
             return redirect('reviews:detail', problem.pk)
+        print('not valid')
     else:
         form = ProblemForm(instance=problem)
     context = {
