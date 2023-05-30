@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import ProblemForm
+from .forms import ProblemForm, ReviewForm
 from .models import Problem
 
 
@@ -63,3 +63,20 @@ def delete(request, pk):
         # 권한이 없는 페이지 만들기?
         # 왔던 곳으로 되돌아가게 하려면?
         return redirect('reviews:detail', pk)
+    
+
+def review_create(request, pk):
+    problem = get_object_or_404(Problem, pk=pk)
+    if request.method == 'POST':
+        form = ReviewForm(data=request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user, review.problem = request.user, problem
+            review.save()
+            return redirect('reviews:detail', problem.pk)
+    else:
+        form = ReviewForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'reviews/review_create.html', context)
