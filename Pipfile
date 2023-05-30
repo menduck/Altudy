@@ -24,6 +24,7 @@ django-tuieditor = "*"
 channels = "*"
 daphne = "*"
 django-allauth = "*"
+django-multiselectfield = "==0.1.12"
 
 [dev-packages]
 
