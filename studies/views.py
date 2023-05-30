@@ -17,8 +17,6 @@ def index(request):
 def detail(request, study_pk: int):
     study = Study.objects.get(pk=study_pk)
     
-    print(study.category.order_by('name'))
-    
     context = {
         'study': study,
     }
