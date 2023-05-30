@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,6 +11,7 @@
     {% endblock title %}
   </title>
   
+
   {# Bootstrap #}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
   
@@ -21,15 +23,62 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="static/CSS/reset.css">
-  <link rel="stylesheet" href="static/CSS/common.css">
-  <link rel="stylesheet" href="static/CSS/base.css">
+  <link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/reset.css' %}"
+  />
+  <link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/common.css' %}"
+  />
+  <link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/base.css' %}"
+  />
+
+  {% block style %}
+  {% endblock style %}
 
 </head>
 
 <body>
   <header>
-    <nav class="box" ></nav>
+    <nav>
+      <div class="nav__container">
+        <div class="nav__container-left">
+          <img src="assets/logo.png" alt="알터디 로고" class="nav__logo">
+        </div>
+        <div class="nav__container-right">
+          <form class="nav__search" role="search">
+            <input class="nav__search-input" type="text" placeholder="스터디를 검색해보세요!" aria-label="Search">
+            <button class="nav__search-button" type="submit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+              </svg>
+            </button>
+          </form>
+          {% if user.is_authenticated %}
+            <div class="nav__item">알림</div>
+            <a href="{% url 'accounts:profile' request.user %}">
+              <div class="nav__item">내 프로필</div>
+            </a>
+            <a href="{% url 'accounts:logout' %}">
+              <div class="nav__item">로그아웃</div>
+            </a>
+          {% else %}
+            <a href="{% url 'accounts:login' %}">
+              <div class="nav__item">로그인</div>
+            </a>
+            <a href="{% url 'accounts:signup' %}">
+              <div class="nav__item">회원가입</div>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
   </header>
 
   <main class="box">
@@ -38,7 +87,19 @@
   </main>
 
   <footer>
-
+    <div class="footer__container">
+      <div>
+        <span>Copyright &copy; 2023 team 12. <a href="https://github.com/thebjko/Altudy">알터디</a></span>
+        <span>| multi-campus KDT 2th Final-project |&nbsp</span>
+      </div>
+      <div class="teamInfo">
+        <a href="https://github.com/thebjko">고봉진</a>        
+        <a href="https://github.com/menduck">김민선</a>
+        <a href="https://github.com/Jo-Chang">김창조</a>
+        <a href="https://github.com/kimfield1">김초원</a>
+        <a href="https://github.com/hyundol2">노현석</a>
+      </div>
+    </div>
   </footer>
 
   {# Bootstrap #}
