@@ -37,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_tuieditor',
     'storages',
     'taggit',
 ]
+
+TUI_EDITOR_LANGUAGE = ['ko']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
