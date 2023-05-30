@@ -14,9 +14,6 @@ def detail(request, pk):
         ),
         pk=pk
     )
-    # problem = get_object_or_404(
-    #     Problem, pk=pk
-    # )
     context = {
         'problem': problem,
     }
@@ -41,7 +38,6 @@ def create(request):
 
 def update(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
-    print(problem.description)
     if request.method == 'POST':
         form = ProblemForm(data=request.POST, instance=problem)
         if form.is_valid():
