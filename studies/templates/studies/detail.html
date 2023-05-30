@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/studies/detail.css' %}"
+/>
+
+<header class="box">뒤로가기</header>
+<main class="box">
+  {# 스터디 디테일 내용 #}
+  <article>
+    <div class="study__container box">
+      <div class="study__title">프로그래머스 LV2 스터디 충원</div>
+      <div class="study__userInfo">
+        <div class="study_userInfo-badge">🐥</div>
+        <div class="study_userInfo-username">김민선</div>
+      </div>
+      <hr />
+      <div class="study__info"></div>
+      <div class="study__content">
+        정해진 문제(프로그래머스 LV2 정답률 낮은 50문제)를 평일 매일 저녁 9시
+        전까지 공부하여 깃허브에 올립니다.
+        <div class="study__content-joinContainer box">
+          {# 참여하기 버튼을 누르면, 참여 취소 버튼이 추가됨 #}
+        </div>
+      </div>
+    </div>
+  </article>
+  {# 댓글 #}
+  <article></article>
+</main>
+
+{% endblock content %}

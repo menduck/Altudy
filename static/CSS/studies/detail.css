@@ -1,0 +1,26 @@
+.box {
+  border: 1px solid black;
+}
+
+header,
+main {
+  width: 1024px;
+  padding: 0 32px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 1023px) {
+  main {
+    width: 100%;
+    max-width: 1024px;
+  }
+}
+
+.study__title {
+  font-size: var(--font-xlarge);
+  font-weight: var(--weight-bold);
+}
+
+.study__userInfo {
+  display: flex;
+}
