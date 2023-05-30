@@ -11,7 +11,6 @@ botocore==1.29.142
 certifi==2023.5.7
 cffi==1.15.1
 channels==4.0.0
-channels-redis==4.1.0
 charset-normalizer==3.1.0
 cmarkgfm==2022.10.27
 constantly==15.1.0

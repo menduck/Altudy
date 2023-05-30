@@ -23,7 +23,6 @@ django-taggit = "*"
 django-tuieditor = "*"
 channels = "*"
 daphne = "*"
-channels-redis = "*"
 
 [dev-packages]
 
