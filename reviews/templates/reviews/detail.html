@@ -13,6 +13,11 @@
     <li>{{ comment }}</li>
     {% endfor %}
   </ul>
+  <form action="{% url 'reviews:delete' problem.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit">삭제</button>
+  </form>
+  <a href="{% url 'reviews:update' problem.pk %}">수정</a>
   {% endfor %}
 </ul>
 

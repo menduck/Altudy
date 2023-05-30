@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="{% url 'reviews:update' form.instance.pk %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">문제 수정하기</button>
+</form>
+{% endblock content %}
