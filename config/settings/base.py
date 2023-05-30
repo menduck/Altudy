@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_tuieditor',
     'storages',
     'taggit',
+    'multiselectfield',
 ]
 
 TUI_EDITOR_LANGUAGE = ['ko']
