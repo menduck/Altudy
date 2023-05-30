@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h1>리뷰 작성하기</h1>
-<form id="review-form" action="{% url 'reviews:review_create' problem_pk %}" method="post">
+<form id="form" action="{% url 'reviews:review_create' problem_pk %}" method="post">
   {% csrf_token %}
   
   {% with form.content as content %}
@@ -25,25 +26,5 @@
   
   <button type="submit">리뷰 작성하기</button>
 </form>
-<script>
-  // ToastUI 및 제출
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const editorDiv = document.getElementById('editor');
-    const editor = new toastui.Editor({
-      el: editorDiv,
-      height: '500px',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical',
-      initialValue: editorDiv.value,
-    })
-    const reviewForm = document.getElementById('review-form')
-    reviewForm.addEventListener('submit', (e) => {
-      e.preventDefault()
-      const reviewFormTextArea = document.querySelector('textarea')
-      reviewFormTextArea.textContent = editor.getMarkdown()
-      reviewForm.submit()
-    });
-  });
-  // ToastUI 및 제출 끝
-</script>
+<script src="{% static 'reviews/toastui.js' %}"></script>
 {% endblock content %}
