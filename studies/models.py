@@ -20,6 +20,15 @@ LANGUAGE_CHOICES = [
     ('node_js', 'Node.js'),
 ]
 
+STUDY_DAYS = [
+    (1, '월요일'),
+    (2, '화요일'),
+    (3, '수요일'),
+    (4, '목요일'),
+    (5, '금요일'),
+    (6, '토요일'),
+    (7, '일요일'),
+]
 
 class Study(models.Model):
     # 스터디장 유저
@@ -34,6 +43,11 @@ class Study(models.Model):
     capacity = models.PositiveSmallIntegerField(default=5)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+    # 스터디 진행 요일
+    days = MultiSelectField(choices=STUDY_DAYS, blank=True)
+    # 스터디 진행 시작, 끝 시간
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     
