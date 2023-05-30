@@ -6,6 +6,9 @@ from .models import Problem, Review
 
 # Create your views here.
 def detail(request, pk):
+    if request.method == 'DELETE':
+        print('delete')
+    print(request.POST.get('_method'))
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',

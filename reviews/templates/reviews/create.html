@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h1>문제 작성하기</h1>
-<form id="problem-form" action="{% url 'reviews:create' %}" method="post">
+<form id="form" action="{% url 'reviews:create' %}" method="post">
   {% csrf_token %}
   
   {% with form.title as title %}
@@ -21,7 +22,6 @@
 
   {% with form.description as description %}
   <div class="form-group" style="display: none;">
-  {% comment %} <div class="form-group"> {% endcomment %}
     {# UI에 드러나지 않는 div입니다 #}
     <label for="{{ description.id_for_label }}">{{ description.label }}</label>
     <textarea id="{{ description.id_for_label }}" class="form-control" placeholder="{{ description.label }}" name="{{ description.name }}"></textarea>
@@ -40,26 +40,5 @@
   
   <button type="submit">문제 작성하기</button>
 </form>
-<script>
-  // ToastUI 및 제출
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const editorDiv = document.getElementById('editor');
-    const problemFormTextArea = document.querySelector('textarea')
-    const editor = new toastui.Editor({
-      el: editorDiv,
-      height: '500px',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical',
-      initialValue: editorDiv.value,
-      {% comment %} initialValue: problemFormTextArea.textContent, {% endcomment %}
-    })
-    const problemForm = document.getElementById('problem-form')
-    problemForm.addEventListener('submit', (e) => {
-      e.preventDefault()
-      problemFormTextArea.textContent = editor.getMarkdown()
-      problemForm.submit()
-    });
-  });
-  // ToastUI 및 제출 끝
-</script>
+<script src="{% static 'reviews/toastui.js' %}"></script>
 {% endblock content %}

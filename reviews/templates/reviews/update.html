@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load custom_filters %}
+{% load static %}
 
 {% block content %}
 <h1>문제 수정하기</h1>
-<form id="problem-form" action="{% url 'reviews:update' form.instance.pk %}" method="post">
+<form id="form" action="{% url 'reviews:update' form.instance.pk %}" method="post">
   {% csrf_token %}
   
   {% with form.title as title %}
@@ -40,25 +41,5 @@
   
   <button type="submit">문제 수정하기</button>
 </form>
-<script>
-  // ToastUI 및 제출
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const editorDiv = document.getElementById('editor');
-    const problemFormTextArea = document.querySelector('textarea')
-    const editor = new toastui.Editor({
-      el: editorDiv,
-      height: '500px',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical',
-      initialValue: problemFormTextArea.textContent,
-    })
-    const problemForm = document.getElementById('problem-form')
-    problemForm.addEventListener('submit', (e) => {
-      e.preventDefault()
-      problemFormTextArea.textContent = editor.getMarkdown()
-      problemForm.submit()
-    });
-  });
-  // ToastUI 및 제출 끝
-</script>
+<script src="{% static 'reviews/toastui.js' %}"></script>
 {% endblock content %}
