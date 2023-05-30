@@ -23,6 +23,7 @@ django-taggit = "*"
 django-tuieditor = "*"
 channels = "*"
 daphne = "*"
+django-allauth = "*"
 
 [dev-packages]
 
