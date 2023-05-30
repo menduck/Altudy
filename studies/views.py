@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Study, Studying, Language, Category, Announcement
+from .models import Study, Studying, Announcement
 from .forms import StudyForm
 
 # Create your views here.
@@ -17,6 +17,8 @@ def index(request):
 def detail(request, study_pk: int):
     study = Study.objects.get(pk=study_pk)
     
+    print(study.category.order_by('name'))
+    
     context = {
         'study': study,
     }
@@ -31,6 +33,10 @@ def create(request):
             study = form.save(commit=False)
             study.user = request.user
             study.save()
+            
+            # Tag 저장
+            form.save_m2m()
+            
             return redirect('studies:detail', study.pk)
     else:
         form = StudyForm()
@@ -49,7 +55,11 @@ def update(request, study_pk: int):
     if request.method == 'POST':
         form = StudyForm(data=request.POST, instance=study)
         if form.is_valid():
-            form.save()
+            # taggit을 위해 commit=False 후 save_m2m()
+            study = form.save(commit=False)
+            study.save()
+            form.save_m2m()
+            
             return redirect('studies:detail', study_pk)
     else:
         form = StudyForm(instance=study)

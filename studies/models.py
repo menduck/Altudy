@@ -1,26 +1,35 @@
 from django.db import models
 from django.conf import settings
+from taggit.managers import TaggableManager
+from multiselectfield import MultiSelectField
 
 # Create your models here.
-# 스터디 언어
-class Language(models.Model):
-    language = models.CharField(max_length=10)
+LANGUAGE_CHOICES = [
+    ('py', 'Python'),
+    ('java', 'Java'),
+    ('js', 'JavaScript'),
+    ('c', 'C'),
+    ('c++', 'C++'),
+    ('c#', 'C#'),
+    ('ruby', 'Ruby'),
+    ('dart', 'Dart'),
+    ('scala', 'Scala'),
+    ('go', 'Golang'),
+    ('swift', 'Swift'),
+    ('kotlin', 'Kotlin'),
+    ('node_js', 'Node.js'),
+]
 
 
-# 스터디 성향 카테고리
-class Category(models.Model):
-    content = models.CharField(max_length=10)
-    
-    
 class Study(models.Model):
     # 스터디장 유저
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    # 스터디 주 언어
-    language = models.ManyToManyField(to=Language, related_name='language_studies', blank=True)
-    category = models.ManyToManyField(to=Category, related_name='category_studies', blank=True)
     
     title = models.CharField(max_length=20)
     description = models.TextField(blank=True, null=True)
+    # 스터디 주 언어
+    language = MultiSelectField(choices=LANGUAGE_CHOICES)
+    category = TaggableManager(blank=True)
     # 스터디 최대 인원수
     capacity = models.PositiveSmallIntegerField(default=5)
     start_date = models.DateField(blank=True, null=True)

@@ -15,6 +15,13 @@
 <p>스터디 종료날짜 - {{ study.end_date }}</p>
 <p>수용가능인원 - {{ study.capacity }}</p>
 <p>생성일 - {{ study.created_at }}</p>
+<p>언어 - {{ study.language }}</p>
+<p>카테고리 - 
+{% for category in study.category.all|dictsort:'name' %}
+{# 태그 이름순 정렬, 필요없을시 dictsort 삭제 #}
+<span>#{{ category }}</span>
+{% endfor %}
+</p>
 {# 스터디 정보 end #}
 
 {# 스터디 수정/삭제 #}
