@@ -6,6 +6,7 @@ from .models import Problem
 
 # Create your views here.
 def detail(request, pk):
+    '''디테일 및 삭제'''
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
@@ -37,3 +38,14 @@ def create(request):
         'form': form,
     }
     return render(request, 'reviews/create.html', context)
+
+
+def delete(request, pk):
+    problem = get_object_or_404(Problem, pk=pk)
+    if request.user == problem.user:
+        problem.delete()
+        return redirect('/')  # 추후 스터디 앱의 메인 페이지로 redirect하도록 수정
+    else:
+        # 권한이 없는 페이지 만들기?
+        # 왔던 곳으로 되돌아가게 하려면?
+        return redirect('reviews:detail', pk)
