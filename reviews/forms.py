@@ -1,8 +1,10 @@
 from django import forms
+from django_tuieditor.widgets import MarkdownEditorWidget
+from django_tuieditor.fields import MarkdownFormField
 from taggit.forms import TagWidget
 
 from .fields import SpaceSeparatedTagsField
-from .models import Problem
+from .models import Problem, Review
     
 
 class ProblemForm(forms.ModelForm):
@@ -13,4 +15,17 @@ class ProblemForm(forms.ModelForm):
             'title',
             'url',
             'tags',
+        )
+
+class ReviewForm(forms.ModelForm):
+    tags = SpaceSeparatedTagsField(widget=TagWidget(), required=True)
+    content = MarkdownFormField(
+        label='내용',
+        widget=MarkdownEditorWidget(),
+    )
+    class Meta:
+        model = Review
+        fields = (
+            'tags',
+            'content',
         )
