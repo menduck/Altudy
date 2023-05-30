@@ -6,7 +6,6 @@ from .models import Problem
 
 # Create your views here.
 def detail(request, pk):
-    '''디테일 및 삭제'''
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
