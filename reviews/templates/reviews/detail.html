@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ problem.title }}</h1>
+<h4>{{ problem.user }}</h4>
+<p>{{ problem.url }}</p>
+
+<div>
+  <a href="{% url 'reviews:review_create' problem.pk %}">리뷰 작성하기</a>
+</div>
+<form action="{% url 'reviews:delete' problem.pk %}" method="post">
+  {% csrf_token %}
+  <button type="submit">문제 삭제</button>
+</form>
+
+<ul>
+  {% for review in problem.review_set.all %}
+  <li>{{ review }}</li>
+  <ul>
+    {% for comment in review.comment_set.all %}
+    <li>{{ comment }}</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'reviews:review_update' problem.pk review.pk %}">리뷰 수정</a>
+  {% endfor %}
+</ul>
+{% endblock content %}

@@ -19,6 +19,12 @@ django-imagekit = "*"
 pillow = "*"
 python-dotenv = "*"
 markdown = "*"
+django-taggit = "*"
+django-tuieditor = "*"
+channels = "*"
+daphne = "*"
+django-allauth = "*"
+django-multiselectfield = "==0.1.12"
 
 [dev-packages]
 

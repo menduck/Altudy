@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_tuieditor',
     'storages',
     'taggit',
     'multiselectfield',
 ]
+
+TUI_EDITOR_LANGUAGE = ['ko']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,3 +141,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'accounts.User'
+
+# django-taggit
+TAGGIT_CASE_INSENSITIVE = True
