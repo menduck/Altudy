@@ -1,32 +1,50 @@
-
-{% extends 'base.html' %}
-{% load static %}
-
-{% block style %}
+{% extends 'base.html' %} {% load static %} {% block style %}
 <link
   rel="stylesheet"
   type="text/css"
   href="{% static 'CSS/studies/detail.css' %}"
 />
-{% endblock style %}
+{% endblock style %} {% block content %}
 
-
-{% block content %}
-<header class="box">뒤로가기</header>
-<main class="box">
+<main class="study__wrapper">
   {# 스터디 디테일 내용 #}
   <article>
-    <div class="study__container box">
-      <div class="study__title"></div>
+    <div class="study__container">
+      <div class="study__title">{{ study.title }}</div>
       <div class="study__userInfo">
-        <div class="study_userInfo-badge">🐥</div>
-        <div class="study_userInfo-username"></div>
+        <div class="study__userInfo-badge">🐥</div>
+        <div class="study__userInfo-username">{{ study.user }}</div>
       </div>
       <hr />
-      <div class="study__info"></div>
+      <div class="study__info">
+        <div class="study__info-item">
+          <div class="study__info-item-title">모집 인원</div>
+          <div class="separator"></div>
+          {{ study.capacity }}
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-title">스터디 일정</div>
+          <div class="separator"></div>
+          {% for day in study.days %}
+          <div class="study__info-circle">
+            {{ day.name }}
+          </div>
+          {% endfor %}
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-title">스터디 기간</div>
+          <div class="separator"></div>
+          {{ study.start_date }} ~ {{ study.end_date }}
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-title">알고리즘 언어</div>
+          <div class="separator"></div>
+          {{ study.language }}
+        </div>
+      </div>
       <div class="study__content">
-        
-        <div class="study__content-joinContainer box">
+        {{ study.description|linebreaksbr }}
+        <div class="study__content-joinContainer">
           {# 참여하기 버튼을 누르면, 참여 취소 버튼이 추가됨 #}
         </div>
       </div>
@@ -37,5 +55,3 @@
 </main>
 
 {% endblock content %}
-
-
