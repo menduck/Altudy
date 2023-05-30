@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %} {% load static %} {% block content %}
 <link
   rel="stylesheet"
@@ -31,3 +32,63 @@
 </main>
 
 {% endblock content %}
+
+<!-- {% extends 'base.html' %}
+
+{% block title %}{% endblock title %}
+
+
+{% block content %}
+<h1 class="">스터디 정보</h1>
+
+{# 스터디 정보 #}
+<p>스터디 pk - {{ study.pk }}</p>
+<p>스터디장 - {{ study.user }}</p>
+<p>스터디 제목 - {{ study.title }}</p>
+<p>스터디 설명 - {{ study.description }}</p>
+<p>스터디 시작날짜 - {{ study.start_date }}</p>
+<p>스터디 종료날짜 - {{ study.end_date }}</p>
+<p>수용가능인원 - {{ study.capacity }}</p>
+<p>생성일 - {{ study.created_at }}</p>
+<p>언어 - {{ study.language }}</p>
+<p>카테고리 - 
+{% for category in study.category.all|dictsort:'name' %}
+{# 태그 이름순 정렬, 필요없을시 dictsort 삭제 #}
+<span>#{{ category }}</span>
+{% endfor %}
+</p>
+{# 스터디 정보 end #}
+
+{# 스터디 수정/삭제 #}
+{% if request.user == study.user %}
+<a href="{% url 'studies:update' study.pk %}">[수정]</a>
+<button type="button" data-bs-toggle="modal" data-bs-target="#deleteStudy">[삭제]</button>
+
+{# 삭제 모달 #}
+<div class="modal fade" id="deleteStudy" tabindex="-1" aria-labelledby="deleteStudyLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content pt-3 px-3">
+      <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body">
+        정말 삭제하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        {# 삭제 버튼 #}
+        <form action="{% url 'studies:delete' study.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">삭제</button>
+        </form>
+        {# 삭제 버튼 end #}
+      </div>
+    </div>
+  </div>
+</div>
+{# 삭제 모달 end #}
+{% endif %}
+{# 스터디 수정/삭제 end #}
+
+
+<a href="{% url 'studies:index' %}">[Home]</a>
+{% endblock content %} -->
+

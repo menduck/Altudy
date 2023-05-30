@@ -6,6 +6,9 @@ from .models import Problem, Review
 
 # Create your views here.
 def detail(request, pk):
+    if request.method == 'DELETE':
+        print('delete')
+    print(request.POST.get('_method'))
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
@@ -14,9 +17,6 @@ def detail(request, pk):
         ),
         pk=pk
     )
-    # problem = get_object_or_404(
-    #     Problem, pk=pk
-    # )
     context = {
         'problem': problem,
     }
@@ -46,6 +46,7 @@ def update(request, pk):
         if form.is_valid():
             form.save()
             return redirect('reviews:detail', problem.pk)
+        print('not valid')
     else:
         form = ProblemForm(instance=problem)
     context = {
@@ -59,10 +60,9 @@ def delete(request, pk):
     if request.user == problem.user:
         problem.delete()
         return redirect('/')  # 추후 스터디 앱의 메인 페이지로 redirect하도록 수정
-    else:
-        # 권한이 없는 페이지 만들기?
-        # 왔던 곳으로 되돌아가게 하려면?
-        return redirect('reviews:detail', pk)
+    # 권한이 없는 페이지 만들기?
+    # 왔던 곳으로 되돌아가게 하려면?
+    return redirect('reviews:detail', pk)
     
 
 def review_create(request, pk):
@@ -97,3 +97,11 @@ def review_update(request, pk, review_pk):
         'form': form,
     }
     return render(request, 'reviews/review_update.html', context)
+
+
+def review_delete(request, pk, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    if request.user == review.user:
+        review.delete()
+        return redirect('/')
+    return redirect('reviews:detail', pk)
