@@ -78,5 +78,6 @@ def review_create(request, pk):
         form = ReviewForm()
     context = {
         'form': form,
+        'review_pk': pk,
     }
     return render(request, 'reviews/review_create.html', context)

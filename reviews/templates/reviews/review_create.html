@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="{% url 'reviews:review_create' %}" method="post">
+<form action="{% url 'reviews:review_create' review_pk %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit">리뷰 작성하기</button>
