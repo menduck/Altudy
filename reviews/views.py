@@ -2,13 +2,20 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import ProblemForm, ReviewForm
 from .models import Problem, Review
+from .tasks import remove_unused_tags
+from .utils import OrderedCounter
 
 
 # Create your views here.
+def index(request):
+    problems = Problem.objects.all()
+    context = {
+        'problems': problems,
+    }
+    return render(request, 'reviews/index.html', context)
+
+
 def detail(request, pk):
-    # if request.method == 'DELETE':
-    #     print('delete')
-    # print(request.POST.get('_method'))
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
@@ -17,6 +24,9 @@ def detail(request, pk):
         ),
         pk=pk
     )
+    # print(problem.tags.all())
+    # c = OrderedCounter(problem.objects.tags + problem.review_set.tags + problem.review_set.comment_set.tags)
+    # print(c)
     context = {
         'problem': problem,
     }
@@ -26,11 +36,16 @@ def detail(request, pk):
 def create(request):
     if request.method == 'POST':
         form = ProblemForm(data=request.POST)
+        print(request.POST)
         if form.is_valid():
             problem = form.save(commit=False)
             problem.user = request.user
             problem.save()
+            form.save_m2m()
             return redirect('reviews:detail', problem.pk)
+        else:
+            print(form.error)
+            return redirect('/')
     else:
         form = ProblemForm()
     context = {
@@ -44,6 +59,7 @@ def update(request, pk):
     if request.method == 'POST':
         form = ProblemForm(data=request.POST, instance=problem)
         if form.is_valid():
+            form.save_m2m()
             form.save()
             return redirect('reviews:detail', problem.pk)
         print('not valid')
@@ -59,6 +75,7 @@ def delete(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
     if request.user == problem.user:
         problem.delete()
+        remove_unused_tags.delay(problem)
         return redirect('/')  # 추후 스터디 앱의 메인 페이지로 redirect하도록 수정
     # 권한이 없는 페이지 만들기?
     # 왔던 곳으로 되돌아가게 하려면?

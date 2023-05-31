@@ -1,3 +1,4 @@
+# from celery import shared_task
 from django.conf import settings
 from django.db import models
 # from django.urls import reverse_lazy
@@ -23,6 +24,12 @@ class Problem(models.Model):
 
     # def get_absolute_url(self):
     #     return reverse_lazy('reviews:detail', kwargs={'pk': self.pk})
+
+    # @shared_task
+    # def remove_unused_tags(self):
+    #     for tag in self.tags.prefetch_related('problem_set', 'review_set', 'comment_set'):
+    #         if tag.problem_set.count() == tag.review_set.count() == tag.comment_set.count() == 0:
+    #             tag.delete()
 
 
 class Review(models.Model):
