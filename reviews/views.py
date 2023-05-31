@@ -1,4 +1,6 @@
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
+from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm
 from .models import Problem, Review
@@ -74,9 +76,11 @@ def update(request, pk):
 def delete(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
     if request.user == problem.user:
-        problem.delete()
-        remove_unused_tags.delay(problem)
-        return redirect('/')  # 추후 스터디 앱의 메인 페이지로 redirect하도록 수정
+        try:
+            problem.delete()
+            return redirect('/')
+        finally:
+            Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
     # 권한이 없는 페이지 만들기?
     # 왔던 곳으로 되돌아가게 하려면?
     return redirect('reviews:detail', pk)
@@ -117,8 +121,11 @@ def review_update(request, pk, review_pk):
 
 
 def review_delete(request, pk, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
+    review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
     if request.user == review.user:
-        review.delete()
-        return redirect('/')
+        try:
+            review.delete()
+            return redirect('/')
+        finally:
+            Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
     return redirect('reviews:detail', pk)
