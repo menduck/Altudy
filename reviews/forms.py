@@ -1,6 +1,4 @@
 from django import forms
-from django_tuieditor.widgets import MarkdownEditorWidget
-from django_tuieditor.fields import MarkdownFormField
 from taggit.forms import TagWidget, TagField
 
 
