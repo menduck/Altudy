@@ -109,6 +109,7 @@
           <form action="{% url 'studies:withdraw' study.pk %}" method="post">
             {% csrf_token %}
             <button class="button-large">스터디 탈퇴</button>
+            {# 스터디장은 스터디 탈퇴가 불가해야함 #}
           </form>
           {% else %}
           <form action="{% url 'studies:join' study.pk %}" method="post">

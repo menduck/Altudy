@@ -37,7 +37,7 @@ class Study(models.Model):
     title = models.CharField(max_length=20)
     description = models.TextField(blank=True, null=True)
     # 스터디 주 언어
-    language = MultiSelectField(choices=LANGUAGE_CHOICES)
+    language = MultiSelectField(choices=LANGUAGE_CHOICES, blank=True)
     category = TaggableManager(blank=True)
     # 스터디 최대 인원수
     capacity = models.PositiveSmallIntegerField(default=5)

@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from taggit.models import Tag
+from django.db.models import Count
 
 from .models import Study, Studying, Announcement
 from .forms import StudyForm
-from django.contrib.auth import get_user_model
 
 # Create your views here.
 def index(request):
@@ -31,8 +33,6 @@ def detail(request, study_pk: int):
         'study': study,
         'is_studying': is_studying,
     }
-    # print('=======================')
-    # print(days)
     return render(request, 'studies/detail.html', context)
 
 
@@ -93,7 +93,12 @@ def delete(request, study_pk: int):
     
     # 스터디장만 삭제 가능
     if request.user == study.user:
-        study.delete()
+        try:
+            study.delete()
+            return redirect('/')
+        finally:
+            Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
+        
     
     return redirect('studies:index')
 
@@ -116,6 +121,18 @@ def withdraw(request, study_pk: int):
     studying = Studying.objects.filter(study=study, user=me)
     if studying.exists():
         studying.first().delete()
+        # 스터디장이 탈퇴할때
+        if me == study.user:
+            # 남은 스터디원이 있을 경우 다음 스터디장(가입 빠른순) 지정
+            if Study.objects.filter(study=study).exists():
+                next_studying = Studying.objects.filter(study=study).first()
+                next_studying.permission = 3
+                new_leader = next_studying.user
+                study.user = new_leader
+            else:
+                # 스터디에 남은 인원이 0명일 경우?
+                # code ... 
+                pass
         
     return redirect('studies:detail', study_pk)
 
@@ -139,7 +156,7 @@ def expel(request, study_pk: int, username: int):
     person = get_user_model().objects.get(username=username)
     me = request.user
     
-    # 스터디장 혹은 부스터디장(permission > 1)인 유저만 방출 스터디원 방출 가능
+    # 스터디장인 유저만 방출 스터디원 방출 가능
     # if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
     #     studying = Studying.objects.filter(study=study, user=person)
     #     studying.first().delete()
