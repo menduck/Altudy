@@ -4,7 +4,6 @@ from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm
 from .models import Problem, Review
-from .tasks import remove_unused_tags
 from .utils import OrderedCounter
 
 
