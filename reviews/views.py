@@ -1,15 +1,27 @@
-from django.db.models import Count
+from django.urls import reverse_lazy
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 
+from studies.models import Study
 from .forms import ProblemForm, ReviewForm
 from .models import Problem, Review
 from .utils import OrderedCounter
 
 
+# def user_has_access_to_study(request):
+#     user = request.user
+#     study = eval(f'get_object_or_404(Study, request.{request.method}.get("study"))')
+
+
+
 # Create your views here.
 def index(request):
-    problems = Problem.objects.all()
+    # print(request.session.__dir__())
+    study_id = request.GET.get('study')   # 세션에 저장, 로그인시 어떻게 유지?
+    study = get_object_or_404(Study, pk=study_id)
+    problems = Problem.objects.filter(study=study).order_by('-post_num')
     context = {
         'problems': problems,
     }
@@ -25,9 +37,6 @@ def detail(request, pk):
         ),
         pk=pk
     )
-    # print(problem.tags.all())
-    # c = OrderedCounter(problem.objects.tags + problem.review_set.tags + problem.review_set.comment_set.tags)
-    # print(c)
     context = {
         'problem': problem,
     }
@@ -36,21 +45,22 @@ def detail(request, pk):
 
 def create(request):
     if request.method == 'POST':
+        study_id = request.POST.get('study')
         form = ProblemForm(data=request.POST)
-        print(request.POST)
         if form.is_valid():
             problem = form.save(commit=False)
             problem.user = request.user
+            problem.study = get_object_or_404(Study, pk=study_id)
             problem.save()
             form.save_m2m()
-            return redirect('reviews:detail', problem.pk)
-        else:
-            print('에러 발생')
-            return redirect('/')
+            url = reverse_lazy('reviews:detail', kwargs={'pk': problem.pk}) + f'?study={study_id}'
+            return redirect(url)
+        return redirect('/')
     else:
         form = ProblemForm()
     context = {
         'form': form,
+        'study_id': request.GET.get('study'),
     }
     return render(request, 'reviews/create.html', context)
 

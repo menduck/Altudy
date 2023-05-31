@@ -4,6 +4,7 @@
 {% block content %}
 <h1>문제 작성하기</h1>
 <form id="form" action="{% url 'reviews:create' %}" method="post">
+  <input type="hidden" name="study" value="{{ study_id }}">
   {% csrf_token %}
   
   {% with form.title as title %}
