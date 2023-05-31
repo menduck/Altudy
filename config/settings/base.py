@@ -191,6 +191,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_REQUIRED = True
 
 ## 로그인 성공 시 리다이렉트할 경로
 LOGIN_REDIRECT_URL = "/studies"
@@ -201,6 +202,15 @@ ACCOUNT_LOGOUT_ON_GET = True
 ## 소셜 로그인 후 바로 가입이 아닌 부가정보를 입력받기 위한 옵션
 SOCIALACCOUNT_AUTO_SIGNUP = False
 
+## 부가정보 자동 입력을 위한 Adpater 연결
 SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
 
+## 이메일 전송
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'altudy12@gmail.com'
+EMAIL_HOST_PASSWORD = 'jsgaxchbzyxtxqxz'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # -------- end allauth --------
