@@ -1,94 +1,124 @@
-
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
 <link
   rel="stylesheet"
   type="text/css"
   href="{% static 'CSS/studies/detail.css' %}"
 />
+{% endblock style %} {% block content %}
 
-<header class="box">뒤로가기</header>
-<main class="box">
+<main class="study__wrapper">
   {# 스터디 디테일 내용 #}
   <article>
-    <div class="study__container box">
-      <div class="study__title">프로그래머스 LV2 스터디 충원</div>
+    <div class="study__container">
+      <div class="study__title">{{ study.title }}</div>
       <div class="study__userInfo">
-        <div class="study_userInfo-badge">🐥</div>
-        <div class="study_userInfo-username">김민선</div>
+        <div class="study__userInfo-badge">
+          <p>&#128035;</p>
+          </div>
+        <div class="study__userInfo-username">{{ study.user }}</div>
+      </div>
+      <div class="study__crudInfo">
+        {{ study.created_at }} 
+        {# 스터디 수정/삭제 #} 
+        {% if request.user == study.user %}
+        <a class="study__crudInfo-item" href="{% url 'studies:update' study.pk %}">수정</a>
+        <button
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteStudy"
+          class="study__crudInfo-item"
+        >
+          삭제
+        </button>
+
+        {# 삭제 모달 #}
+        <div
+          class="modal fade"
+          id="deleteStudy"
+          tabindex="-1"
+          aria-labelledby="deleteStudyLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content pt-3 px-3">
+              <button
+                type="button"
+                class="btn-close ms-auto"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+              <div class="modal-body text-center">정말 삭제하시겠습니까?</div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  닫기
+                </button>
+                {# 삭제 버튼 #}
+                <form
+                  action="{% url 'studies:delete' study.pk %}"
+                  method="post"
+                >
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-delete">삭제</button>
+                </form>
+                {# 삭제 버튼 end #}
+              </div>
+            </div>
+          </div>
+        </div>
+        {# 삭제 모달 end #} 
+        {% endif %} 
+        {# 스터디 수정/삭제 end #}
       </div>
       <hr />
-      <div class="study__info"></div>
+      <div class="study__info">
+        <div class="study__info-item">
+          <div class="study__info-item-title">모집 인원</div>
+          <div class="separator"></div>
+          {{ study.capacity }}
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-title">스터디 일정</div>
+          <div class="separator"></div>
+          {% comment %} {% for day in study.days.all %} {% endcomment %}
+          {{ study.days }}
+          {{ study.start_time}} ~ {{ study.end_time}}
+          {% comment %} <div class="study__info-circle">{{ day }}</div> {% endcomment %}
+          {% comment %} {% endfor %} {% endcomment %}
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-title">스터디 기간</div>
+          <div class="separator"></div>
+          {{ study.start_date }} ~ {{ study.end_date }}
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-title">알고리즘 언어</div>
+          <div class="separator"></div>
+          {{ study.language }}
+        </div>
+      </div>
       <div class="study__content">
-        정해진 문제(프로그래머스 LV2 정답률 낮은 50문제)를 평일 매일 저녁 9시
-        전까지 공부하여 깃허브에 올립니다.
-        <div class="study__content-joinContainer box">
+        {{ study.description|linebreaksbr }}
+        <div class="study__content-joinContainer">
+          <button class="button-large">스터디 참여</button>
           {# 참여하기 버튼을 누르면, 참여 취소 버튼이 추가됨 #}
         </div>
       </div>
     </div>
+    <div class="category__container">
+      {% for category in study.category.all|dictsort:'name' %}
+      <span class="category-item">#{{ category }}</span>
+      {% endfor %}
+    </div>
   </article>
+  <hr />
   {# 댓글 #}
   <article></article>
 </main>
 
 {% endblock content %}
-
-<!-- {% extends 'base.html' %}
-
-{% block title %}{% endblock title %}
-
-
-{% block content %}
-<h1 class="">스터디 정보</h1>
-
-{# 스터디 정보 #}
-<p>스터디 pk - {{ study.pk }}</p>
-<p>스터디장 - {{ study.user }}</p>
-<p>스터디 제목 - {{ study.title }}</p>
-<p>스터디 설명 - {{ study.description }}</p>
-<p>스터디 시작날짜 - {{ study.start_date }}</p>
-<p>스터디 종료날짜 - {{ study.end_date }}</p>
-<p>수용가능인원 - {{ study.capacity }}</p>
-<p>생성일 - {{ study.created_at }}</p>
-<p>언어 - {{ study.language }}</p>
-<p>카테고리 - 
-{% for category in study.category.all|dictsort:'name' %}
-{# 태그 이름순 정렬, 필요없을시 dictsort 삭제 #}
-<span>#{{ category }}</span>
-{% endfor %}
-</p>
-{# 스터디 정보 end #}
-
-{# 스터디 수정/삭제 #}
-{% if request.user == study.user %}
-<a href="{% url 'studies:update' study.pk %}">[수정]</a>
-<button type="button" data-bs-toggle="modal" data-bs-target="#deleteStudy">[삭제]</button>
-
-{# 삭제 모달 #}
-<div class="modal fade" id="deleteStudy" tabindex="-1" aria-labelledby="deleteStudyLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content pt-3 px-3">
-      <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-      <div class="modal-body">
-        정말 삭제하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        {# 삭제 버튼 #}
-        <form action="{% url 'studies:delete' study.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary">삭제</button>
-        </form>
-        {# 삭제 버튼 end #}
-      </div>
-    </div>
-  </div>
-</div>
-{# 삭제 모달 end #}
-{% endif %}
-{# 스터디 수정/삭제 end #}
-
-
-<a href="{% url 'studies:index' %}">[Home]</a>
-{% endblock content %} -->
-

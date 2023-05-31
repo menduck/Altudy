@@ -16,10 +16,13 @@ def index(request):
 
 def detail(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    
+    # days = [day.label for day in study.days]
+
     context = {
         'study': study,
     }
+    # print('=======================')
+    # print(days)
     return render(request, 'studies/detail.html', context)
 
 

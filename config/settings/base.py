@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'storages',
     'taggit',
     'multiselectfield',
+    'rest_framework',
 ]
 
 TUI_EDITOR_LANGUAGE = ['ko']
