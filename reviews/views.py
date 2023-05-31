@@ -7,6 +7,14 @@ from .utils import OrderedCounter
 
 
 # Create your views here.
+def index(request):
+    problems = Problem.objects.all()
+    context = {
+        'problems': problems,
+    }
+    return render(request, 'reviews/index.html', context)
+
+
 def detail(request, pk):
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
