@@ -53,8 +53,8 @@ class Study(models.Model):
     
 # study - user M:N 중개 테이블
 class Studying(models.Model):
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    study = models.ForeignKey(to=Study, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_studyings')
+    study = models.ForeignKey(to=Study, on_delete=models.CASCADE, related_name='study_studyings')
     
     permission = models.PositiveSmallIntegerField(default=1)
     joined_at = models.DateTimeField(auto_now_add=True)

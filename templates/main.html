@@ -5,4 +5,15 @@
 <h1>Main</h1>
 
 <div>hello</div>
+
+<p>가입중인 스터디</p>
+{% for studying in studyings %}
+<div>{{ studying.study.title }}</div>
+{% endfor %}
+
+<p>신규 스터디</p>
+{% for study in latest_studies %}
+<div>{{ study.title }}</div>
+{% endfor %}
+
 {% endblock content %}
