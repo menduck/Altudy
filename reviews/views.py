@@ -45,7 +45,7 @@ def create(request):
             form.save_m2m()
             return redirect('reviews:detail', problem.pk)
         else:
-            print(form.error)
+            print('에러 발생')
             return redirect('/')
     else:
         form = ProblemForm()

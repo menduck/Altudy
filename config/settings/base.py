@@ -155,6 +155,11 @@ AUTH_USER_MODEL = 'accounts.User'
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True
 
+
+# django-taggit customization (config/utils.py 참고)
+TAGGIT_TAGS_FROM_STRING = 'config.utils.custom_tag_string'
+
+
 # -------- allauth --------
 ## social setting
 AUTHENTICATION_BACKENDS = (
