@@ -14,6 +14,7 @@
 <p>신규 스터디</p>
 {% for study in latest_studies %}
 <div>{{ study.title }}</div>
+<div>{{ study.member_num }}</div>
 {% endfor %}
 
 {% endblock content %}
