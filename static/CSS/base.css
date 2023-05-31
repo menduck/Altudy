@@ -21,6 +21,7 @@ body {
   height: 100vh;
   background-color: var(--color-gray-1);
   font-family: var(--font-family);
+  box-sizing: border-box;
 }
 
 /* header + nav */
@@ -42,7 +43,7 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 60px;
   padding: 16px;
   color: var(--color-white);
 }
