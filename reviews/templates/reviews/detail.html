@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block content %}
 <h1>{{ problem.title }}</h1>
 <h4>{{ problem.user }}</h4>
 <p>{{ problem.url }}</p>
+<p>{{ problem.description|markdown }}</p>
 
 <div>
   <a href="{% url 'reviews:review_create' problem.pk %}">리뷰 작성하기</a>
@@ -15,13 +17,14 @@
 
 <ul>
   {% for review in problem.review_set.all %}
-  <li>{{ review }}</li>
+  <li>{{ review.content|markdown }}</li>
   <ul>
     {% for comment in review.comment_set.all %}
-    <li>{{ comment }}</li>
+    <li>{{ comment.content|markdown }}</li>
     {% endfor %}
   </ul>
   <a href="{% url 'reviews:review_update' problem.pk review.pk %}">리뷰 수정</a>
   {% endfor %}
 </ul>
+
 {% endblock content %}

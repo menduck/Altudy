@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_tuieditor',
     'storages',
     'taggit',
+    'multiselectfield',
+    'rest_framework',
 
     # allauth
     'django.contrib.sites',
@@ -187,7 +189,7 @@ SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
 ## 로그인 성공 시 리다이렉트할 경로
-LOGIN_REDIRECT_URL = "/accounts"
+LOGIN_REDIRECT_URL = "/studies"
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_LOGOUT_ON_GET = True
