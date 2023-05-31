@@ -17,6 +17,18 @@ class StudyForm(forms.ModelForm):
             'start_time',
             'end_time',
             )
+        labels = {
+            # 'title': '', 
+            # 'description': '',
+            # 'language': '',
+            # 'category': '',
+            # 'capacity': '',
+            # 'start_date': '',
+            # 'end_date': '',
+            # 'days': '',
+            # 'start_time': '',
+            # 'end_time': '',
+            }
         widgets = {
             'title': forms.TextInput(attrs={}),
             'description': forms.Textarea(attrs={}),

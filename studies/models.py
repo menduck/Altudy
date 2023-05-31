@@ -21,13 +21,13 @@ LANGUAGE_CHOICES = [
 ]
 
 STUDY_DAYS = [
-    (1, '월요일'),
-    (2, '화요일'),
-    (3, '수요일'),
-    (4, '목요일'),
-    (5, '금요일'),
-    (6, '토요일'),
-    (7, '일요일'),
+    ('월', '월요일'),
+    ('화', '화요일'),
+    ('수', '수요일'),
+    ('목', '목요일'),
+    ('금', '금요일'),
+    ('토', '토요일'),
+    ('일', '일요일'),
 ]
 
 class Study(models.Model):
@@ -53,8 +53,8 @@ class Study(models.Model):
     
 # study - user M:N 중개 테이블
 class Studying(models.Model):
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    study = models.ForeignKey(to=Study, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_studyings')
+    study = models.ForeignKey(to=Study, on_delete=models.CASCADE, related_name='study_studyings')
     
     permission = models.PositiveSmallIntegerField(default=1)
     joined_at = models.DateTimeField(auto_now_add=True)

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>문제 목록</h1>
+<ul>
+  {% for problem in problems %}
+  <li>
+    <a href="{% url 'reviews:detail' problem.pk %}">{{ problem.title }}</a>
+  </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'reviews:create' %}">문제 올리기</a>
+{% endblock content %}

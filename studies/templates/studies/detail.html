@@ -87,7 +87,7 @@
           <div class="separator"></div>
           {% comment %} {% for day in study.days.all %} {% endcomment %}
           {{ study.days }}
-          {{ study.start_time}} ~ {{ study.end_time}}
+          {{ study.start_time }} ~ {{ study.end_time }}
           {% comment %} <div class="study__info-circle">{{ day }}</div> {% endcomment %}
           {% comment %} {% endfor %} {% endcomment %}
         </div>
@@ -105,7 +105,18 @@
       <div class="study__content">
         {{ study.description|linebreaksbr }}
         <div class="study__content-joinContainer">
-          <button class="button-large">스터디 참여</button>
+          {% if is_studying %}
+          <form action="{% url 'studies:withdraw' study.pk %}" method="post">
+            {% csrf_token %}
+            <button class="button-large">스터디 탈퇴</button>
+          </form>
+          {% else %}
+          <form action="{% url 'studies:join' study.pk %}" method="post">
+            {% csrf_token %}
+            <button class="button-large">스터디 참여</button>
+          </form>
+          {# 스터디 참여 요청 기능 완성 후 변환 필요 #}
+          {% endif %}
           {# 참여하기 버튼을 누르면, 참여 취소 버튼이 추가됨 #}
         </div>
       </div>

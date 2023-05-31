@@ -17,14 +17,14 @@ def index(request):
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('accounts:index')
+        return redirect('studies:index')
     
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            auth_login(request, user)
-            return redirect('accounts:index')  # 임시 index
+            auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend',)
+            return redirect('studies:index')  # 임시 index
     else:
         form = CustomUserCreationForm()
     context = {
@@ -35,13 +35,13 @@ def signup(request):
 
 def login(request):
     if request.user.is_authenticated:
-        return redirect('accounts:index')
+        return redirect('studies:index')
     
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('accounts:index')  # 임시 index
+            return redirect('studies:index')  # 임시 index
     else:
         form = AuthenticationForm()
     context = {
@@ -53,14 +53,14 @@ def login(request):
 @login_required
 def logout(request):
     auth_logout(request)
-    return redirect('accounts:index')  # 임시 index
+    return redirect('studies:index')  # 임시 index
 
 
 @login_required
 def delete(request):
     request.user.delete()
     auth_logout(request)
-    return redirect('accounts:index')  # 임시 index
+    return redirect('studies:index')  # 임시 index
 
 
 @login_required
@@ -69,7 +69,7 @@ def update(request):
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('accounts:index')  # 임시 index
+            return redirect('studies:index')  # 임시 index
     else:
         form = CustomUserChangeForm(instance=request.user)
     context = {
@@ -85,7 +85,7 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            return redirect('accounts:index')  # 임시 index
+            return redirect('studies:index')  # 임시 index
     else:
         form = CustomPasswordChangeForm(request.user)
     context = {
