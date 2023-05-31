@@ -1,8 +1,55 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static %} {% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'CSS/main.css' %}" />
+{% endblock style %} {% block content %}
+<header>
+  <div class="banner__container"></div>
+</header>
+<main id="main__main">
+  {% comment %} 참여한 스터디가 있으면 {% endcomment %}
+  <section class="myStudies__container">
+    <div class="studies__title">참여한 스터디 🙆🏻</div>
+  </section>
+  <section class="newStudies__container">
+    <div class="studies__title">최신 스터디 👩‍🏫</div>
 
+    <div class="cards__container">
+      <div class="swiper-button__container">
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+      <swiper-container class="mySwiper" init="false">
+        {% for study in studies %}
+        <swiper-slide>
+          <div class="card">
+            <a href="{% url 'studies:detail' study.pk %}">
+              <div>
+                <div class="card__title">{{ study.title }}</div>
+                <div class="card__content">{{ study.description|linebreaksbr }}</div>
+                <div class="card__lanuage-container">
+                  {% for language  in study.language %}
+                    <div class="card__lanuage">
+                      <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__userinfo">
+                  <div class="card__badge"></div>
+                  <div class="card__username">{{ study.user }}</div>
+                </div>
+                <div class="card__headCount">/{{ study.capacity }}</div>
+              </div>
+            </a>
+          </div>
+        </swiper-slide>
+        {% endfor %}
+      </swiper-container>
+    </div>
+  </section>
+</main>
 
-{% block content %}
-<h1>Main</h1>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
 
-<div>hello</div>
+<script type="text/javascript" src="{% static 'JS/swiper.js' %}"></script>
 {% endblock content %}

@@ -34,8 +34,9 @@ swiper-container {
 
 .swiper-button__container {
   position: absolute;
-  width: 100%;
+  width: 104%;
   top: 50%;
+  right: -2%;
 }
 
 .swiper-button-next,
@@ -59,7 +60,7 @@ swiper-container {
 }
 
 /* 카드 */
-.card__container {
+.cards__container {
   position: relative;
 }
 
