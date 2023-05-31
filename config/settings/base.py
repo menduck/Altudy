@@ -42,6 +42,16 @@ INSTALLED_APPS = [
     'taggit',
     'multiselectfield',
     'rest_framework',
+
+    # allauth
+    'django.contrib.sites',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+
+    # social providers
+    "allauth.socialaccount.providers.github",
+    "allauth.socialaccount.providers.google",
 ]
 
 TUI_EDITOR_LANGUAGE = ['ko']
@@ -145,3 +155,46 @@ AUTH_USER_MODEL = 'accounts.User'
 
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True
+
+# -------- allauth --------
+## social setting
+AUTHENTICATION_BACKENDS = (
+    # 장고 기본 사용자 인증 백엔드
+    'django.contrib.auth.backends.ModelBackend',
+
+    # allauth를 사용한 인증 백엔드
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+SOCIALACCOUNT_PROVIDERS = {
+    'github' : {
+        'APP' : {
+            'client_id': '21fdc27a6953e4613324',
+            'secret': 'adf2853d21a47afa47a76f619ae4b90fb2f3bdb7',
+            'key': '',
+        }
+    },
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+## 로그인 성공 시 리다이렉트할 경로
+LOGIN_REDIRECT_URL = "/studies"
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_LOGOUT_ON_GET = True
+
+## 소셜 로그인 후 바로 가입이 아닌 부가정보를 입력받기 위한 옵션
+SOCIALACCOUNT_AUTO_SIGNUP = False
+
+# -------- end allauth --------

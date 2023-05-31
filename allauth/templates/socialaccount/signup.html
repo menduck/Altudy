@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 {% load socialaccount %}
+
 {% block content %}
-  <h1>login</h1>
+  <h1>signup</h1>
   <hr>
-  <form action="{% url 'accounts:login' %}" method="POST">
+  <form action="{% url 'accounts:signup' %}" method="POST">
     {% csrf_token %}
     <div>
       {{ form.as_p }}
-      <input type="submit" value="로그인">
-
+      <input type="submit" value="회원가입">
     </div>
   </form>
   <a href="{% provider_login_url 'github'%}">github</a>
-  <a href="{% provider_login_url 'google'%}">google</a>
 {% endblock content %}
