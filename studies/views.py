@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 
 from .models import Study, Studying, Announcement
@@ -15,8 +15,9 @@ def index(request):
 
 
 def detail(request, study_pk: int):
-    study = Study.objects.get(pk=study_pk)
+    study = get_object_or_404(Study, pk=study_pk)
     # days = [day.label for day in study.days]
+
     context = {
         'study': study,
     }
@@ -48,7 +49,7 @@ def create(request):
 
 
 def update(request, study_pk: int):
-    study = Study.objects.get(pk=study_pk)
+    study = get_object_or_404(Study, pk=study_pk)
     if request.user != study.user:
         return redirect('studies:detail', study_pk)
     
@@ -72,7 +73,7 @@ def update(request, study_pk: int):
 
 
 def delete(request, study_pk: int):
-    study = Study.objects.get(pk=study_pk)
+    study = get_object_or_404(Study, pk=study_pk)
     if request.user == study.user:
         study.delete()
     
