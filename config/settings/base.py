@@ -201,4 +201,6 @@ ACCOUNT_LOGOUT_ON_GET = True
 ## 소셜 로그인 후 바로 가입이 아닌 부가정보를 입력받기 위한 옵션
 SOCIALACCOUNT_AUTO_SIGNUP = False
 
+SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
+
 # -------- end allauth --------
