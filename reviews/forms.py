@@ -1,8 +1,6 @@
 from django import forms
 from taggit.forms import TagWidget, TagField
 
-
-from .fields import SpaceSeparatedTagsField
 from .models import Problem, Review
     
 
