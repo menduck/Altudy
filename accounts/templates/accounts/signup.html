@@ -22,11 +22,11 @@
         {% csrf_token %}
         <div>
           {{ form.as_p }}
+          <input type="submit" value="altudy 회원가입" class="main__signupbutton">
           <div class="main__socialbox">
             <a href="{% provider_login_url 'github'%}"><img src="{% static 'IMAGE/github.png' %}" alt="깃허브 로고" class="main__sociallogo"></a>
             <a href="{% provider_login_url 'google'%}"><img src="{% static 'IMAGE/google.png' %}" alt="구글 로고" class="main__sociallogo"></a>
           </div>
-          <input type="submit" value="altudy 회원가입" class="main__signupbutton">
         </div>
       </form>
     </div>
