@@ -203,13 +203,23 @@ def expel(request, study_pk: int, username: int):
     return redirect('studies:detail', study_pk)
 
 
+# 스터디 가입 요청 취소
+@login_required
+def cancel(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    me = request.user
+    
+    if study.join_request.filter(pk=me.pk).exists():
+        study.join_request.remove(me)
+    
+    return redirect('studies:detail', study_pk)
+
+
 @login_required
 def alarm(request):
     studies = Study.objects.filter(user=request.user)
     all_requests = list()
     for study in studies:
-        print(study.title, '가입 요청')
-        print(study.join_request.all())
         all_requests.append((study, study.join_request.all()))
     print(all_requests)
     
