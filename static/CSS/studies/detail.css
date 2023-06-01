@@ -161,6 +161,7 @@
   background-color: var(--color-white);
   color: var(--color-gray-6);
   margin-right: 15px;
+  transform: scale(1);
 }
 
 .category-item {

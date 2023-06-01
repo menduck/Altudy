@@ -128,23 +128,14 @@
           <form action="{% url 'studies:withdraw' study.pk %}" method="post">
             {% csrf_token %}
             <button type"submit" class="button-large">스터디 탈퇴</button>
-            {# 스터디장은 스터디 탈퇴가 불가해야함 #}
+            {# TODO: 스터디장은 스터디 탈퇴가 불가해야함, 어떤 식으로 보일지 의논 필요 #}
           </form>
           {% elif is_studying == 'join_request' %}
-{% comment %}
->>> feature/studies-join
-          <button class="button-large" disabled>참여 요청 중</button>
-          {# TODO: 참여자가 참여 취소하는 view 생성해야 함. #}
-          <button class="button-large">참여 취소</button>
-================================
           <form action="{% url 'studies:cancel' study.pk %}" method="post">
             {% csrf_token %}
-            <p style="color:grey;">참여 요청 중...</p>
-            <button type="submit" class="button-large">참여 요청 취소</button>
-            {# 스터디장은 스터디 탈퇴가 불가해야함 #}
+            <button class="button-large" disabled>참여 요청 중</button>
+            <button type="submit" class="button-large">참여 취소</button>
           </form>
->>> dev
-{% endcomment %}
           {% else %}
           <form action="{% url 'studies:join' study.pk %}" method="post">
             {% csrf_token %}
