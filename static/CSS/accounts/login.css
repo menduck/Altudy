@@ -1,4 +1,4 @@
-.main__signup-container {
+.main__login-container {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -23,7 +23,7 @@
   height: auto;
 }
 
-.main__signupbox {
+.main__loginbox {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,14 +31,14 @@
   width: 100%;
 }
 
-.main__signupbox label {
+.main__loginbox label {
   margin: 10px 0;
   color: var(--color-gray-5);
   display: flex;
   align-items: center;
 }
 
-.main__signupbox input {
+.main__loginbox input {
   background-color: var(--color-gray-1);
   border: 1px solid var(--color-gray-4);
 }
@@ -56,7 +56,7 @@
   margin: 0 5px;
 }
 
-.main__signupbutton {
+.main__loginbutton {
   display: block;
   width: 100%;
   margin-top: 20px;
@@ -68,7 +68,32 @@
   cursor: pointer;
 }
 
-.main__signupbutton:hover {
+.main__loginbutton:hover {
   background-color: var(--color-gray-7);
+  color: var(--color-gray-1);
+}
+
+.main__signupbutton-title {
+  margin-top: 20px;
+  color: var(--color-gray-7);
+  font-size: var(--font-micro);
+}
+
+.main__signupbutton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px;
+  background-color: var(--color-gray-1);
+  color: var(--color-gray-6);
+  border: 1px solid var(--color-gray-5);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.main__signupbutton:hover {
+  background-color: var(--color-green);
   color: var(--color-gray-1);
 }
