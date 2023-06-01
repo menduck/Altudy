@@ -24,4 +24,4 @@ def markdown(value):
 
 @register.filter
 def pickle(obj):
-    return str(pk.dump(obj, 0))
+    return pk.dumps(obj, 0)
