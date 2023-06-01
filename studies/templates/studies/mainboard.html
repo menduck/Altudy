@@ -21,12 +21,12 @@
   {% endfor %}
 </div>
 <hr>
+
 <div>
   <h3>문제</h3>
-  <a href="{% url 'reviews:create' %}">문제 생성하기</a>
-  <hr>
+  <br>
   {% for prob in problems %}
-    <div>문제 : {{ prob }}</div>
+    <p><a href="#">{{ prob }}</a></p>
   {% endfor %}
 </div>
 <hr>

@@ -196,9 +196,9 @@ def expel(request, study_pk: int, username: int):
     me = request.user
     
     # 스터디장인 유저만 스터디원 방출 가능
-    # if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
-    #     studying = Studying.objects.filter(study=study, user=person)
-    #     studying.first().delete()
+    if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
+        studying = Studying.objects.filter(study=study, user=person)
+        studying.first().delete()
     
     return redirect('studies:detail', study_pk)
 
@@ -234,11 +234,11 @@ def mainboard(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     users = study.studying_users.all()
 
-    # 스터디에 가입돼있지 않으면 디테일 페이지로 리다이렉트
+    # 스터디에 가입돼있지 않으면 접근 불가
     if not Studying.objects.filter(study=study, user=request.user).exists():
         return redirect('studies:detail', study_pk)
 
-    # 메인보드에서는 n개만 보여주도록
+    # 메인보드에서는 n개만 보여주도록? 일단 임의로 추가
     problems = Problem.objects.filter(study=study)[:5]
 
     # 유저별 리뷰 수, 백분율 (그래프에 사용)
@@ -271,3 +271,33 @@ def mainboard(request, study_pk: int):
 @login_required
 def member(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
+
+    # 스터디장만 접근 가능
+    if not Studying.objects.filter(study=study, user=request.user, permission__gte=2).exists():
+        return redirect('studies:mainboard', study_pk)
+    
+    users = study.studying_users.all()
+    join_requests = study.join_request.all()
+
+    context = {
+        'study': study,
+        'users': users,
+        'join_requests': join_requests,
+    }
+    return render(request, 'studies/member.html', context)
+
+
+@login_required
+def problem(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    query = request.GET.get('query')
+    problems = Problem.objects.filter(study=study)
+
+    if query:
+        problems = problems.filter(title__icontains=query)
+
+    context = {
+        'study': study,
+        'problems': problems,
+    }
+    return render(request, 'studies/problem.html', context)

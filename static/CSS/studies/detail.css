@@ -23,15 +23,16 @@
 
 .study__info {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
+  margin-top: 30px;
   margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
 .study__info-item {
   display: flex;
-  align-items: center;
+  align-items: start;
   color: var(--color-gray-5);
   width: 50%;
   margin-bottom: 20px;
@@ -41,6 +42,20 @@
   min-width: 100px;
 }
 
+.study__info-item-left{
+  display: flex;
+  align-items: start;
+}
+
+.study__info-item-right{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.study__info-margin-top{
+  transform: translate(0,-12px);
+}
 .separator {
   width: 3px;
   height: 20px;
@@ -68,6 +83,7 @@
   width: 100%;
   max-width: 150px;
   border-radius: 20px;
+  margin: 5px;
 }
 
 .study__info-circle img{

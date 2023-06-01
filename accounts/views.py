@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
-from .forms import CustomUserCreationForm, CustomUserChangeForm, CustomPasswordChangeForm
+from .forms import CustomUserCreationForm, CustomAuthenticationFormForm, CustomUserChangeForm, CustomPasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -37,12 +37,12 @@ def login(request):
         return redirect('studies:index')
     
     if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
+        form = CustomAuthenticationFormForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
             return redirect('studies:index')  # 임시 index
     else:
-        form = AuthenticationForm()
+        form = CustomAuthenticationFormForm()
     context = {
         'form': form,
     }
