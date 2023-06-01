@@ -1,0 +1,93 @@
+.main__signup-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-width: 400px;
+  height: 400px;
+  margin: 80px auto;
+}
+
+.main__logobox {
+  display: flex;
+  justify-content: center;
+  width: 200px;
+  padding: 5px;
+  background-color: var(--color-gray-5);
+  border-radius: var(--border-radius-soft);
+}
+
+.main__altudylogo {
+  width: 60px;
+}
+
+.main__idbox {
+  display: flex;
+  margin-top: 30px;
+}
+
+.main__pwbox {
+  display: flex;
+  margin-top: 30px;
+}
+
+.main__label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  color: var(--color-gray-1);
+  background-color: var(--color-gray-4);
+  border-radius: var(--border-radius-soft);
+}
+
+.main__input {
+  width: 120px;
+  height: 30px;
+  margin-left: 10px;
+  background-color: var(--color-gray-1);
+  border: 1px solid var(--color-gray-4);
+  border-radius: var(--border-radius-soft);
+}
+
+.main__loginbutton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  margin-top: 30px;
+  color: var(--color-gray-1);
+  background-color: var(--color-gray-4);
+  border: none;
+  border-radius: var(--border-radius-soft);
+  font-family: var(--font-famaily);
+}
+
+.main__socialbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-gray-4);
+}
+
+.main__sociallogo {
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+}
+
+.main__signupbox {
+  margin-top: 30px;
+}
+
+.main__signupbutton {
+  color: var(--color-gray-5);
+  font-size: var(--font-micro);
+  text-decoration: underline;
+  background-color: none;
+  border: none;
+}
