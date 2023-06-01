@@ -15,10 +15,11 @@ urlpatterns = [
     path('<int:study_pk>/reject/<username>/', views.reject, name='reject'), # 스터디 가입 요청 거절
     path('<int:study_pk>/expel/<username>/', views.expel, name='expel'), # 스터디원 방출
     path('<int:study_pk>/cancel/', views.cancel, name='cancel'), # 스터디 가입 요청 취소
+  
+    # 메인보드
+    path('<int:study_pk>/mainboard/', views.mainboard, name='mainboard'),
+    path('<int:study_pk>/mainboard/member', views.member, name='member'),
     
     # 알람 페이지 -임시-
     path('alarm/', views.alarm, name='alarm'),
-
-    # mainboard
-    path('<int:study_pk>/mainboard/', views.mainboard, name='mainboard'),
 ]
