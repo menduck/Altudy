@@ -8,4 +8,5 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             user.email = sociallogin.account.extra_data['email']
         if sociallogin.account.provider == 'google':
             # 구글 로그인인 경우 이메일의 아이디 부분을 유저네임으로
-            user.username = sociallogin.account.extra_data['email'].split('@')[0]
+            email_id = sociallogin.account.extra_data['email'].split('@')[0]
+            user.username = email_id
