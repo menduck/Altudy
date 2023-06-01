@@ -7,7 +7,7 @@ from taggit.models import Tag, TaggedItem
 
 from studies.models import Study
 from .forms import ProblemForm, ReviewForm, CommentForm
-from .models import Problem, Review
+from .models import Problem, Review, Comment
 from .utils import OrderedCounter
 
 
@@ -109,17 +109,16 @@ def review_create(request, pk):
 
 
 @login_required
-def review_update(request, pk, review_pk):
-    problem = get_object_or_404(Problem, pk=pk)
-    review = get_object_or_404(Review, pk=review_pk)
+def review_update(request, review_pk):
+    review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
     if request.user != review.user:
-        return redirect('reviews:detail', problem.pk)
+        return redirect('reviews:detail', review.problem.pk)
     
     if request.method == 'POST':
         form = ReviewForm(data=request.POST, instance=review)
         if form.is_valid():
             form.save()
-            return redirect('reviews:detail', problem.pk)
+            return redirect('reviews:detail', review.problem.pk)
     else:
         form = ReviewForm(instance=review)
     context = {
@@ -129,7 +128,7 @@ def review_update(request, pk, review_pk):
 
 
 @login_required
-def review_delete(request, pk, review_pk):
+def review_delete(request, review_pk):
     review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
     if request.user == review.user:
         try:
@@ -137,4 +136,49 @@ def review_delete(request, pk, review_pk):
             return redirect('studies:index')
         finally:
             Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
-    return redirect('reviews:detail', pk)
+    return redirect('reviews:detail', review.problem.pk)
+
+
+@login_required
+def comment_create(request, review_pk):
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
+            comment.user, comment.review = request.user, review
+            comment.save()
+            return redirect('reviews:detail', review.problem.pk)
+    else:
+        form = CommentForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'reviews/comment_create.html', context)
+
+
+@login_required
+def comment_update(request, comment_pk):
+    comment = get_object_or_404(Comment.objects.select_related('review__problem'), pk=comment_pk)
+    if request.user != comment.user:
+        return redirect('reviews:detail', comment.review.problem.pk)
+    
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('reviews:detail', comment.review.problem.pk)
+    else:
+        form = CommentForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'reviews/comment_create.html', context)
+
+
+@login_required
+def comment_delete(request, comment_pk):
+    comment = get_object_or_404(Comment.objects.select_related('review__problem'), pk=comment_pk)
+    if request.user == comment.user:
+        comment.delete()
+    return redirect('reviews:detail', comment.review.problem.pk)
