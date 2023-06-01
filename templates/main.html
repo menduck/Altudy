@@ -2,16 +2,48 @@
 {% load static %}
 {% block style %}
 <link rel="stylesheet" type="text/css" href="{% static 'CSS/main.css' %}" />
-{% endblock style %} {% block content %}
+{% endblock style %}
+{% block content %}
 <header>
-  <div class="banner__container"></div>
+  <div class="banner__container">
+    <swiper-container class="bannerSwiper" pagination="true" pagination-dynamic-bullets="true">
+      <swiper-slide>
+        <img src="https://product-image.kurly.com/cdn-cgi/image/quality=85/banner/main/pc/img/85c076e8-16fe-42fd-a190-6c7af593669a.jpg" alt="">
+      </swiper-slide>
+      <swiper-slide>
+        <img src="https://product-image.kurly.com/cdn-cgi/image/quality=85/banner/main/pc/img/7e2f7507-d4bb-45f3-ae9a-1877194efbec.png" alt="">
+      </swiper-slide>
+    </swiper-container>
+  </div>
 </header>
 <main id="main__main">
-  {% comment %} 참여한 스터디가 있으면 {% endcomment %}
-  <section class="myStudies__container">
-    <div class="studies__title">참여한 스터디 🙆🏻</div>
-  </section>
-  <section class="newStudies__container">
+  {# 나의 스터디 #}
+  {% if studyings  %}
+    <section class="myStudies__container">
+      <div class="studies__title">참여한 스터디 🙆🏻</div>
+      <div class="newStudies__wrapper">
+        {% for myStudy in studyings %}
+        <div class="newStudies__container">
+          <div class="newStudies-title card__title">{{ myStudy.study.title }}</div>
+          <div class="card__lanuage-container">
+            {% for language  in myStudy.study.language %}
+            <div class="card__lanuage">
+              <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
+            </div>
+            {% endfor %}
+          </div>
+          <div class="newStudies-joinbutton__container">
+            <button class="button-small joinbutton">입장 하기</button>
+          </div>
+          
+        </div>
+        {% endfor %}
+      </div>   
+    </section>
+  {% endif %}
+
+  {# 최신 스터디 #}
+  <section>
     <div class="studies__title">최신 스터디 👩‍🏫</div>
 
     <div class="cards__container">
@@ -20,7 +52,7 @@
         <div class="swiper-button-prev"></div>
       </div>
       <swiper-container class="mySwiper" init="false">
-        {% for study in studies %}
+        {% for study in latest_studies %}
         <swiper-slide>
           <div class="card">
             <a href="{% url 'studies:detail' study.pk %}">
