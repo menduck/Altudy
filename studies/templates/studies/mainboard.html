@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+
+{% endblock style %} {% block content %}
+<h1>스터디 메인보드</h1>
+<div>{{study}}</div>
+<hr>
+<h3>문제</h3>
+<a href="{% url 'reviews:create' %}">문제 생성하기</a>
+{% for prob in problems %}
+  <div>{{ prob }}</div>
+{% endfor %}
+
+{% endblock content %}

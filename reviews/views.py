@@ -1,17 +1,26 @@
-from django.db.models import Count
+from django.urls import reverse_lazy
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 
+from studies.models import Study
 from .forms import ProblemForm, ReviewForm
 from .models import Problem, Review
 from .utils import OrderedCounter
 
 
+'''다른 스터디 선택하기 기능이 추가되어야 한다'''
 # Create your views here.
 def index(request):
-    problems = Problem.objects.all()
+    if not 'study' in request.session:
+        return redirect('studies:index')
+    study_id = request.session['study_id']
+    study = get_object_or_404(Study, pk=study_id)
+    problems = Problem.objects.filter(study=study).all()
     context = {
         'problems': problems,
+        'study': study,
     }
     return render(request, 'reviews/index.html', context)
 
@@ -25,9 +34,6 @@ def detail(request, pk):
         ),
         pk=pk
     )
-    # print(problem.tags.all())
-    # c = OrderedCounter(problem.objects.tags + problem.review_set.tags + problem.review_set.comment_set.tags)
-    # print(c)
     context = {
         'problem': problem,
     }
@@ -35,22 +41,26 @@ def detail(request, pk):
 
 
 def create(request):
+    if 'study_id' not in request.session:
+        return redirect('studies:mainboard')
+
+    study_id = request.session.get('study_id')
+    
     if request.method == 'POST':
         form = ProblemForm(data=request.POST)
-        print(request.POST)
         if form.is_valid():
             problem = form.save(commit=False)
-            problem.user = request.user
+            problem.user, problem.study = request.user, get_object_or_404(Study, pk=study_id)
             problem.save()
             form.save_m2m()
+            # url = reverse_lazy('studies:mainboard', kwargs={'pk': problem.pk}) + f'?study={study_id}'
             return redirect('reviews:detail', problem.pk)
-        else:
-            print('에러 발생')
-            return redirect('/')
+        return redirect('studies:mainboard')
     else:
         form = ProblemForm()
     context = {
         'form': form,
+        # 'study_id': study_id,
     }
     return render(request, 'reviews/create.html', context)
 
@@ -63,7 +73,6 @@ def update(request, pk):
             form.save_m2m()
             form.save()
             return redirect('reviews:detail', problem.pk)
-        print('not valid')
     else:
         form = ProblemForm(instance=problem)
     context = {
@@ -77,8 +86,9 @@ def delete(request, pk):
     if request.user == problem.user:
         try:
             problem.delete()
-            return redirect('/')
+            return redirect('studies:mainboard')
         finally:
+            # 레이스 컨디션 테스트 어떻게?
             Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
     # 권한이 없는 페이지 만들기?
     # 왔던 곳으로 되돌아가게 하려면?
@@ -124,7 +134,7 @@ def review_delete(request, pk, review_pk):
     if request.user == review.user:
         try:
             review.delete()
-            return redirect('/')
+            return redirect('studies:index')
         finally:
             Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
     return redirect('reviews:detail', pk)
