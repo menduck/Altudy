@@ -271,3 +271,11 @@ def mainboard(request, study_pk: int):
 @login_required
 def member(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
+    users = study.studying_users.all()
+    join_requests = study.join_request.all()
+    context = {
+        'study': study,
+        'users': users,
+        'join_requests': join_requests,
+    }
+    return render(request, 'studies/member.html', context)

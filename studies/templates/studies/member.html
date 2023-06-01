@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock title %}
+
+
+{% block content %}
+<h1 class="">멤버 관리</h1>
+<hr>
+
+<div>
+  <p>참여요청</p>
+  {% for request in join_requests %}
+    <div>
+      <span>{{ request }} 님께서 스터디에 참여를 요청하셨습니다</span>
+      <form action="{% url 'studies:accept' study.pk request %}" method="post">
+        {% csrf_token %}
+        <button type="submit">승인</button>
+      </form>
+      <form action="{% url 'studies:reject' study.pk request %}" method="post">
+        {% csrf_token %}
+        <button type="submit">거절</button>
+      </form>
+    </div>
+    <br>
+  {% endfor %}
+</div>
+<hr>
+
+<div>
+  <p>멤버 관리</p>
+  {% for user in users %}
+  <div>
+    <span>{{ user }}</span>
+    <form action="{% url 'studies:expel' study.pk user %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="강퇴">
+    </form>
+    <br>
+  </div>
+  {% endfor %}
+</div>
+<hr>
+
+{% endblock content %}
