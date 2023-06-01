@@ -2,9 +2,18 @@
 {% load static %}
 {% block style %}
 <link rel="stylesheet" type="text/css" href="{% static 'CSS/main.css' %}" />
-{% endblock style %} {% block content %}
+{% endblock style %}
+{% block content %}
 <header>
   <div class="banner__container">
+    <swiper-container class="bannerSwiper" pagination="true" pagination-dynamic-bullets="true">
+      <swiper-slide>
+        <img src="https://product-image.kurly.com/cdn-cgi/image/quality=85/banner/main/pc/img/85c076e8-16fe-42fd-a190-6c7af593669a.jpg" alt="">
+      </swiper-slide>
+      <swiper-slide>
+        <img src="https://product-image.kurly.com/cdn-cgi/image/quality=85/banner/main/pc/img/7e2f7507-d4bb-45f3-ae9a-1877194efbec.png" alt="">
+      </swiper-slide>
+    </swiper-container>
   </div>
 </header>
 <main id="main__main">

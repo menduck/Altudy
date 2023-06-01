@@ -1,4 +1,4 @@
-const swiperEl = document.querySelector('swiper-container')
+const swiperEl = document.querySelector('.mySwiper')
     Object.assign(swiperEl, {
       slidesPerView: 1,
       spaceBetween: 10,
