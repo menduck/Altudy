@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+
+{% endblock style %} {% block content %}
+<h1>학습 관리</h1>
+<hr>
+
+<div>
+  <p>문제 검색</p>
+  <form method="GET" action="{% url 'studies:problem' study.pk %}">
+    <input type="text" name="query" placeholder="검색어를 입력하세요">
+    <button type="submit">검색</button>
+  </form>
+</div>
+<hr>
+
+<div>
+  <h3>문제</h3>
+  <a href="{% url 'reviews:create' %}">문제 생성하기</a>
+  <hr>
+  {% for prob in problems %}
+    <div>문제 : <a href="{% url 'reviews:detail' prob.post_num %}">{{ prob }}</a></div>
+  {% endfor %}
+</div>
+<hr>
+
+
+{% endblock content %}
