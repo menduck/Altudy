@@ -24,6 +24,8 @@ channels = "*"
 daphne = "*"
 django-allauth = "*"
 django-multiselectfield = "==0.1.12"
+django-rest-framework = "*"
+celery = "*"
 
 [dev-packages]
 
