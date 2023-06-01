@@ -19,6 +19,7 @@ urlpatterns = [
     # 메인보드
     path('<int:study_pk>/mainboard/', views.mainboard, name='mainboard'),
     path('<int:study_pk>/mainboard/member', views.member, name='member'),
+    path('<int:study_pk>/mainboard/problem', views.problem, name='problem'),
     
     # 알람 페이지 -임시-
     path('alarm/', views.alarm, name='alarm'),
