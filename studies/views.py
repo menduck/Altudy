@@ -5,10 +5,10 @@ from taggit.models import Tag
 from django.db.models import Count
 from django.contrib import messages
 
-from reviews.models import Problem
+from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement
 from .forms import StudyForm
-
+from .models import LANGUAGE_CHOICES
 
 # Create your views here.
 def index(request):
@@ -22,7 +22,6 @@ def index(request):
 
 def detail(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # days = [day.label for day in study.days]
     
     # 현재 스터디 가입 여부 is_studying
     if study.studying_users.filter(pk=request.user.pk).exists():
@@ -38,6 +37,7 @@ def detail(request, study_pk: int):
     context = {
         'study': study,
         'is_studying': is_studying,
+        'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
     }
     return render(request, 'studies/detail.html', context)
 
@@ -221,7 +221,6 @@ def alarm(request):
     all_requests = list()
     for study in studies:
         all_requests.append((study, study.join_request.all()))
-    print(all_requests)
     
     context = {
         'all_requests': all_requests,
@@ -229,12 +228,46 @@ def alarm(request):
     return render(request, 'studies/alarm.html', context)
 
 
-def mainboard(request, study_pk):
+@login_required
+def mainboard(request, study_pk: int):
     request.session['study_id'] = study_pk
-    study = get_object_or_404(Study, study_pk)
-    problems = Problem.objects.filter(study=study)
+    study = get_object_or_404(Study, pk=study_pk)
+    users = study.studying_users.all()
+
+    # 스터디에 가입돼있지 않으면 디테일 페이지로 리다이렉트
+    if not Studying.objects.filter(study=study, user=request.user).exists():
+        return redirect('studies:detail', study_pk)
+
+    # 메인보드에서는 n개만 보여주도록
+    problems = Problem.objects.filter(study=study)[:5]
+
+    # 유저별 리뷰 수, 백분율 (그래프에 사용)
+    user_reviews = {}
+    user_percentages = {}
+    total_reviews = 0
+
+    for user in users:
+            reviews_count = Review.objects.filter(problem__study=study, user=user).count()
+            user_reviews[user.username] = reviews_count
+            total_reviews += reviews_count
+
+    for user, reviews_count in user_reviews.items():
+            percentage = (reviews_count / total_reviews) * 100
+            user_percentages[user] = int(percentage)
+
+    user_reviews = sorted(user_reviews.items(), key=lambda x: x[1], reverse=True)
+    user_percentages = sorted(user_percentages.items(), key=lambda x: x[1], reverse=True)
+
     context = {
         'problems': problems,
         'study': study,
+        'users': users,
+        'user_reviews': user_reviews,
+        'user_percentages': user_percentages,
     }
     return render(request, 'studies/mainboard.html', context)
+
+
+@login_required
+def member(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)

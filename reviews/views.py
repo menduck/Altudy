@@ -43,7 +43,8 @@ def create(request):
             problem.user, problem.study = request.user, get_object_or_404(Study, pk=study_id)
             problem.save()
             form.save_m2m()
-            return redirect('reviews:detail')
+            return redirect('reviews:detail', problem.pk)
+
         return redirect('studies:mainboard')
     else:
         form = ProblemForm()
