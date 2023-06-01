@@ -51,8 +51,10 @@
     <nav>
       <div class="nav__container">
         <div class="nav__container-left">
-          <img src="{% static 'IMAGE/altudy.png' %} " alt="알터디 로고" class="nav__logo">
-        </div>
+          <a href="{% url 'main' %}">
+            <img src="{% static 'IMAGE/altudy.png' %} " alt="알터디 로고" class="nav__logo">
+          </a>
+          </div>
         <div class="nav__container-right">
           <form class="nav__search" role="search">
             <input class="nav__search-input" type="text" placeholder="스터디를 검색해보세요!" aria-label="Search">
