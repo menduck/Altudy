@@ -221,7 +221,6 @@ def alarm(request):
     all_requests = list()
     for study in studies:
         all_requests.append((study, study.join_request.all()))
-    print(all_requests)
     
     context = {
         'all_requests': all_requests,
