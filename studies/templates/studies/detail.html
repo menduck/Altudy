@@ -87,38 +87,54 @@
 
       <div class="study__info">
         <div class="study__info-item">
-          <div class="study__info-item-title">모집 인원</div>
-          <div class="separator"></div>
-          {{ study.capacity }}
+          <div class="study__info-item-left">
+            <div class="study__info-item-title">모집 인원</div>
+            <div class="separator"></div>
+          </div>
+          <div class="study__info-item-right">
+            {{ study.capacity }}
+          </div>
         </div>
         <div class="study__info-item">
-          <div class="study__info-item-title">스터디 일정</div>
-          <div class="separator"></div>
-          {% for day in study.days %} 
-          <div class="study__info-circle">{{ day }}</div>
-          {% endfor %}
-          {{ study.start_time }} ~ {{ study.end_time }} 
-        </div>
-        <div class="study__info-item">
-          <div class="study__info-item-title">스터디 기간</div>
-          <div class="separator"></div>
-          {{ study.start_date }} ~ {{ study.end_date }}
-        </div>
-        <div class="study__info-item">
-          <div class="study__info-item-title">알고리즘 언어</div>
-          <div class="separator"></div>
-          {% for language in study.language %}
-            {% for lang_code, lang_name in LANGUAGE_CHOICES %}
-              {% if lang_code == language %}
-                <div class="study__info-circle custom-circle">
-                  <div class="lauguage__container">
-                    <img src="{% static 'IMAGE/hashlogo/'|add:lang_code|add:'.png' %}" alt="{{ lang_name }} 언어 로고">
-                    <div>{{ lang_name }}</div>
-                  </div>
-                </div>
-              {% endif %}
+          <div class="study__info-item-left">
+            <div class="study__info-item-title">스터디 일정</div>
+            <div class="separator"></div>
+          </div>
+          <div class="study__info-item-right study__info-margin-top">
+            {% for day in study.days %} 
+            <div class="study__info-circle">{{ day }}</div>
             {% endfor %}
-          {% endfor %}
+            {{ study.start_time }} ~ {{ study.end_time }} 
+          </div>
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-left">
+            <div class="study__info-item-title">스터디 기간</div>
+            <div class="separator"></div>
+          </div>
+          <div class="study__info-item-right">
+            {{ study.start_date }} ~ {{ study.end_date }}
+          </div>
+        </div>
+        <div class="study__info-item">
+          <div class="study__info-item-left">
+            <div class="study__info-item-title">알고리즘 언어</div>
+            <div class="separator"></div>
+          </div>
+          <div class="study__info-item-right study__info-margin-top"> 
+            {% for language in study.language %}
+            {% for lang_code, lang_name in LANGUAGE_CHOICES %}
+            {% if lang_code == language %}
+            <div class="study__info-circle custom-circle">
+              <div class="lauguage__container">
+                <img src="{% static 'IMAGE/hashlogo/'|add:lang_code|add:'.png' %}" alt="{{ lang_name }} 언어 로고">
+                <div>{{ lang_name }}</div>
+              </div>
+            </div>
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
+            </div>
         </div>
       </div>
       <div class="study__content">
