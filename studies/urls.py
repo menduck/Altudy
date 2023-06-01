@@ -12,5 +12,9 @@ urlpatterns = [
     path('<int:study_pk>/join/', views.join, name='join'),
     path('<int:study_pk>/withdraw/', views.withdraw, name='withdraw'),
     path('<int:study_pk>/accept/<username>/', views.accept, name='accept'),
+    path('<int:study_pk>/reject/<username>/', views.reject, name='reject'),
     path('<int:study_pk>/expel/<username>/', views.expel, name='expel'),
+    
+    # 알람 페이지 -임시-
+    path('alarm/', views.alarm, name='alarm'),
 ]

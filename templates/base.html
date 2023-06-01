@@ -63,7 +63,15 @@
             </button>
           </form>
           {% if user.is_authenticated %}
-            <div class="nav__item">알림</div>
+            <a href="{% url 'studies:alarm' %}">
+              <div class="nav__item">알림
+                {# 알림 뱃지, 조건 작성중... #}
+                {% if False %}
+                <div style="width:10px; height:10px; background-color:red;
+                float: right; top: 0px; left: 0px; border-radius: 50%;"></div>
+                {% endif %}
+              </div>
+            </a>
             <a href="{% url 'accounts:profile' request.user %}">
               <div class="nav__item">내 프로필</div>
             </a>
