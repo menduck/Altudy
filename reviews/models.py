@@ -7,7 +7,7 @@ from taggit.managers import TaggableManager
 
 # Create your models here.
 class Problem(models.Model):
-    # post_num = models.IntegerField('글 번호')
+    post_num = models.IntegerField('글 번호')
     title = models.CharField('제목', max_length=255)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='게시자', on_delete=models.CASCADE)
     
