@@ -161,6 +161,10 @@ TAGGIT_TAGS_FROM_STRING = 'config.utils.custom_tag_string'
 
 
 # -------- allauth --------
+## secret
+GITHUB_SECRET_KEY = os.getenv('GITHUB_SECRET_KEY')
+GOOGLE_EMAIL_SECRET_KEY = os.getenv('GOOGLE_EMAIL_SECRET_KEY')
+
 ## social setting
 AUTHENTICATION_BACKENDS = (
     # 장고 기본 사용자 인증 백엔드
@@ -174,7 +178,7 @@ SOCIALACCOUNT_PROVIDERS = {
     'github' : {
         'APP' : {
             'client_id': '21fdc27a6953e4613324',
-            'secret': 'adf2853d21a47afa47a76f619ae4b90fb2f3bdb7',
+            'secret': GITHUB_SECRET_KEY,
             'key': '',
         }
     },
@@ -190,8 +194,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_EMAIL_REQUIRED = True
+
+# 로그인 시 유저네임, 이메일 모두 인증 가능
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 ## 로그인 성공 시 리다이렉트할 경로
 LOGIN_REDIRECT_URL = "/studies"
@@ -205,12 +210,21 @@ SOCIALACCOUNT_AUTO_SIGNUP = False
 ## 부가정보 자동 입력을 위한 Adpater 연결
 SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
 
+# 회원가입 메일 인증 관련
+# ACCOUNT_EMAIL_REQUIRED = True
+## 회원가입 시 이메일 인증 여부
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+## get 방식으로 email 인증에 접속했을 때 허용시켜주는 옵션
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
 ## 이메일 전송
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'altudy12@gmail.com'
-EMAIL_HOST_PASSWORD = 'jsgaxchbzyxtxqxz'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST = "smtp.gmail.com"  # 메일 호스트 서버
+EMAIL_PORT = 587  # gmail과 통신하는 포트
+EMAIL_HOST_USER = 'altudy12@gmail.com'  # 발신할 이메일 주소
+EMAIL_HOST_PASSWORD = GOOGLE_EMAIL_SECRET_KEY  # 발신할 메일의 비밀번호
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[altudy]'
+EMAIL_USE_TLS = True  # TLS 보안 방법
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 사이트와 관련한 자동응답 받을 이메일 주소
+
 # -------- end allauth --------
