@@ -7,7 +7,7 @@ from django.contrib import messages
 
 from .models import Study, Studying, Announcement
 from .forms import StudyForm
-
+from .models import LANGUAGE_CHOICES
 
 # Create your views here.
 def index(request):
@@ -21,7 +21,6 @@ def index(request):
 
 def detail(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # days = [day.label for day in study.days]
     
     # 현재 스터디 가입 여부 is_studying
     if study.studying_users.filter(pk=request.user.pk).exists():
@@ -37,6 +36,7 @@ def detail(request, study_pk: int):
     context = {
         'study': study,
         'is_studying': is_studying,
+        'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
     }
     return render(request, 'studies/detail.html', context)
 
