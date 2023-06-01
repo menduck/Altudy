@@ -60,6 +60,8 @@ class Study(models.Model):
     
     # 스터디 참여중인 user, 중개테이블 - Studying
     studying_users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, related_name='user_studies', through='Studying', blank=True)
+
+    post_index = models.IntegerField('게시글 번호', default=1)
     
     def __str__(self) -> str:
         return self.title
