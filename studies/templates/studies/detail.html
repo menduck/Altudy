@@ -7,7 +7,9 @@
   href="{% static 'CSS/studies/detail.css' %}"
 />
 {% endblock style %} {% block content %}
-
+{# studies 앱에서 reviews 앱으로 넘어갈때 "localhost:8000/reviews/?study=n"로 넘기기 #}
+{# 예비 코드 #}
+{% comment %} <a href="{% url 'reviews:index' %}?study={{ study.pk }}">test</a> {% endcomment %}
 <main class="study__wrapper">
   {# 스터디 디테일 내용 #}
   <article>
@@ -105,11 +107,14 @@
       <div class="study__content">
         {{ study.description|linebreaksbr }}
         <div class="study__content-joinContainer">
-          {% if is_studying %}
+          {% if is_studying == 'joined' %}
           <form action="{% url 'studies:withdraw' study.pk %}" method="post">
             {% csrf_token %}
             <button class="button-large">스터디 탈퇴</button>
+            {# 스터디장은 스터디 탈퇴가 불가해야함 #}
           </form>
+          {% elif is_studying == 'join_request' %}
+          <button class="button-large">참여 요청 중</button>
           {% else %}
           <form action="{% url 'studies:join' study.pk %}" method="post">
             {% csrf_token %}
