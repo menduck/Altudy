@@ -1,4 +1,5 @@
-import markdown
+import pickle as pk
+import markdown as md
 from django import template
 from django.utils.safestring import mark_safe
 
@@ -15,7 +16,12 @@ def get_attributes(obj):
     return type(obj)
 
 
-@register.filter('markdown')
-def mark(value):
+@register.filter
+def markdown(value):
     extensions = ["nl2br", "fenced_code"]
-    return mark_safe(markdown.markdown(value, extensions=extensions))
+    return mark_safe(md.markdown(value, extensions=extensions))
+
+
+@register.filter
+def pickle(obj):
+    return str(pk.dump(obj, 0))
