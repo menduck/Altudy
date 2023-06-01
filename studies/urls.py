@@ -14,7 +14,10 @@ urlpatterns = [
     path('<int:study_pk>/accept/<username>/', views.accept, name='accept'),
     path('<int:study_pk>/reject/<username>/', views.reject, name='reject'),
     path('<int:study_pk>/expel/<username>/', views.expel, name='expel'),
+
+    # 메인보드
     path('<int:study_pk>/mainboard/', views.mainboard, name='mainboard'),
+    path('<int:study_pk>/mainboard/member', views.member, name='member'),
     
     # 알람 페이지 -임시-
     path('alarm/', views.alarm, name='alarm'),

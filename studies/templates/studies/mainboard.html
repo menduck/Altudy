@@ -3,13 +3,33 @@
 {% block style %}
 
 {% endblock style %} {% block content %}
-<h1>스터디 메인보드</h1>
-<div>{{study}}</div>
+<h1>{{ study }}스터디 메인보드</h1>
 <hr>
-<h3>문제</h3>
-<a href="{% url 'reviews:create' %}">문제 생성하기</a>
-{% for prob in problems %}
-  <div>{{ prob }}</div>
-{% endfor %}
+<!-- 유저별 리뷰 백분율, 그래프에 활용하세요 -->
+<div>
+  <p>리뷰 그래프</p>
+  {% for key, value in user_percentages %}
+    <div>{{ key }} : {{ value }}</div>
+  {% endfor %}
+</div>
+<hr>
+
+<div>
+  <p>멤버</p>
+  {% for user in users %}
+    <p>{{ user }}</p>
+  {% endfor %}
+</div>
+<hr>
+<div>
+  <h3>문제</h3>
+  <a href="{% url 'reviews:create' %}">문제 생성하기</a>
+  <hr>
+  {% for prob in problems %}
+    <div>문제 : {{ prob }}</div>
+  {% endfor %}
+</div>
+<hr>
+
 
 {% endblock content %}
