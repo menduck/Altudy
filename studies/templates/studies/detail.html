@@ -1,15 +1,17 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block style %}
+{% extends 'base.html' %} {% load static %} {% block style %}
 <link
   rel="stylesheet"
   type="text/css"
   href="{% static 'CSS/studies/detail.css' %}"
 />
-{% endblock style %} {% block content %}
-{# studies 앱에서 reviews 앱으로 넘어갈때 "localhost:8000/reviews/?study=n"로 넘기기 #}
-{# 예비 코드 #}
-{% comment %} <a href="{% url 'reviews:index' %}?study={{ study.pk }}">test</a> {% endcomment %}
+{% endblock style %}
+{% block content %}
+{# studies 앱에서 reviews 앱으로 넘어갈때 "localhost:8000/reviews/?study=n"로 넘기기 #} 
+{# 예비 코드 #} 
+{% comment %} 
+<a href="{% url 'reviews:index' %}?study={{ study.pk }}">test</a> 
+{% endcomment %}
+
 <main class="study__wrapper">
   {# 스터디 디테일 내용 #}
   <article>
@@ -18,14 +20,18 @@
       <div class="study__userInfo">
         <div class="study__userInfo-badge">
           <p>&#128035;</p>
-          </div>
+        </div>
         <div class="study__userInfo-username">{{ study.user }}</div>
       </div>
       <div class="study__crudInfo">
-        {{ study.created_at }} 
-        {# 스터디 수정/삭제 #} 
+        {{ study.created_at }}
+        {# 스터디 수정/삭제 #}
         {% if request.user == study.user %}
-        <a class="study__crudInfo-item" href="{% url 'studies:update' study.pk %}">수정</a>
+        <a
+          class="study__crudInfo-item"
+          href="{% url 'studies:update' study.pk %}"
+          >수정</a
+        >
         <button
           type="button"
           data-bs-toggle="modal"
@@ -73,11 +79,12 @@
             </div>
           </div>
         </div>
-        {# 삭제 모달 end #} 
-        {% endif %} 
+        {# 삭제 모달 end #}
+        {% endif %}
         {# 스터디 수정/삭제 end #}
       </div>
       <hr />
+
       <div class="study__info">
         <div class="study__info-item">
           <div class="study__info-item-title">모집 인원</div>
@@ -87,11 +94,10 @@
         <div class="study__info-item">
           <div class="study__info-item-title">스터디 일정</div>
           <div class="separator"></div>
-          {% comment %} {% for day in study.days.all %} {% endcomment %}
-          {{ study.days }}
-          {{ study.start_time }} ~ {{ study.end_time }}
-          {% comment %} <div class="study__info-circle">{{ day }}</div> {% endcomment %}
-          {% comment %} {% endfor %} {% endcomment %}
+          {% for day in study.days %} 
+          <div class="study__info-circle">{{ day }}</div>
+          {% endfor %}
+          {{ study.start_time }} ~ {{ study.end_time }} 
         </div>
         <div class="study__info-item">
           <div class="study__info-item-title">스터디 기간</div>
@@ -101,7 +107,18 @@
         <div class="study__info-item">
           <div class="study__info-item-title">알고리즘 언어</div>
           <div class="separator"></div>
-          {{ study.language }}
+          {% for language in study.language %}
+            {% for lang_code, lang_name in LANGUAGE_CHOICES %}
+              {% if lang_code == language %}
+                <div class="study__info-circle custom-circle">
+                  <div class="lauguage__container">
+                    <img src="{% static 'IMAGE/hashlogo/'|add:lang_code|add:'.png' %}" alt="{{ lang_name }} 언어 로고">
+                    <div>{{ lang_name }}</div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
         </div>
       </div>
       <div class="study__content">
@@ -114,12 +131,20 @@
             {# 스터디장은 스터디 탈퇴가 불가해야함 #}
           </form>
           {% elif is_studying == 'join_request' %}
+{% comment %}
+>>> feature/studies-join
+          <button class="button-large" disabled>참여 요청 중</button>
+          {# TODO: 참여자가 참여 취소하는 view 생성해야 함. #}
+          <button class="button-large">참여 취소</button>
+================================
           <form action="{% url 'studies:cancel' study.pk %}" method="post">
             {% csrf_token %}
             <p style="color:grey;">참여 요청 중...</p>
             <button type="submit" class="button-large">참여 요청 취소</button>
             {# 스터디장은 스터디 탈퇴가 불가해야함 #}
           </form>
+>>> dev
+{% endcomment %}
           {% else %}
           <form action="{% url 'studies:join' study.pk %}" method="post">
             {% csrf_token %}
@@ -127,7 +152,6 @@
           </form>
           {# 스터디 참여 요청 기능 완성 후 변환 필요 #}
           {% endif %}
-          {# 참여하기 버튼을 누르면, 참여 취소 버튼이 추가됨 #}
         </div>
       </div>
     </div>
