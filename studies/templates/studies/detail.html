@@ -110,15 +110,20 @@
           {% if is_studying == 'joined' %}
           <form action="{% url 'studies:withdraw' study.pk %}" method="post">
             {% csrf_token %}
-            <button class="button-large">스터디 탈퇴</button>
+            <button type"submit" class="button-large">스터디 탈퇴</button>
             {# 스터디장은 스터디 탈퇴가 불가해야함 #}
           </form>
           {% elif is_studying == 'join_request' %}
-          <button class="button-large">참여 요청 중</button>
+          <form action="{% url 'studies:cancel' study.pk %}" method="post">
+            {% csrf_token %}
+            <p style="color:grey;">참여 요청 중...</p>
+            <button type="submit" class="button-large">참여 요청 취소</button>
+            {# 스터디장은 스터디 탈퇴가 불가해야함 #}
+          </form>
           {% else %}
           <form action="{% url 'studies:join' study.pk %}" method="post">
             {% csrf_token %}
-            <button class="button-large">스터디 참여</button>
+            <button type="submit" class="button-large">스터디 참여</button>
           </form>
           {# 스터디 참여 요청 기능 완성 후 변환 필요 #}
           {% endif %}
