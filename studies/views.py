@@ -5,6 +5,7 @@ from taggit.models import Tag
 from django.db.models import Count
 from django.contrib import messages
 
+from reviews.models import Problem
 from .models import Study, Studying, Announcement
 from .forms import StudyForm
 
@@ -216,3 +217,14 @@ def alarm(request):
         'all_requests': all_requests,
     }
     return render(request, 'studies/alarm.html', context)
+
+
+def mainboard(request, study_pk):
+    request.session['study_id'] = study_pk
+    study = get_object_or_404(Study, study_pk)
+    problems = Problem.objects.filter(study=study)
+    context = {
+        'problems': problems,
+        'study': study,
+    }
+    return render(request, 'studies/mainboard.html', context)
