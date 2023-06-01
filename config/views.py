@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_list_or_404
 from studies.models import Study, Studying
 from django.db.models import Count
+from studies.models import LANGUAGE_CHOICES
 
 def main(request):
     # 가입 중인 스터디
@@ -17,5 +18,6 @@ def main(request):
     context = {
         'studyings': studyings,
         'latest_studies': latest_studies,
+        'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
     }
     return render(request, 'main.html', context)

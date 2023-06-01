@@ -4,14 +4,37 @@
 <link rel="stylesheet" type="text/css" href="{% static 'CSS/main.css' %}" />
 {% endblock style %} {% block content %}
 <header>
-  <div class="banner__container"></div>
+  <div class="banner__container">
+  </div>
 </header>
 <main id="main__main">
-  {% comment %} 참여한 스터디가 있으면 {% endcomment %}
-  <section class="myStudies__container">
-    <div class="studies__title">참여한 스터디 🙆🏻</div>
-  </section>
-  <section class="newStudies__container">
+  {# 나의 스터디 #}
+  {% if studyings  %}
+    <section class="myStudies__container">
+      <div class="studies__title">참여한 스터디 🙆🏻</div>
+      <div class="newStudies__wrapper">
+        {% for myStudy in studyings %}
+        <div class="newStudies__container">
+          <div class="newStudies-title card__title">{{ myStudy.study.title }}</div>
+          <div class="card__lanuage-container">
+            {% for language  in myStudy.study.language %}
+            <div class="card__lanuage">
+              <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
+            </div>
+            {% endfor %}
+          </div>
+          <div class="newStudies-joinbutton__container">
+            <button class="button-small joinbutton">입장 하기</button>
+          </div>
+          
+        </div>
+        {% endfor %}
+      </div>   
+    </section>
+  {% endif %}
+
+  {# 최신 스터디 #}
+  <section>
     <div class="studies__title">최신 스터디 👩‍🏫</div>
 
     <div class="cards__container">
