@@ -20,7 +20,7 @@
         <div class="swiper-button-prev"></div>
       </div>
       <swiper-container class="mySwiper" init="false">
-        {% for study in studies %}
+        {% for study in latest_studies %}
         <swiper-slide>
           <div class="card">
             <a href="{% url 'studies:detail' study.pk %}">

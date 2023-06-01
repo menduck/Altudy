@@ -9,10 +9,10 @@ def main(request):
         studyings = Studying.objects.filter(user=request.user)
     else:
         studyings = None
-    # 최신 스터디 5개
+    # 최신 스터디 16개
     latest_studies = Study.objects.annotate(
         member_num=Count('studying_users')
-        ).order_by('-created_at')[:5]
+        ).order_by('-created_at')[:16]
     
     context = {
         'studyings': studyings,
