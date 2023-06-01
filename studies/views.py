@@ -5,6 +5,7 @@ from taggit.models import Tag
 from django.db.models import Count
 from django.contrib import messages
 
+from reviews.models import Problem
 from .models import Study, Studying, Announcement
 from .forms import StudyForm
 from .models import LANGUAGE_CHOICES
@@ -202,17 +203,37 @@ def expel(request, study_pk: int, username: int):
     return redirect('studies:detail', study_pk)
 
 
+# 스터디 가입 요청 취소
+@login_required
+def cancel(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    me = request.user
+    
+    if study.join_request.filter(pk=me.pk).exists():
+        study.join_request.remove(me)
+    
+    return redirect('studies:detail', study_pk)
+
+
 @login_required
 def alarm(request):
     studies = Study.objects.filter(user=request.user)
     all_requests = list()
     for study in studies:
-        print(study.title, '가입 요청')
-        print(study.join_request.all())
         all_requests.append((study, study.join_request.all()))
-    print(all_requests)
     
     context = {
         'all_requests': all_requests,
     }
     return render(request, 'studies/alarm.html', context)
+
+
+def mainboard(request, study_pk):
+    request.session['study_id'] = study_pk
+    study = get_object_or_404(Study, study_pk)
+    problems = Problem.objects.filter(study=study)
+    context = {
+        'problems': problems,
+        'study': study,
+    }
+    return render(request, 'studies/mainboard.html', context)

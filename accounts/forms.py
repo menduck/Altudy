@@ -10,12 +10,12 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserChangeForm(UserChangeForm):
-    class Meta(UserCreationForm):
+    class Meta(UserChangeForm):
         model = get_user_model()
         fields = ('username', 'email')
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
-    class Meta(UserChangeForm):
+    class Meta(PasswordChangeForm):
         model = get_user_model()
         fields = ('old_password', 'new_password1', 'new_password2',)
