@@ -17,4 +17,7 @@ urlpatterns = [
     
     # 알람 페이지 -임시-
     path('alarm/', views.alarm, name='alarm'),
+
+    # mainboard
+    path('<int:study_pk>/mainboard/', views.mainboard, name='mainboard'),
 ]
