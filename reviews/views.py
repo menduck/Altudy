@@ -1,30 +1,19 @@
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from taggit.models import Tag, TaggedItem
 
 from studies.models import Study
-from .forms import ProblemForm, ReviewForm
-from .models import Problem, Review
+from .forms import ProblemForm, ReviewForm, CommentForm
+from .models import Problem, Review, Comment
 from .utils import OrderedCounter
 
 
 '''다른 스터디 선택하기 기능이 추가되어야 한다'''
 # Create your views here.
-def index(request):
-    if not 'study' in request.session:
-        return redirect('studies:index')
-    study_id = request.session['study_id']
-    study = get_object_or_404(Study, pk=study_id)
-    problems = Problem.objects.filter(study=study).all()
-    context = {
-        'problems': problems,
-        'study': study,
-    }
-    return render(request, 'reviews/index.html', context)
-
-
+@login_required
 def detail(request, pk):
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
@@ -40,6 +29,7 @@ def detail(request, pk):
     return render(request, 'reviews/detail.html', context)
 
 
+@login_required
 def create(request):
     if 'study_id' not in request.session:
         return redirect('studies:mainboard')
@@ -53,8 +43,8 @@ def create(request):
             problem.user, problem.study = request.user, get_object_or_404(Study, pk=study_id)
             problem.save()
             form.save_m2m()
-            # url = reverse_lazy('studies:mainboard', kwargs={'pk': problem.pk}) + f'?study={study_id}'
             return redirect('reviews:detail', problem.pk)
+
         return redirect('studies:mainboard')
     else:
         form = ProblemForm()
@@ -65,8 +55,12 @@ def create(request):
     return render(request, 'reviews/create.html', context)
 
 
+@login_required
 def update(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
+    if request.user != problem.user:
+        return redirect('reviews:detail', problem.pk)
+    
     if request.method == 'POST':
         form = ProblemForm(data=request.POST, instance=problem)
         if form.is_valid():
@@ -81,6 +75,7 @@ def update(request, pk):
     return render(request, 'reviews/update.html', context)
 
 
+@login_required
 def delete(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
     if request.user == problem.user:
@@ -95,6 +90,7 @@ def delete(request, pk):
     return redirect('reviews:detail', pk)
     
 
+@login_required
 def review_create(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
     if request.method == 'POST':
@@ -113,14 +109,17 @@ def review_create(request, pk):
     return render(request, 'reviews/review_create.html', context)
 
 
-def review_update(request, pk, review_pk):
-    problem = get_object_or_404(Problem, pk=pk)
-    review = get_object_or_404(Review, pk=review_pk)
+@login_required
+def review_update(request, review_pk):
+    review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
+    if request.user != review.user:
+        return redirect('reviews:detail', review.problem.pk)
+    
     if request.method == 'POST':
         form = ReviewForm(data=request.POST, instance=review)
         if form.is_valid():
             form.save()
-            return redirect('reviews:detail', problem.pk)
+            return redirect('reviews:detail', review.problem.pk)
     else:
         form = ReviewForm(instance=review)
     context = {
@@ -129,7 +128,8 @@ def review_update(request, pk, review_pk):
     return render(request, 'reviews/review_update.html', context)
 
 
-def review_delete(request, pk, review_pk):
+@login_required
+def review_delete(request, review_pk):
     review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
     if request.user == review.user:
         try:
@@ -137,4 +137,49 @@ def review_delete(request, pk, review_pk):
             return redirect('studies:index')
         finally:
             Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
-    return redirect('reviews:detail', pk)
+    return redirect('reviews:detail', review.problem.pk)
+
+
+@login_required
+def comment_create(request, review_pk):
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
+            comment.user, comment.review = request.user, review
+            comment.save()
+            return redirect('reviews:detail', review.problem.pk)
+    else:
+        form = CommentForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'reviews/comment_create.html', context)
+
+
+@login_required
+def comment_update(request, comment_pk):
+    comment = get_object_or_404(Comment.objects.select_related('review__problem'), pk=comment_pk)
+    if request.user != comment.user:
+        return redirect('reviews:detail', comment.review.problem.pk)
+    
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('reviews:detail', comment.review.problem.pk)
+    else:
+        form = CommentForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'reviews/comment_create.html', context)
+
+
+@login_required
+def comment_delete(request, comment_pk):
+    comment = get_object_or_404(Comment.objects.select_related('review__problem'), pk=comment_pk)
+    if request.user == comment.user:
+        comment.delete()
+    return redirect('reviews:detail', comment.review.problem.pk)

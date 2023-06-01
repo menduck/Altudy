@@ -1,7 +1,7 @@
 from django import forms
 from taggit.forms import TagWidget, TagField
 
-from .models import Problem, Review
+from .models import Problem, Review, Comment
     
 
 class ProblemForm(forms.ModelForm):
@@ -35,3 +35,10 @@ class ReviewForm(forms.ModelForm):
             'tags',
             'content',
         )
+
+
+class CommentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Comment
+        fields = ('content',)

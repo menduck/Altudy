@@ -8,7 +8,7 @@ from django.contrib import messages
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement
 from .forms import StudyForm
-
+from .models import LANGUAGE_CHOICES
 
 # Create your views here.
 def index(request):
@@ -22,7 +22,6 @@ def index(request):
 
 def detail(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # days = [day.label for day in study.days]
     
     # 현재 스터디 가입 여부 is_studying
     if study.studying_users.filter(pk=request.user.pk).exists():
@@ -38,6 +37,7 @@ def detail(request, study_pk: int):
     context = {
         'study': study,
         'is_studying': is_studying,
+        'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
     }
     return render(request, 'studies/detail.html', context)
 
@@ -203,15 +203,24 @@ def expel(request, study_pk: int, username: int):
     return redirect('studies:detail', study_pk)
 
 
+# 스터디 가입 요청 취소
+@login_required
+def cancel(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    me = request.user
+    
+    if study.join_request.filter(pk=me.pk).exists():
+        study.join_request.remove(me)
+    
+    return redirect('studies:detail', study_pk)
+
+
 @login_required
 def alarm(request):
     studies = Study.objects.filter(user=request.user)
     all_requests = list()
     for study in studies:
-        print(study.title, '가입 요청')
-        print(study.join_request.all())
         all_requests.append((study, study.join_request.all()))
-    print(all_requests)
     
     context = {
         'all_requests': all_requests,

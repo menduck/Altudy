@@ -17,7 +17,6 @@ class Problem(models.Model):
     description = models.TextField('설명')
 
     study = models.ForeignKey("studies.Study", verbose_name='스터디', on_delete=models.CASCADE, default=1)
-    # display = models.BooleanField(default=True)
 
 
     class Meta:
@@ -26,12 +25,13 @@ class Problem(models.Model):
 
     def __str__(self) -> str:
         return self.title
-    
-    # def delete(self):
-    #     pass
 
-    # def create(self):
-    #     pass
+    def save(self, *args, **kwargs):
+        self.post_num = self.study.post_index
+        self.study.post_index = models.F('post_index') + 1
+        # self.study.save(update_fields=['post_index'])
+        self.study.save()
+        super().save(*args, **kwargs)
 
     # def get_absolute_url(self):
     #     return reverse_lazy('reviews:detail', kwargs={'pk': self.pk})
