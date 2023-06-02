@@ -1,20 +1,15 @@
 import json
-import pickle as pk
-from cryptography.fernet import Fernet
 
 from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework.decorators import api_view
-from taggit.models import Tag, TaggedItem
+from taggit.models import Tag
 
 from studies.models import Study
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
-from .templatetags.custom_filters import fernet
-from .utils import OrderedCounter
 
 '''다른 스터디 선택하기 기능이 추가되어야 한다'''
 # Create your views here.
