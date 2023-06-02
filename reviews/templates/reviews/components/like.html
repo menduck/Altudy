@@ -1,0 +1,10 @@
+{% load custom_filters %}
+
+<form id="like-forms" action="{% url 'reviews:like' %}" method="post" data-object-identifier="{{ obj|pickle }}">
+  {% csrf_token %}
+  {% if user in obj.like_users %}
+  <input type="submit" value="좋아요 취소" id="{{ obj|class }}-{{ obj.pk }}">
+  {% else %}
+  <input type="submit" value="좋아요" id="{{ obj|class }}-{{ obj.pk }}">
+  {% endif %}
+</form>
