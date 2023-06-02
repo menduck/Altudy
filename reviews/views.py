@@ -33,8 +33,8 @@ def detail(request, pk):
     )
 
     '''
-    SELECT DISTINCT tag.name FROM tag
-    INNER JOIN (
+    SELECT DISTINCT name FROM tag
+    WHERE id IN (
         SELECT tag_id FROM taggeditem
         WHERE object_id = pk
         OR object_id IN (
@@ -47,7 +47,7 @@ def detail(request, pk):
                 WHERE problem_id = pk
             ) AS review ON review.id = comment.review_id
         )
-    ) AS t ON t.tag_id = tag.id
+    )
     '''
     querydict = {
         'problem\'s tags': Q(object_id=pk),
