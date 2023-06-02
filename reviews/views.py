@@ -22,7 +22,11 @@ def detail(request, pk):
     - [ ] 클릭시 해당 태그가 사용된 Problem, Review, Comment로 이동하는 링크
     '''
     problem = get_object_or_404(
-        Problem.objects.prefetch_related('review_set__comment_set'),
+        Problem.objects.prefetch_related(
+            'tags',
+            'review_set__tags',
+            'review_set__comment_set__tags',
+        ),
         pk=pk
     )
 
@@ -47,7 +51,9 @@ def detail(request, pk):
     q = Q(id__in=TaggedItem.objects.filter(query))
 
     tags = Tag.objects.filter(q).distinct()
-    print(tags)
+
+    tags = TaggedItem.objects.annotate(freq=Count('tag')).order_by('-freq').filter(id__in=tags).prefetch_related('review_set', 'comment_set')
+    
     context = {
         'problem': problem,
         'tags': tags,
