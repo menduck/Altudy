@@ -15,6 +15,10 @@
     </form>
   -->
   <input type="text" data-study-id="{{ study.pk }}" id="prob-search-input">
+  <div>
+    <span>제출하지 않은 과제</span>
+    <button id="is-solved-btn">off</button>
+  </div>
 </div>
 <hr>
 
@@ -23,7 +27,7 @@
   <a href="{% url 'reviews:create' %}">문제 생성하기</a>
   <hr>
   <div id="prob-search-list">
-    <!-- studies/search.js에서 요소 추가 -->
+    <!-- studies/search.js에서 요소 추가, js 내 주석 참고 -->
     <!-- ul > li > a 구조 -->
   </div>
 </div>

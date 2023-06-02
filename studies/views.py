@@ -309,8 +309,18 @@ def problem(request, study_pk: int):
 def problem_search(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     query = request.GET.get('query')
+    isSolved = request.GET.get('isSolved')
     problems = Problem.objects.filter(study=study)
-    
+
+    # 제출하지 않은 과제 버튼 on일때 문제 필터링
+    if isSolved == 'true':
+        # 현재 로그인한 유저가 작성한 리뷰의 문제 id 목록
+        user_reviewed_problems = Review.objects.filter(user=request.user, problem__study=study).values('problem_id')
+
+        if user_reviewed_problems:
+            # 로그인한 유저가 리뷰를 남기지 않은 문제 목록
+            problems = problems.exclude(id__in=user_reviewed_problems)
+
     if query:
         problems = problems.filter(
             Q(title__icontains=query) |
