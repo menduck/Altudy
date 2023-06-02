@@ -1,4 +1,6 @@
 import json
+import operator
+from functools import reduce
 
 from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
@@ -47,13 +49,18 @@ def detail(request, pk):
         )
     ) AS t ON t.tag_id = tag.id
     '''
-    query = Q(object_id=pk) | Q(object_id__in=Review.objects.filter(problem=problem)) | Q(object_id__in=Comment.objects.select_related('review').filter(review__problem=problem))
-    q = Q(id__in=TaggedItem.objects.filter(query))
+    querydict = {
+        'problem\'s tags': Q(object_id=pk),
+        'reviews\' tags': Q(object_id__in=Review.objects.filter(problem=problem)),
+        'comments\' tags': Q(object_id__in=Comment.objects.select_related('review').filter(review__problem=problem)),
+    }
+    queries = reduce(operator.__or__, querydict.values())
+    query = Q(id__in=TaggedItem.objects.filter(queries))
 
-    tags = Tag.objects.filter(q).distinct()
-
-    tags = TaggedItem.objects.annotate(freq=Count('tag')).order_by('-freq').filter(id__in=tags).prefetch_related('review_set', 'comment_set')
+    tags = Tag.objects.filter(query).distinct()
     
+    tags = TaggedItem.objects.annotate(freq=Count('tag')).order_by('-freq').filter(id__in=tags).prefetch_related('review_set', 'comment_set')
+
     context = {
         'problem': problem,
         'tags': tags,
