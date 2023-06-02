@@ -13,13 +13,13 @@
 {% block content %}
 <main id="studies_list__wrapper">
   <section>
-    <div class="lauguages__container">
+    <div class="language__container">
       {% for lang_name, lang_label in LANGUAGE_CHOICES  %}
-        <button class='lauguage-btn'>{{ lang_label }}</button>
+        <button class='language-btn'>{{ lang_label }}</button>
       {% endfor %}
     </div>
     <div class="bottom-separator"></div>
-    <div class="selected_lauguages__container"></div>
+    <div class="selected_languages__container"></div>
     <div class="joiningToggle__container">
       <div class="joiningToggel-title">모집중</div>
       <input type="checkbox" id="toggle" hidden> 
@@ -39,9 +39,9 @@
               <div class="card__content">
                 {{ study.description|linebreaksbr }}
               </div>
-              <div class="card__lanuage-container">
+              <div class="card__language-container">
                 {% for language in study.language %}
-                <div class="card__lanuage">
+                <div class="card__language">
                   <img
                     src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}"
                     alt="{{ language }} 언어 로고"

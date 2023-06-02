@@ -53,11 +53,11 @@
   margin: 10px 0;
 }
 
-.card__lanuage-container {
+.card__language-container {
   display: flex;
 }
 
-.card__lanuage,
+.card__language,
 .card__badge {
   width: 1.6em;
   height: 1.6em;
@@ -68,7 +68,7 @@
   margin-right: 5px;
 }
 
-.card__lanuage img {
+.card__language img {
   width: 1em;
   height: 1em;
 

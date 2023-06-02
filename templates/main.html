@@ -26,9 +26,9 @@
         {% for myStudy in studyings %}
         <div class="newStudies__container">
           <div class="newStudies-title card__title">{{ myStudy.study.title }}</div>
-          <div class="card__lanuage-container">
+          <div class="card__language-container">
             {% for language  in myStudy.study.language %}
-            <div class="card__lanuage">
+            <div class="card__language">
               <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
             </div>
             {% endfor %}
@@ -60,9 +60,9 @@
               <div>
                 <div class="card__title">{{ study.title }}</div>
                 <div class="card__content">{{ study.description|linebreaksbr }}</div>
-                <div class="card__lanuage-container">
+                <div class="card__language-container">
                   {% for language  in study.language %}
-                    <div class="card__lanuage">
+                    <div class="card__language">
                       <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
                     </div>
                   {% endfor %}

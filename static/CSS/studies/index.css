@@ -11,13 +11,13 @@
   }
 }
 
-.lauguages__container{
+.language__container{
   display: flex;
   justify-content: space-evenly;
   flex-flow: wrap;
   
 }
-.lauguage-btn{
+.language-btn{
   border: none;
   font-size: var(--font-regular);
   box-shadow: 2px 2px 3px var(--color-gray-3);

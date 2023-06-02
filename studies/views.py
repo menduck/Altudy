@@ -13,7 +13,7 @@ from .models import LANGUAGE_CHOICES
 # Create your views here.
 def index(request):
     studies = Study.objects.all()
-    
+
     context = {
         'studies': studies,
         'LANGUAGE_CHOICES' : LANGUAGE_CHOICES,
