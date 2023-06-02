@@ -9,11 +9,21 @@ from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement
 from .forms import StudyForm
 from .models import LANGUAGE_CHOICES
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
     studies = Study.objects.all()
 
+    language_list = []
+    selected_langs = request.GET.get('lang')
+    print(selected_langs)
+
+    if selected_langs:
+        studies = studies.filter(language__contains=selected_langs)
+        
+        
+    
     context = {
         'studies': studies,
         'LANGUAGE_CHOICES' : LANGUAGE_CHOICES,
