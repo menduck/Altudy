@@ -23,7 +23,8 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend',)
-            return redirect('studies:index')  # 임시 index
+            # return redirect('studies:index')  # 임시 index
+            return redirect('main')
     else:
         form = CustomUserCreationForm()
     context = {
@@ -40,7 +41,8 @@ def login(request):
         form = CustomAuthenticationFormForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('studies:index')  # 임시 index
+            # return redirect('studies:index')  # 임시 index
+            return redirect('main')
     else:
         form = CustomAuthenticationFormForm()
     context = {
@@ -52,14 +54,16 @@ def login(request):
 @login_required
 def logout(request):
     auth_logout(request)
-    return redirect('studies:index')  # 임시 index
+    # return redirect('studies:index')  # 임시 index
+    return redirect('main')
 
 
 @login_required
 def delete(request):
     request.user.delete()
     auth_logout(request)
-    return redirect('studies:index')  # 임시 index
+    # return redirect('studies:index')  # 임시 index
+    return redirect('main')
 
 
 @login_required
@@ -68,7 +72,8 @@ def update(request):
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('studies:index')  # 임시 index
+            # return redirect('studies:index')  # 임시 index
+            return redirect('main')
     else:
         form = CustomUserChangeForm(instance=request.user)
     context = {
@@ -84,7 +89,8 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            return redirect('studies:index')  # 임시 index
+            # return redirect('studies:index')  # 임시 index
+            return redirect('main')
     else:
         form = CustomPasswordChangeForm(request.user)
     context = {
