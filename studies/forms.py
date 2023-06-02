@@ -56,3 +56,11 @@ class AnnouncementForm(forms.ModelForm):
     class Meta:
         model = Announcement
         fields = ('title', 'content',)
+        labels = {
+            # 'title': '',
+            # 'content': '',
+        }
+        widgets = {
+            'title': forms.TextInput(attrs={}),
+            'content': forms.Textarea(attrs={}),
+        }

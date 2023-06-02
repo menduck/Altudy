@@ -4,11 +4,14 @@ from . import views
 
 app_name = 'studies'
 urlpatterns = [
+    # 스터디 CRUD
     path('', views.index, name='index'),
     path('<int:study_pk>/', views.detail, name='detail'),
     path('create/', views.create, name='create'),
     path('<int:study_pk>/delete/', views.delete, name='delete'),
     path('<int:study_pk>/update/', views.update, name='update'),
+    
+    # 스터디 가입 요청 관련 {POST}
     path('<int:study_pk>/join/', views.join, name='join'), # 스터디 가입, 가입 요청
     path('<int:study_pk>/withdraw/', views.withdraw, name='withdraw'), # 스터디 탈퇴
     path('<int:study_pk>/accept/<username>/', views.accept, name='accept'), # 스터디 가입 요청 수락
@@ -21,7 +24,11 @@ urlpatterns = [
     path('<int:study_pk>/mainboard/member/', views.member, name='member'),
     path('<int:study_pk>/mainboard/problem/', views.problem, name='problem'),
     path('<int:study_pk>/mainboard/problem/search/', views.problem_search, name='problem_search'),
-    
-    # 알람 페이지 -임시-
-    path('alarm/', views.alarm, name='alarm'),
+
+    # 스터디 공지 in 메인보드
+    path('<int:study_pk>/mainboard/announcement/', views.announcement, name='announcement'),
+    path('<int:study_pk>/mainboard/announcement/create/', views.announcement_create, name='announcement_create'),
+    path('<int:study_pk>/mainboard/announcement/<int:announcement_pk>/', views.announcement_detail, name='announcement_detail'),
+    path('<int:study_pk>/mainboard/announcement/<int:announcement_pk>/update/', views.announcement_update, name='announcement_update'),
+    path('<int:study_pk>/mainboard/announcement/<int:announcement_pk>/delete/', views.announcement_delete, name='announcement_delete'),
 ]

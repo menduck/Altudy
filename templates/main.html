@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block style %}
-<link rel="stylesheet" type="text/css" href="{% static 'CSS/main.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'CSS/main.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'CSS/card.css' %}" />
 {% endblock style %}
 {% block content %}
 <header>
   <div class="banner__container">
-    <swiper-container class="bannerSwiper" pagination="true" pagination-dynamic-bullets="true">
+    <swiper-container class="bannerSwiper" autoplay="true">
       <swiper-slide>
-        <img src="https://product-image.kurly.com/cdn-cgi/image/quality=85/banner/main/pc/img/85c076e8-16fe-42fd-a190-6c7af593669a.jpg" alt="">
+        <img src="{% static 'IMAGE/1.png' %} " alt="배너1" class="banner1">
       </swiper-slide>
       <swiper-slide>
-        <img src="https://product-image.kurly.com/cdn-cgi/image/quality=85/banner/main/pc/img/7e2f7507-d4bb-45f3-ae9a-1877194efbec.png" alt="">
+        <img src="{% static 'IMAGE/2.png' %} " alt="배너2">
       </swiper-slide>
     </swiper-container>
   </div>
@@ -25,9 +26,9 @@
         {% for myStudy in studyings %}
         <div class="newStudies__container">
           <div class="newStudies-title card__title">{{ myStudy.study.title }}</div>
-          <div class="card__lanuage-container">
+          <div class="card__language-container">
             {% for language  in myStudy.study.language %}
-            <div class="card__lanuage">
+            <div class="card__language">
               <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
             </div>
             {% endfor %}
@@ -59,9 +60,9 @@
               <div>
                 <div class="card__title">{{ study.title }}</div>
                 <div class="card__content">{{ study.description|linebreaksbr }}</div>
-                <div class="card__lanuage-container">
+                <div class="card__language-container">
                   {% for language  in study.language %}
-                    <div class="card__lanuage">
+                    <div class="card__language">
                       <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
                     </div>
                   {% endfor %}
@@ -72,7 +73,7 @@
                   <div class="card__badge"></div>
                   <div class="card__username">{{ study.user }}</div>
                 </div>
-                <div class="card__headCount">/{{ study.capacity }}</div>
+                <div class="card__headCount">{{ study.member_num }}/{{ study.capacity }}</div>
               </div>
             </a>
           </div>
