@@ -77,7 +77,7 @@ class Studying(models.Model):
     
     
 class Announcement(models.Model):
-    study = models.ForeignKey(to=Study, on_delete=models.CASCADE)
+    study = models.ForeignKey(to=Study, on_delete=models.CASCADE, related_name='announcements')
     
     title = models.CharField(max_length=20)
     content = models.CharField(max_length=100)

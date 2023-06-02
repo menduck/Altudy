@@ -25,3 +25,8 @@ def markdown(value):
 @register.filter('id')
 def get_id(obj):
     return f'{obj.__class__.__name__}-{obj.pk}'
+
+
+@register.filter('class')
+def get_class_name(obj):
+    return obj.__class__.__name__
