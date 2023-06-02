@@ -20,7 +20,7 @@
   <a href="{% url 'reviews:create' %}">문제 생성하기</a>
   <hr>
   {% for prob in problems %}
-    <div>문제 : <a href="{% url 'reviews:detail' prob.post_num %}">{{ prob }}</a></div>
+    <div>문제 : <a href="{% url 'reviews:detail' prob.pk %}">{{ prob }}</a></div>
   {% endfor %}
 </div>
 <hr>
