@@ -192,9 +192,7 @@ def like(request):
         object_identifier = data.get('objectIdentifier')
         if object_identifier is not None:
             model, pk = object_identifier.split('-')
-        else:
-            return redirect('studies:index')
-        obj = get_object_or_404(eval(model), pk=pk)
+            obj = get_object_or_404(eval(model), pk=pk)
     except:
         raise Http404("Request not valid")
 
