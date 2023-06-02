@@ -108,6 +108,7 @@ def review_create(request, pk):
         if form.is_valid():
             review = form.save(commit=False)
             review.user, review.problem = request.user, problem
+            form.save_m2m()
             review.save()
             return redirect('reviews:detail', problem.pk)
     else:
@@ -128,6 +129,7 @@ def review_update(request, review_pk):
     if request.method == 'POST':
         form = ReviewForm(data=request.POST, instance=review)
         if form.is_valid():
+            form.save_m2m()
             form.save()
             return redirect('reviews:detail', review.problem.pk)
     else:
