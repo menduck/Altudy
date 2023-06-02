@@ -96,8 +96,8 @@ def update(request, pk):
     if request.method == 'POST':
         form = ProblemForm(data=request.POST, instance=problem)
         if form.is_valid():
-            form.save_m2m()
             form.save()
+            form.save_m2m()
             return redirect('reviews:detail', problem.pk)
     else:
         form = ProblemForm(instance=problem)
@@ -151,8 +151,8 @@ def review_update(request, review_pk):
     if request.method == 'POST':
         form = ReviewForm(data=request.POST, instance=review)
         if form.is_valid():
-            form.save_m2m()
             form.save()
+            form.save_m2m()
             return redirect('reviews:detail', review.problem.pk)
     else:
         form = ReviewForm(instance=review)
@@ -183,6 +183,7 @@ def comment_create(request, review_pk):
             review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
             comment.user, comment.review = request.user, review
             comment.save()
+            form.save_m2m()
             return redirect('reviews:detail', review.problem.pk)
     else:
         form = CommentForm()
@@ -202,6 +203,7 @@ def comment_update(request, comment_pk):
         form = CommentForm(data=request.POST)
         if form.is_valid():
             form.save()
+            form.save_m2m()
             return redirect('reviews:detail', comment.review.problem.pk)
     else:
         form = CommentForm()
