@@ -2,10 +2,11 @@ import json
 
 from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework.decorators import api_view
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 
 from studies.models import Study
 from .forms import ProblemForm, ReviewForm, CommentForm
@@ -15,16 +16,19 @@ from .models import Problem, Review, Comment
 # Create your views here.
 @login_required
 def detail(request, pk):
+    '''
+    구현할 기능:
+    - Problem, Review, Comment에 달린 모든 태그를 모아보는 기능
+    - 클릭시 해당 태그가 사용된 Problem, Review, Comment로 이동하는 링크
+    '''
     problem = get_object_or_404(
-        Problem.objects.prefetch_related(
-            'tags',
-            'review_set__tags',
-            'review_set__comment_set__tags',
-        ),
+        Problem.objects.prefetch_related('review_set__comment_set'),
         pk=pk
     )
+    tags = TaggedItem.objects.filter(object_id=pk).prefetch_related('tag').distinct()
     context = {
         'problem': problem,
+        'tags': tags,
     }
     return render(request, 'reviews/detail.html', context)
 
@@ -32,7 +36,10 @@ def detail(request, pk):
 @login_required
 def create(request):
     if 'study_id' not in request.session:
-        return redirect('studies:mainboard')
+        study_id = request.GET.get('study_id')
+        if study_id:
+            return redirect('studies:mainboard', study_id)
+        return redirect('studies:index')
 
     study_id = request.session.get('study_id')
     
