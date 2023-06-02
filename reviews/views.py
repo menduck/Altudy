@@ -41,9 +41,10 @@ def detail(request, pk):
 
 @login_required
 def create(request):
-    study_id = request.session.get('study_id', request.GET.get('study_id'))
+    study_id = request.GET.get('study_id', request.session.get('study_id'))
     if study_id is None:
         return redirect('studies:index')
+    request.session['study_id'] = study_id
     
     if request.method == 'POST':
         form = ProblemForm(data=request.POST)
