@@ -137,9 +137,10 @@ def join(request, study_pk: int):
     if not Studying.objects.filter(study=study, user=me).exists():
         # 1 : 승인 필요, 2: 즉시 가입
         if study.join_condition == 2:
-            studying = Studying.objects.create(study=study, user=me)
-        else:
-            study.join_request.add(request.user)
+            # Studying.objects.create(study=study, user=me)
+            study.studying_users.add(me)
+        elif study.join_condition == 1:
+            study.join_request.add(me)
     
     return redirect('studies:detail', study_pk)
     
@@ -150,24 +151,10 @@ def withdraw(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     me = request.user
     
-    # studying = Studying.objects.filter(study=study, user=me)
-    # if studying.exists():
-    #   studying.first().delete()
-    studying = get_object_or_404(study=study, user=me)
-    if studying:
-        studying.delete()
-        # 스터디장이 탈퇴할때
-        if me == study.user:
-            # 남은 스터디원이 있을 경우 다음 스터디장(가입 빠른순) 지정
-            if Study.objects.filter(study=study).exists():
-                next_studying = Studying.objects.filter(study=study).first()
-                next_studying.permission = 3
-                new_leader = next_studying.user
-                study.user = new_leader
-            else:
-                # 스터디에 남은 인원이 0명일 경우?
-                # code ... 
-                pass
+    if study.studying_users.filter(pk=me.pk).exists():
+        # 스터디장 탈퇴 불가
+        if me != study.user:
+            study.studying_users.remove(me)
         
     return redirect('studies:detail', study_pk)
 
@@ -184,7 +171,7 @@ def accept(request, study_pk: int, username: int):
         print('Error: 스터디 만원')
         return redirect('studies:detail', study_pk)
     
-    # 스터디장 혹은 부스터디장(permission > 1)인 유저만 스터디 가입 요청 허가
+    # 스터디장 혹은 부스터디장(permission > 1)인 유저만 요청 허가 가능
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         Studying.objects.get_or_create(study=study, user=person)
         study.join_request.remove(person)
@@ -215,7 +202,8 @@ def expel(request, study_pk: int, username: int):
     # 스터디장인 유저만 스터디원 방출 가능
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         studying = Studying.objects.filter(study=study, user=person)
-        studying.first().delete()
+        if studying.permission <= 2:
+            studying.first().delete()
     
     return redirect('studies:detail', study_pk)
 
@@ -447,9 +435,51 @@ def announcement_delete(request, study_pk: int, announcement_pk: int):
     # 스터디장만 announcement 삭제 가능
     if study.user != request.user:
         return redirect('studies:announcement_detail', study_pk, announcement_pk)
-    announcement = get_object_or_404(Announcement, pk=announcement_pk)
     
-    # announcement.delete()
+    announcement = get_object_or_404(Announcement, pk=announcement_pk)
+    announcement.delete()
     
     return redirect('studies:announcement')
 
+
+def appoint(request, study_pk: int, username: str, permission: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    person = get_user_model().objects.get(username=username)
+    me = request.user 
+    
+    # 스터디장만 권한 부여 가능 + 자기 자신일때 취소
+    if me != study.user or me == person:
+        print('Error: 잘못된 접근!')
+        return redirect('studies:mainboard', study_pk)
+    
+    # 스터디장 권한 양도
+    if permission == 3:
+        study.user = person
+        study.save()
+        new_leader = Studying.objects.get(study=study, user=person)
+        new_leader.permission = 3
+        old_leader = Studying.objects.get(study=study, user=me)
+        old_leader.permission = 1
+        new_leader.save()
+        old_leader.save()
+    # 부스터디장 임명
+    elif permission == 2:
+        study.studying_users.get(user=person).permission = 2
+
+    return redirect('studies:mainboard', study_pk)
+
+
+def dismiss(request, study_pk: int, username: str):
+    study = get_object_or_404(Study, pk=study_pk)
+    person = get_user_model().objects.get(username=username)
+    me = request.user 
+    
+    # 스터디장만 타 유저 해임 가능 + 자기 자신 해임 요청일때 취소
+    if me != study.user or me == person:
+        print('Error: 잘못된 접근!')
+        return redirect('studies:mainboard', study_pk)
+    
+    studying = Studying.objects.get(study=study, user=person)
+    studying.permission = 1
+    
+    return redirect('studies:mainboard', study_pk)

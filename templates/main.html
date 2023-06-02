@@ -34,7 +34,9 @@
             {% endfor %}
           </div>
           <div class="newStudies-joinbutton__container">
-            <button class="button-small joinbutton">입장 하기</button>
+            <a href="{% url 'studies:mainboard' myStudy.study.pk %}">
+              <button class="button-small joinbutton">입장 하기</button>
+            </a>
           </div>
           
         </div>
