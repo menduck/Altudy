@@ -73,12 +73,3 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f'Comment by {self.user}, on {self.review}'
-
-
-class Like(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.IntegerField()
-
-    class Meta:
-        db_table = 'like'
