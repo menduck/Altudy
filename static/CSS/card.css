@@ -9,7 +9,7 @@
   justify-content: space-between;
 
   min-width: 150px;
-  height: 140px;
+  height: 150px;
   background-color: var(--color-white);
   border-radius: var(--border-radius-soft);
   box-shadow: 5px 5px 10px lightgray;
@@ -35,7 +35,7 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 
-  height: 16px;
+  height: 20px;
 }
 
 .card__content {

@@ -16,6 +16,7 @@ def index(request):
     
     context = {
         'studies': studies,
+        'LANGUAGE_CHOICES' : LANGUAGE_CHOICES,
     }
     return render(request, 'studies/index.html', context)
 

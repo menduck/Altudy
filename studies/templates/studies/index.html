@@ -1,19 +1,67 @@
 {% extends 'base.html' %}
-
-{% block title %}index{% endblock title %}
-
+{% load static %} 
+{% block title %}index{% endblock title %} 
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'CSS/card.css' %}" />
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/studies/index.css' %}"
+/>
+{% endblock style %} 
 
 {% block content %}
-<h1 class="">모든 스터디</h1>
-
-<a href="{% url 'studies:create' %}">스터디 생성</a>
-
-<hr>
-
-{% for study in studies %}
-<a href="{% url 'studies:detail' study.pk %}">
-  <p>[{{ study.pk }}] - {{ study.title }}</p>
-</a>
-{% endfor %}
-
+<main id="studies_list__wrapper">
+  <section>
+    <div class="lauguages__container">
+      {% for lang_name, lang_label in LANGUAGE_CHOICES  %}
+        <button class='lauguage-btn'>{{ lang_label }}</button>
+      {% endfor %}
+    </div>
+    <div class="bottom-separator"></div>
+    <div class="selected_lauguages__container"></div>
+    <div class="joiningToggle__container">
+      <div class="joiningToggel-title">모집중</div>
+      <input type="checkbox" id="toggle" hidden> 
+      <label for="toggle" class="toggleSwitch">
+        <span class="toggleButton"></span>
+      </label>
+    </div>
+  </section>
+  <section>
+    <article>
+      <div class="cardlist__container">
+        {% for study in studies %}
+        <div class="card">
+          <a href="{% url 'studies:detail' study.pk %}">
+            <div>
+              <div class="card__title">{{ study.title }}</div>
+              <div class="card__content">
+                {{ study.description|linebreaksbr }}
+              </div>
+              <div class="card__lanuage-container">
+                {% for language in study.language %}
+                <div class="card__lanuage">
+                  <img
+                    src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}"
+                    alt="{{ language }} 언어 로고"
+                  />
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="card__footer">
+              <div class="card__userinfo">
+                <div class="card__badge"></div>
+                <div class="card__username">{{ study.user }}</div>
+              </div>
+              <div class="card__headCount">/{{ study.capacity }}</div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+    </div>
+    </article>
+  </section>
+</main>
 {% endblock content %}
