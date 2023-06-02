@@ -18,20 +18,34 @@ from .models import Problem, Review, Comment
 def detail(request, pk):
     '''
     구현할 기능:
-    - Problem, Review, Comment에 달린 모든 태그를 모아보는 기능
-    - 클릭시 해당 태그가 사용된 Problem, Review, Comment로 이동하는 링크
+    - ✅ Problem, Review, Comment에 달린 모든 태그를 모아보는 기능
+    - [ ] 클릭시 해당 태그가 사용된 Problem, Review, Comment로 이동하는 링크
     '''
     problem = get_object_or_404(
         Problem.objects.prefetch_related('review_set__comment_set'),
         pk=pk
     )
+
     '''
-    SELECT * FROM problem
-    INNER JOIN review ON problem.id = review.problem_id
-    INNER JOIN comment ON review.id = comment.review_id
-    WHERE problem.id = pk
+    SELECT DISTINCT tag.name FROM tag
+    INNER JOIN (
+        SELECT tag_id FROM taggeditem
+        WHERE object_id = pk
+        OR object_id IN (
+            SELECT id FROM review
+            WHERE problem_id = pk
+        ) OR object_id IN (
+            SELECT comment.id FROM comment
+            INNER JOIN (
+                SELECT id FROM review
+                WHERE problem_id = pk
+            ) AS review ON review.id = comment.review_id
+        )
+    ) AS t ON t.tag_id = tag.id
     '''
-    tags = TaggedItem.objects.filter(Q(object_id=pk)).prefetch_related('tag').distinct()
+    query = Q(object_id=pk) | Q(object_id__in=Review.objects.filter(problem=problem)) | Q(object_id__in=Comment.objects.select_related('review').filter(review__problem=problem))
+
+    tags = Tag.objects.filter(id__in=TaggedItem.objects.filter(query)).distinct()
     context = {
         'problem': problem,
         'tags': tags,
@@ -108,8 +122,8 @@ def review_create(request, pk):
         if form.is_valid():
             review = form.save(commit=False)
             review.user, review.problem = request.user, problem
-            form.save_m2m()
             review.save()
+            form.save_m2m()
             return redirect('reviews:detail', problem.pk)
     else:
         form = ReviewForm()
