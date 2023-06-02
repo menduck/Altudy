@@ -35,7 +35,6 @@ def detail(request, study_pk: int):
         # 스터디 미가입
         is_studying = 'not_joined'
     
-    
     context = {
         'study': study,
         'is_studying': is_studying,
@@ -118,7 +117,9 @@ def join(request, study_pk: int):
     me = request.user
     
     # 스터디 인원 만원 시 승낙 불가
-    # code...
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
+        print('Error: 스터디 만원')
+        return redirect('studies:detail', study_pk)
     
     # User가 스터디에 가입되어 있지 않은 경우
     if not Studying.objects.filter(study=study, user=me).exists():
@@ -167,7 +168,9 @@ def accept(request, study_pk: int, username: int):
     me = request.user
     
     # 스터디 인원 만원 시 승낙 불가
-    # code...
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
+        print('Error: 스터디 만원')
+        return redirect('studies:detail', study_pk)
     
     # 스터디장 혹은 부스터디장(permission > 1)인 유저만 스터디 가입 요청 허가
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
@@ -257,7 +260,11 @@ def mainboard(request, study_pk: int):
             total_reviews += reviews_count
 
     for user, reviews_count in user_reviews.items():
-            percentage = (reviews_count / total_reviews) * 100
+            if total_reviews:
+                # Division 0 Error 발생 가능
+                percentage = (reviews_count / total_reviews) * 100
+            else:
+                percentage = 0
             user_percentages[user] = int(percentage)
 
     user_reviews = sorted(user_reviews.items(), key=lambda x: x[1], reverse=True)
@@ -306,3 +313,14 @@ def problem(request, study_pk: int):
         'problems': problems,
     }
     return render(request, 'studies/problem.html', context)
+
+
+@login_required
+def announcement(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    announcements = Announcement.objects.filter(study=study)
+    
+    context = {
+        'announcements': announcements,    
+    }
+    return render(request, 'studies/announcement.html', context)
