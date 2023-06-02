@@ -25,7 +25,13 @@ def detail(request, pk):
         Problem.objects.prefetch_related('review_set__comment_set'),
         pk=pk
     )
-    tags = TaggedItem.objects.filter(object_id=pk).prefetch_related('tag').distinct()
+    '''
+    SELECT * FROM problem
+    INNER JOIN review ON problem.id = review.problem_id
+    INNER JOIN comment ON review.id = comment.review_id
+    WHERE problem.id = pk
+    '''
+    tags = TaggedItem.objects.filter(Q(object_id=pk)).prefetch_related('tag').distinct()
     context = {
         'problem': problem,
         'tags': tags,
@@ -37,11 +43,10 @@ def detail(request, pk):
 def create(request):
     if 'study_id' not in request.session:
         study_id = request.GET.get('study_id')
-        if study_id:
-            return redirect('studies:mainboard', study_id)
-        return redirect('studies:index')
+        if study_id is None:
+            return redirect('studies:index')
 
-    study_id = request.session.get('study_id')
+    study_id = request.session.get('study_id', study_id)
     
     if request.method == 'POST':
         form = ProblemForm(data=request.POST)
@@ -52,7 +57,7 @@ def create(request):
             form.save_m2m()
             return redirect('reviews:detail', problem.pk)
 
-        return redirect('studies:mainboard')
+        return redirect('studies:mainboard', study_id)
     else:
         form = ProblemForm()
     context = {
