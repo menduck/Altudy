@@ -189,36 +189,31 @@ def comment_delete(request, comment_pk):
         comment.delete()
     return redirect('reviews:detail', comment.review.problem.pk)
 
-
-# @api_view(['POST'])
+    
 @login_required
 def like(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            object_identifier = data.get('objectIdentifier')
-            object_identifier = bytes(object_identifier, encoding='utf-8')
-            pickled = fernet.decrypt(object_identifier)
-            model, obj_pk = pk.loads(pickled)
-            obj = get_object_or_404(eval(model), pk=obj_pk)
-        except:
-            raise Http404("Request not valid")
-
-        # 조건문 추가해 Problem, Review, Comment 별로 swap_text 수정 가능
-        if request.user in obj.like_users.all():
-            obj.like_users.remove(request.user)
-            response = {
-                'swap_text': '좋아요',
-                'class': model,
-                'pk': obj_pk,
-            }
+    try:
+        data = json.loads(request.body)
+        object_identifier = data.get('objectIdentifier')
+        if object_identifier is not None:
+            model, pk = object_identifier.split('-')
         else:
-            obj.like_users.add(request.user)
-            response = {
-                'swap_text': '좋아요 취소',
-                'class': model,
-                'pk': obj_pk,
-            }
-        return JsonResponse(response)
+            return redirect('studies:index')
+        obj = get_object_or_404(eval(model), pk=pk)
+    except:
+        raise Http404("Request not valid")
+
+    # 조건문 추가해 Problem, Review, Comment 별로 swap_text 수정 가능
+    if request.user in obj.like_users.all():
+        obj.like_users.remove(request.user)
+        response = {
+            'swap_text': '좋아요',
+        }
+    else:
+        obj.like_users.add(request.user)
+        response = {
+            'swap_text': '좋아요 취소',
+        }
+    return JsonResponse(response)
         
     

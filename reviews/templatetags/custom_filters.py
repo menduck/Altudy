@@ -35,3 +35,8 @@ def pickle(obj):
 def get_attributes(obj):
     '''returns class name'''
     return obj.__class__.__name__
+
+
+@register.filter('id')
+def get_id(obj):
+    return f'{obj.__class__.__name__}-{obj.pk}'

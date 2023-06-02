@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', (x) => {
       }
       axios.post(endpoint, data, {headers}).then((r) => {
         swapText = r.data.swap_text
-        const inputEl = document.getElementById(`${r.data.class}-${r.data.pk}`)
+        const inputEl = document.getElementById(`${objectIdentifier}`)
         inputEl.value = `${swapText}`
       }).catch((error) => {
         console.log(error.response)
