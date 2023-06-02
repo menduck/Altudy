@@ -6,6 +6,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.db.models import Q
 from datetime import datetime, timedelta
+from django.http import JsonResponse
 
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement
@@ -245,8 +246,7 @@ def mainboard(request, study_pk: int):
     start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
-    print(start_of_week, end_of_week, problems)
-    
+
     # 유저별 리뷰 수, 백분율 (그래프에 사용)
     user_reviews = {}
     user_percentages = {}
@@ -321,6 +321,40 @@ def problem(request, study_pk: int):
     return render(request, 'studies/problem.html', context)
 
 
+@login_required
+def problem_search(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    query = request.GET.get('query')
+    isSolved = request.GET.get('isSolved')
+    problems = Problem.objects.filter(study=study)
+
+    # 제출하지 않은 과제 버튼 on일때 문제 필터링
+    if isSolved == 'true':
+        # 현재 로그인한 유저가 작성한 리뷰의 문제 id 목록
+        user_reviewed_problems = Review.objects.filter(user=request.user, problem__study=study).values('problem_id')
+
+        if user_reviewed_problems:
+            # 로그인한 유저가 리뷰를 남기지 않은 문제 목록
+            problems = problems.exclude(id__in=user_reviewed_problems)
+
+    if query:
+        problems = problems.filter(
+            Q(title__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    problems_list = []
+    for problem in problems:
+        problem_dict = {
+            'title': problem.title,
+            'id': problem.pk,
+            # 원하는 정보 추가
+        }
+        problems_list.append(problem_dict)
+
+    return JsonResponse({'problems': problems_list})
+
+  
 def announcement(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     announcements = Announcement.objects.filter(study=study)
@@ -418,3 +452,4 @@ def announcement_delete(request, study_pk: int, announcement_pk: int):
     # announcement.delete()
     
     return redirect('studies:announcement')
+

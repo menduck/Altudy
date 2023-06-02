@@ -23,6 +23,8 @@ urlpatterns = [
     path('<int:study_pk>/mainboard/', views.mainboard, name='mainboard'),
     path('<int:study_pk>/mainboard/member/', views.member, name='member'),
     path('<int:study_pk>/mainboard/problem/', views.problem, name='problem'),
+    path('<int:study_pk>/mainboard/problem/search/', views.problem_search, name='problem_search'),
+
     # 스터디 공지 in 메인보드
     path('<int:study_pk>/mainboard/announcement/', views.announcement, name='announcement'),
     path('<int:study_pk>/mainboard/announcement/create/', views.announcement_create, name='announcement_create'),
