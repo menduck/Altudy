@@ -24,7 +24,7 @@
 
 <div>
   <h3>문제</h3>
-  <a href="{% url 'reviews:create' %}">문제 생성하기</a>
+  <a href="{% url 'reviews:create' %}?study={{ study.pk }}">문제 생성하기</a>
   <hr>
   <div id="prob-search-list">
     <!-- studies/search.js에서 요소 추가, js 내 주석 참고 -->
