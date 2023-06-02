@@ -10,6 +10,7 @@ class Problem(models.Model):
     post_num = models.IntegerField('글 번호')
     title = models.CharField('제목', max_length=255)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='게시자', on_delete=models.CASCADE)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_problems')
     
     # url shortener + 미리보기 + Validator
     url = models.CharField('문제 링크', max_length=1000)
@@ -40,6 +41,7 @@ class Problem(models.Model):
 class Review(models.Model):
     content = models.TextField('내용')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='작성자', on_delete=models.CASCADE)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
     problem = models.ForeignKey("reviews.Problem", verbose_name='문제', on_delete=models.CASCADE)
     tags = TaggableManager(blank=True)
 
@@ -54,8 +56,8 @@ class Review(models.Model):
 class Comment(models.Model):
     content = models.TextField('내용')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='작성자', on_delete=models.CASCADE)
-    review = models.ForeignKey("reviews.Review", verbose_name='리뷰', on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
+    review = models.ForeignKey("reviews.Review", verbose_name='리뷰', on_delete=models.CASCADE)
     tags = TaggableManager(blank=True)
 
     class Meta:
@@ -63,3 +65,12 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f'Comment by {self.user}, on {self.review}'
+
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'like'

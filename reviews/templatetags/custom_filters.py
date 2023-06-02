@@ -27,5 +27,11 @@ def markdown(value):
 
 @register.filter
 def pickle(obj):
-    pickled = pk.dumps(obj, 0)
-    return fernet.encrypt(pickled)
+    pickled = pk.dumps((obj.__class__.__name__, obj.pk), 0)
+    return str(fernet.encrypt(pickled))[2:-1]
+
+
+@register.filter('class')
+def get_attributes(obj):
+    '''returns class name'''
+    return obj.__class__.__name__
