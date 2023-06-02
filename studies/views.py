@@ -6,6 +6,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.db.models import Q
 from datetime import datetime, timedelta
+from django.http import JsonResponse
 
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement
@@ -244,7 +245,6 @@ def mainboard(request, study_pk: int):
     start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
-    print(start_of_week, end_of_week, problems)
 
     # 유저별 리뷰 수, 백분율 (그래프에 사용)
     user_reviews = {}
@@ -298,11 +298,32 @@ def problem(request, study_pk: int):
     query = request.GET.get('query')
     problems = Problem.objects.filter(study=study)
 
-    if query:
-        problems = problems.filter(title__icontains=query)
-
     context = {
         'study': study,
         'problems': problems,
     }
     return render(request, 'studies/problem.html', context)
+
+
+@login_required
+def problem_search(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    query = request.GET.get('query')
+    problems = Problem.objects.filter(study=study)
+    
+    if query:
+        problems = problems.filter(
+            Q(title__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    problems_list = []
+    for problem in problems:
+        problem_dict = {
+            'title': problem.title,
+            'id': problem.pk,
+            # 원하는 정보 추가
+        }
+        problems_list.append(problem_dict)
+
+    return JsonResponse({'problems': problems_list})
