@@ -1,4 +1,5 @@
 {% load static %}
+{% load studies_tags %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -68,7 +69,7 @@
             <a href="{% url 'studies:alarm' %}">
               <div class="nav__item">알림
                 {# 알림 뱃지, 조건 작성중... #}
-                {% if False %}
+                {% if request.user|alarm_exists %}
                 <div style="width:10px; height:10px; background-color:red;
                 float: right; top: 0px; left: 0px; border-radius: 50%;"></div>
                 {% endif %}
