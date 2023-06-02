@@ -1,20 +1,15 @@
 import json
-import pickle as pk
-from cryptography.fernet import Fernet
 
 from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework.decorators import api_view
-from taggit.models import Tag, TaggedItem
+from taggit.models import Tag
 
 from studies.models import Study
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
-from .templatetags.custom_filters import fernet
-from .utils import OrderedCounter
 
 '''다른 스터디 선택하기 기능이 추가되어야 한다'''
 # Create your views here.
@@ -189,36 +184,31 @@ def comment_delete(request, comment_pk):
         comment.delete()
     return redirect('reviews:detail', comment.review.problem.pk)
 
-
-# @api_view(['POST'])
+    
 @login_required
 def like(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            object_identifier = data.get('objectIdentifier')
-            object_identifier = bytes(object_identifier, encoding='utf-8')
-            pickled = fernet.decrypt(object_identifier)
-            model, obj_pk = pk.loads(pickled)
-            obj = get_object_or_404(eval(model), pk=obj_pk)
-        except:
-            raise Http404("Request not valid")
-
-        # 조건문 추가해 Problem, Review, Comment 별로 swap_text 수정 가능
-        if request.user in obj.like_users.all():
-            obj.like_users.remove(request.user)
-            response = {
-                'swap_text': '좋아요',
-                'class': model,
-                'pk': obj_pk,
-            }
+    try:
+        data = json.loads(request.body)
+        object_identifier = data.get('objectIdentifier')
+        if object_identifier is not None:
+            model, pk = object_identifier.split('-')
         else:
-            obj.like_users.add(request.user)
-            response = {
-                'swap_text': '좋아요 취소',
-                'class': model,
-                'pk': obj_pk,
-            }
-        return JsonResponse(response)
+            return redirect('studies:index')
+        obj = get_object_or_404(eval(model), pk=pk)
+    except:
+        raise Http404("Request not valid")
+
+    # 조건문 추가해 Problem, Review, Comment 별로 swap_text 수정 가능
+    if request.user in obj.like_users.all():
+        obj.like_users.remove(request.user)
+        response = {
+            'swap_text': '좋아요',
+        }
+    else:
+        obj.like_users.add(request.user)
+        response = {
+            'swap_text': '좋아요 취소',
+        }
+    return JsonResponse(response)
         
     
