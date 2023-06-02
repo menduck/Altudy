@@ -18,6 +18,8 @@ class Problem(models.Model):
 
     study = models.ForeignKey("studies.Study", verbose_name='스터디', on_delete=models.CASCADE, default=1)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'problem'
@@ -43,6 +45,9 @@ class Review(models.Model):
     problem = models.ForeignKey("reviews.Problem", verbose_name='문제', on_delete=models.CASCADE)
     tags = TaggableManager(blank=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         db_table = 'review'
 
@@ -57,6 +62,9 @@ class Comment(models.Model):
     review = models.ForeignKey("reviews.Review", verbose_name='리뷰', on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
     tags = TaggableManager(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'comment'

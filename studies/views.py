@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from taggit.models import Tag
 from django.db.models import Count
 from django.contrib import messages
+from django.db.models import Q
+from datetime import datetime, timedelta
 
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement
@@ -238,8 +240,11 @@ def mainboard(request, study_pk: int):
     if not Studying.objects.filter(study=study, user=request.user).exists():
         return redirect('studies:detail', study_pk)
 
-    # 메인보드에서는 n개만 보여주도록? 일단 임의로 추가
-    problems = Problem.objects.filter(study=study)[:5]
+    # 메인보드에서는 이번주에 추가된 문제만 보여주도록? 일단 임의로 추가
+    start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    end_of_week = start_of_week + timedelta(days=6)
+    problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
+    print(start_of_week, end_of_week, problems)
 
     # 유저별 리뷰 수, 백분율 (그래프에 사용)
     user_reviews = {}
