@@ -44,8 +44,10 @@ def detail(request, pk):
     ) AS t ON t.tag_id = tag.id
     '''
     query = Q(object_id=pk) | Q(object_id__in=Review.objects.filter(problem=problem)) | Q(object_id__in=Comment.objects.select_related('review').filter(review__problem=problem))
+    q = Q(id__in=TaggedItem.objects.filter(query))
 
-    tags = Tag.objects.filter(id__in=TaggedItem.objects.filter(query)).distinct()
+    tags = Tag.objects.filter(q).distinct()
+    print(tags)
     context = {
         'problem': problem,
         'tags': tags,
