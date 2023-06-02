@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from taggit.models import Tag
@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement
-from .forms import StudyForm
+from .forms import StudyForm, AnnouncementForm
 from .models import LANGUAGE_CHOICES
 
 # Create your views here.
@@ -221,25 +221,12 @@ def cancel(request, study_pk: int):
 
 
 @login_required
-def alarm(request):
-    studies = Study.objects.filter(user=request.user)
-    all_requests = list()
-    for study in studies:
-        all_requests.append((study, study.join_request.all()))
-    
-    context = {
-        'all_requests': all_requests,
-    }
-    return render(request, 'studies/alarm.html', context)
-
-
-@login_required
 def mainboard(request, study_pk: int):
     request.session['study_id'] = study_pk
     study = get_object_or_404(Study, pk=study_pk)
     users = study.studying_users.all()
 
-    # 스터디에 가입돼있지 않으면 접근 불가
+    # 스터디에 가입되어있지 않으면 접근 불가
     if not Studying.objects.filter(study=study, user=request.user).exists():
         return redirect('studies:detail', study_pk)
 
@@ -248,7 +235,7 @@ def mainboard(request, study_pk: int):
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
     print(start_of_week, end_of_week, problems)
-
+    
     # 유저별 리뷰 수, 백분율 (그래프에 사용)
     user_reviews = {}
     user_percentages = {}
@@ -270,9 +257,13 @@ def mainboard(request, study_pk: int):
     user_reviews = sorted(user_reviews.items(), key=lambda x: x[1], reverse=True)
     user_percentages = sorted(user_percentages.items(), key=lambda x: x[1], reverse=True)
 
+    # 메인보드에서 보여줄 공지
+    announcements = Announcement.objects.filter(study=study)
+    
     context = {
         'problems': problems,
         'study': study,
+        'announcements': announcements,
         'users': users,
         'user_reviews': user_reviews,
         'user_percentages': user_percentages,
@@ -305,6 +296,10 @@ def problem(request, study_pk: int):
     query = request.GET.get('query')
     problems = Problem.objects.filter(study=study)
 
+    # 스터디에 가입되어있지 않으면 접근 불가
+    if not Studying.objects.filter(study=study, user=request.user).exists():
+        return redirect('studies:detail', study_pk)
+    
     if query:
         problems = problems.filter(title__icontains=query)
 
@@ -315,12 +310,100 @@ def problem(request, study_pk: int):
     return render(request, 'studies/problem.html', context)
 
 
-@login_required
 def announcement(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     announcements = Announcement.objects.filter(study=study)
     
+    # 스터디에 가입되어있지 않으면 접근 불가
+    if not Studying.objects.filter(study=study, user=request.user).exists():
+        return redirect('studies:detail', study_pk)
+    
     context = {
         'announcements': announcements,    
+        'study_pk': study_pk,
     }
     return render(request, 'studies/announcement.html', context)
+
+
+def check_study_leader(request, leader: str, target_url: str, *url_args):
+    # 스터디장만 announcement 생성, 수정, 삭제 가능
+    if leader != request.user:
+        print('Error : 스터디장 아님!')
+        if url_args:
+            return redirect(target_url, url_args)
+        return redirect(target_url)
+    
+    
+def announcement_create(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    # check_study_leader(request, study.user, 'studies:announcement', study_pk)
+    # 스터디장만 announcement 생성 가능
+    if study.user != request.user:
+        print('Error : 스터디장 아님!')
+        return redirect('studies:announcement', study_pk)
+    
+    if request.method == 'POST':
+        form = AnnouncementForm(data=request.POST)
+        if form.is_valid():
+            announcement = form.save(commit=False)
+            announcement.study = study
+            announcement.save()
+            return redirect('studies:announcement_detail', study_pk, announcement.pk)
+    else:
+        form = AnnouncementForm()
+    
+    context = {
+        'form': form,
+        'study_pk': study_pk,
+    }
+    return render(request, 'studies/announcement_create.html', context)
+
+
+def announcement_detail(request, study_pk: int, announcement_pk: int):
+    announcement = get_object_or_404(Announcement, pk=announcement_pk)
+    leader = get_object_or_404(Study, pk=study_pk).user
+    
+    context = {
+        'announcement': announcement,
+        'study_pk': study_pk,
+        'leader': leader,
+    }
+    return render(request, 'studies/announcement_detail.html', context)
+    
+    
+def announcement_update(request, study_pk: int, announcement_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
+    # 스터디장만 announcement 수정, 삭제 가능
+    if study.user != request.user:
+        return redirect('studies:announcement_detail', study_pk, announcement_pk)
+    
+    announcement = get_object_or_404(Announcement, pk=announcement_pk)
+    
+    if request.method == 'POST':
+        form = AnnouncementForm(data=request.POST, instance=announcement)
+        if form.is_valid():
+            form.save()
+            return redirect('studies:announcement_detail', study_pk, announcement_pk)
+    else:
+        form = AnnouncementForm(instance = announcement)
+    
+    context = {
+        'form': form,
+        'study_pk': study_pk,
+        'announcement_pk': announcement_pk,
+    }
+    return render(request, 'studies/announcement_update.html', context)
+    
+    
+def announcement_delete(request, study_pk: int, announcement_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
+    # 스터디장만 announcement 삭제 가능
+    if study.user != request.user:
+        return redirect('studies:announcement_detail', study_pk, announcement_pk)
+    announcement = get_object_or_404(Announcement, pk=announcement_pk)
+    
+    # announcement.delete()
+    
+    return redirect('studies:announcement')
