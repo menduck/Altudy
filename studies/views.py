@@ -442,44 +442,44 @@ def announcement_delete(request, study_pk: int, announcement_pk: int):
     return redirect('studies:announcement')
 
 
-# def appoint(request, study_pk: int, username: str, permission: int):
-#     study = get_object_or_404(Study, pk=study_pk)
-#     person = get_user_model().objects.get(username=username)
-#     me = request.user 
+def appoint(request, study_pk: int, username: str, permission: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    person = get_user_model().objects.get(username=username)
+    me = request.user 
     
-#     # 스터디장만 권한 부여 가능 + 자기 자신일때 취소
-#     if me != study.user or me == person:
-#         print('Error: 잘못된 접근!')
-#         return redirect('studies:mainboard', study_pk)
+    # 스터디장만 권한 부여 가능 + 자기 자신일때 취소
+    if me != study.user or me == person:
+        print('Error: 잘못된 접근!')
+        return redirect('studies:mainboard', study_pk)
     
-#     # 스터디장 권한 양도
-#     if permission == 3:
-#         study.user = person
-#         study.save()
-#         new_leader = Studying.objects.get(study=study, user=person)
-#         new_leader.permission = 3
-#         old_leader = Studying.objects.get(study=study, user=me)
-#         old_leader.permission = 1
-#         new_leader.save()
-#         old_leader.save()
-#     # 부스터디장 임명
-#     elif permission == 2:
-#         study.studying_users.get(user=person).permission = 2
+    # 스터디장 권한 양도
+    if permission == 3:
+        study.user = person
+        study.save()
+        new_leader = Studying.objects.get(study=study, user=person)
+        new_leader.permission = 3
+        old_leader = Studying.objects.get(study=study, user=me)
+        old_leader.permission = 1
+        new_leader.save()
+        old_leader.save()
+    # 부스터디장 임명
+    elif permission == 2:
+        study.studying_users.get(user=person).permission = 2
 
-#     return redirect('studies:mainboard', study_pk)
+    return redirect('studies:mainboard', study_pk)
 
 
-# def dismiss(request, study_pk: int, username: str):
-#     study = get_object_or_404(Study, pk=study_pk)
-#     person = get_user_model().objects.get(username=username)
-#     me = request.user 
+def dismiss(request, study_pk: int, username: str):
+    study = get_object_or_404(Study, pk=study_pk)
+    person = get_user_model().objects.get(username=username)
+    me = request.user 
     
-#     # 스터디장만 타 유저 해임 가능 + 자기 자신 해임 요청일때 취소
-#     if me != study.user or me == person:
-#         print('Error: 잘못된 접근!')
-#         return redirect('studies:mainboard', study_pk)
+    # 스터디장만 타 유저 해임 가능 + 자기 자신 해임 요청일때 취소
+    if me != study.user or me == person:
+        print('Error: 잘못된 접근!')
+        return redirect('studies:mainboard', study_pk)
     
-#     studying = Studying.objects.get(study=study, user=person)
-#     studying.permission = 1
+    studying = Studying.objects.get(study=study, user=person)
+    studying.permission = 1
     
-#     return redirect('studies:mainboard', study_pk)
+    return redirect('studies:mainboard', study_pk)

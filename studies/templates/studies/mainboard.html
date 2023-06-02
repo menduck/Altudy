@@ -69,7 +69,7 @@
   {% for user in users %}
     <p>
       {% if user != request.user %}
-      <a href="{% url 'studies:appoint' study.pk user %}" style="color: blue;">{{ user }}</a>
+      <a href="{% url 'studies:appoint' study.pk user 2 %}" style="color: blue;">{{ user }}</a>
       {% endif %}
     </p>
   {% endfor %}

@@ -32,7 +32,8 @@ urlpatterns = [
     path('<int:study_pk>/mainboard/announcement/<int:announcement_pk>/update/', views.announcement_update, name='announcement_update'),
     path('<int:study_pk>/mainboard/announcement/<int:announcement_pk>/delete/', views.announcement_delete, name='announcement_delete'),
     
-    # 스터디장, 임시 스터디장 (Studying.permission) 임명(appoint), 해임(dismiss)
+    # 스터디장 (Studying.permission) 임명(appoint), 해임(dismiss)
+    # 부스터디장?
     path('<int:study_pk>/appoint/<username>/<int:permission>/', views.appoint, name='appoint'),
     path('<int:study_pk>/dismiss/<username>/', views.dismiss, name='dismiss'),
 ]
