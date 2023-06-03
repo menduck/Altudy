@@ -1,57 +1,70 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
-
+{% block style %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/reviews/detail.css' %}"
+/>
+{% endblock style %}
 {% block content %}
-<h1>{{ problem.title }}</h1>
-<h4>{{ problem.user }}</h4>
-<p>{{ problem.url }}</p>
-<p>{{ problem.description|markdown }}</p>
+<div class="main__container">
+  <div class="probelm-box">
+    <h1>{{ problem.title }}</h1>
+    <h4>{{ problem.user }}</h4>
+    <p>{{ problem.url }}</p>
+    <p>{{ problem.description|markdown }}</p>
+    <div class="problem-button-box">
+      <div class="like button-small joinbutton reset-style">
+        {% include 'reviews/components/like.html' with obj=problem %}
+      </div>
+      <form action="{% url 'reviews:delete' problem.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="button-small joinbutton reset-style">문제 삭제</button>
+      </form>
+    </div>
+    <div class="submit-button">
+      <a href="{% url 'reviews:review_create' problem.pk %}" class="button-small joinbutton reset-style">리뷰 작성하기</a>
+    </div>
+  </div>
 
-{# 좋아요 #}
-{% include 'reviews/components/like.html' with obj=problem %}
-
-<hr>
-<div>
-  <a href="{% url 'reviews:review_create' problem.pk %}">리뷰 작성하기</a>
+  <div class="review-box">
+    <ul class="review">
+      {% for review in problem.review_set.all %}
+      <div class="review-content">
+        <li>{{ review.content|markdown }}</li>
+        <div class="review-button-box">
+          <form action="{% url 'reviews:review_update' review.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="button-small joinbutton reset-style">리뷰 수정</button>
+          </form>
+          <div class="like button-small joinbutton reset-style">
+            {% include 'reviews/components/like.html' with obj=review %}
+          </div>
+          <a href="{% url 'reviews:comment_create' review.pk %}" class="button-small joinbutton">댓글 작성</a>
+          <ul>
+            {% for comment in review.comment_set.all %}
+            <li>{{ comment.content|markdown }}</li>
+            <form action="{% url 'reviews:comment_update' comment.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit">댓글 수정</button>
+            </form>
+            <form action="{% url 'reviews:comment_delete' comment.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit">댓글 삭제</button>
+            </form>
+            <div class="like reset-style">
+              {% include 'reviews/components/like.html' with obj=comment %}
+            </div>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
-<form action="{% url 'reviews:delete' problem.pk %}" method="post">
-  {% csrf_token %}
-  <button type="submit">문제 삭제</button>
-</form>
-<hr>
-<ul>
-  {% for review in problem.review_set.all %}
-  <li>{{ review.content|markdown }}</li>
-  
-  {# 좋아요 #}
-  {% include 'reviews/components/like.html' with obj=review %}
-  
-  <form action="{% url 'reviews:review_update' review.pk %}" method="post">
-    {% csrf_token %}
-    <button type="submit">리뷰 수정</button>
-  </form>
-  <hr>
-  <a href="{% url 'reviews:comment_create' review.pk %}">댓글 작성</a>
-  <ul>
-    {% for comment in review.comment_set.all %}
-    <li>{{ comment.content|markdown }}</li>
-    <form action="{% url 'reviews:comment_update' comment.pk %}" method="post">
-      {% csrf_token %}
-      <button type="submit">댓글 수정</button>
-    </form>
-    <form action="{% url 'reviews:comment_delete' comment.pk %}" method="post">
-      {% csrf_token %}
-      <button type="submit">댓글 삭제</button>
-    </form>
-    
-    {# 좋아요 #}
-    {% include 'reviews/components/like.html' with obj=comment %}
-    
-    {% endfor %}
-  </ul>
-  {% endfor %}
-</ul>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'reviews/like.js' %}"></script>
 {% endblock content %}
