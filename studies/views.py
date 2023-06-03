@@ -278,12 +278,14 @@ def member(request, study_pk: int):
     if not Studying.objects.filter(study=study, user=request.user, permission__gte=2).exists():
         return redirect('studies:mainboard', study_pk)
     
-    users = study.studying_users.all()
+    users = study.studying_users.all().order_by('-studying__permission')
     join_requests = study.join_request.all()
+    study_members = Studying.objects.filter(study=study)
+    print(study_members)
 
     context = {
         'study': study,
-        'users': users,
+        'study_members': study_members,
         'join_requests': join_requests,
     }
     return render(request, 'studies/member.html', context)

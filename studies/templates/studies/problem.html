@@ -8,12 +8,6 @@
 
 <div>
   <p>문제 검색</p>
-  <!--
-    <form method="GET" action="{% url 'studies:problem' study.pk %}">
-      <input type="text" name="query" placeholder="검색어를 입력하세요">
-      <button type="submit">검색</button>
-    </form>
-  -->
   <input type="text" data-study-id="{{ study.pk }}" id="prob-search-input">
   <div>
     <span>제출하지 않은 과제</span>
