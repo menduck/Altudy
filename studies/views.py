@@ -16,9 +16,10 @@ from django.db.models import Q
 
 # Create your views here.
 def index(request):
-    studies = Study.objects.all()
-
-    language_list = []
+    studies = Study.objects.annotate(
+        member_num=Count('studying_users')
+        ).order_by('-created_at')
+    
     selected_langs = request.GET.get('lang')
     print(selected_langs)
 
