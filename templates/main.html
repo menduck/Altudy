@@ -25,7 +25,15 @@
       <div class="newStudies__wrapper">
         {% for myStudy in studyings %}
         <div class="newStudies__container">
+          <div class="alarm blinking">
+
+          </div>
           <div class="newStudies-title card__title">{{ myStudy.study.title }}</div>
+          <div class="card__days-container">
+            {% for day in myStudy.study.days %} 
+            <div class="card__day">{{ day }}</div>
+            {% endfor %}
+          </div>
           <div class="card__language-container">
             {% for language  in myStudy.study.language %}
             <div class="card__language">
@@ -56,30 +64,30 @@
       </div>
       <swiper-container class="mySwiper" init="false">
         {% for study in latest_studies %}
-        <swiper-slide>
-          <div class="card">
-            <a href="{% url 'studies:detail' study.pk %}">
-              <div>
-                <div class="card__title">{{ study.title }}</div>
-                <div class="card__content">{{ study.description|linebreaksbr }}</div>
-                <div class="card__language-container">
-                  {% for language  in study.language %}
+          <swiper-slide>
+            <div class="card">
+              <a href="{% url 'studies:detail' study.pk %}">
+                <div>
+                  <div class="card__title">{{ study.title }}</div>
+                  <div class="card__content">{{ study.description|linebreaksbr }}</div>
+                  <div class="card__language-container">
+                    {% for language  in study.language %}
                     <div class="card__language">
                       <img src="{% static 'IMAGE/hashlogo/'|add:language|add:'.png' %}" alt="{{ language }} 언어 로고">
                     </div>
-                  {% endfor %}
+                    {% endfor %}
+                  </div>
                 </div>
-              </div>
-              <div class="card__footer">
-                <div class="card__userinfo">
-                  <div class="card__badge"></div>
-                  <div class="card__username">{{ study.user }}</div>
+                <div class="card__footer">
+                  <div class="card__userinfo">
+                    <div class="card__badge"></div>
+                    <div class="card__username">{{ study.user }}</div>
+                  </div>
+                  <div class="card__headCount">{{ study.member_num }}/{{ study.capacity }}</div>
                 </div>
-                <div class="card__headCount">{{ study.member_num }}/{{ study.capacity }}</div>
-              </div>
-            </a>
-          </div>
-        </swiper-slide>
+              </a>
+            </div>
+          </swiper-slide>
         {% endfor %}
       </swiper-container>
     </div>
