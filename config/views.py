@@ -11,12 +11,15 @@ def main(request):
     # 스터디에서 접근 시 {for-each}.study.title로 접근
     if request.user.is_authenticated:
         studyings = Studying.objects.filter(user=request.user)
+        for studying in studyings:
+            studying.announcements_count = Announcement.objects.filter(study=studying.study,updated_at__gte=datetime.now() - timedelta(days=7)).count()
     else:
         studyings = None
     # 최신 스터디 16개
     latest_studies = Study.objects.annotate(
         member_num=Count('studying_users')
         ).order_by('-created_at')[:16]
+    
     
     context = {
         'studyings': studyings,

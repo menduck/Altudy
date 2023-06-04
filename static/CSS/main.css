@@ -86,7 +86,11 @@ swiper-slide img {
 swiper-container {
   width: 100%;
   height: 100%;
-  /* padding: 10px; */
+}
+
+/* 최신 스터디 캐러셀 */
+.mySwiper{
+  padding: 10px 5px;
 }
 
 .mySwiper {
@@ -133,7 +137,8 @@ swiper-container {
 
 .newStudies__container {
   width: 240px;
-  height: 120px;
+
+  height: 150px;
   background-color: var(--color-white);
   border-radius: var(--border-radius-soft);
   box-shadow: 5px 5px 10px lightgray;
@@ -142,6 +147,8 @@ swiper-container {
   margin-bottom: 40px;
   padding: 10px 10px;
 
+  position: relative;
+
 }
 
 .newStudies-title {
@@ -149,7 +156,7 @@ swiper-container {
 }
 
 .newStudies-joinbutton__container {
-  padding: 10px;
+  padding: 6px;
   display: flex;
   flex-direction: row-reverse;
 }
@@ -167,4 +174,44 @@ swiper-container {
   background-color: var(--color-white);
   color: var(--color-green);
   font-weight: var(--weight-semi-bold);
+}
+
+.card__days-container{
+  display: flex;
+}
+
+/* 알람 */
+.alarm {
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  color: black;
+  text-align: center;
+  line-height: 1.5em;
+  font-weight: var(--weight-bold);
+}
+
+.blinking{
+  -webkit-animation: blink 1.5s ease-in-out infinite alternate;
+  -moz-animation: blink 1.5s ease-in-out infinite alternate;
+  animation: blink 1.5s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes blink{
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@-moz-keyframes blink{
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@keyframes blink{
+  0% {opacity: 0;}
+  100% {opacity: 1;}
 }

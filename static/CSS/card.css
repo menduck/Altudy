@@ -1,6 +1,7 @@
 /* 카드 */
 .cards__container {
   position: relative;
+  height: 100%;
 }
 
 .card {
@@ -12,6 +13,7 @@
   background-color: var(--color-white);
   border: none;
   border-radius: var(--border-radius-soft);
+  border: none;
   box-shadow: 5px 5px 10px lightgray;
   margin: 1px;
 
@@ -56,13 +58,21 @@
 }
 
 .card__language,
-.card__badge {
+.card__badge,
+.card__day {
   width: 1.6em;
   height: 1.6em;
   border-radius: 50%;
   border: 1px solid var(--color-gray-2);
   position: relative;
   margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.card__day{
+  text-align: center;
+  line-height: 1.6em;
+  color: var(--color-gray-6);
 }
 
 .card__language img {
