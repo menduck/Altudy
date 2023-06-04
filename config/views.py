@@ -11,17 +11,21 @@ def main(request):
     # 스터디에서 접근 시 {for-each}.study.title로 접근
     if request.user.is_authenticated:
         studyings = Studying.objects.filter(user=request.user)
+        announcements_count = Announcement.objects.filter(study__in=studyings.values('study')).count()
     else:
         studyings = None
+        announcements_count = 0
     # 최신 스터디 16개
     latest_studies = Study.objects.annotate(
         member_num=Count('studying_users')
         ).order_by('-created_at')[:16]
     
+    
     context = {
         'studyings': studyings,
         'latest_studies': latest_studies,
         'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
+        'announcements_count': announcements_count,
     }
     return render(request, 'main.html', context)
 
