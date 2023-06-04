@@ -12,12 +12,21 @@
         <img src="{% static 'IMAGE/1.png' %} " alt="배너1" class="banner1">
       </swiper-slide>
       <swiper-slide>
-        <img src="{% static 'IMAGE/2.png' %} " alt="배너2">
+        <img src="{% static 'IMAGE/2.png' %} " alt="배너2" class="banner2">
+      </swiper-slide>
+      <swiper-slide>
+        <img src="{% static 'IMAGE/3.png' %} " alt="배너2" class="banner3">
       </swiper-slide>
     </swiper-container>
   </div>
 </header>
 <main id="main__main">
+  <a href="{% url 'studies:create' %}">
+    <svg class="study-create-button" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+    </svg>
+  </a>
   {# 나의 스터디 #}
   {% if studyings  %}
     <section class="myStudies__container">
@@ -48,7 +57,6 @@
               <button class="button-small joinbutton">입장 하기</button>
             </a>
           </div>
-          
         </div>
         {% endfor %}
       </div>   

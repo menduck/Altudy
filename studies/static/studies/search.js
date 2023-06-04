@@ -60,10 +60,14 @@ const displayNoResults = () => {
 
 
 // 초기 상태에서(input이 비어있는 경우) 모든 problems를 가져와서 표시
-async function getInitialProblems() {
+async function getInitialProblems(isSolved) {
   try {
     const studyId = probSearchInput.dataset.studyId;
-    const response = await axios.get(`/studies/${studyId}/mainboard/problem/search`)
+    const response = await axios.get(`/studies/${studyId}/mainboard/problem/search`, {
+      params: {
+        isSolved: isSolved,
+      }
+    })
     const results = response.data.problems
     displayResults(results)
   } catch (error) {
@@ -88,9 +92,23 @@ const getProblems = async (query, isSolved) => {
   }
 }
 
-probSearchInput.addEventListener('input', async (event) => {
-  const query = probSearchInput.value.trim()
 
+// input 이벤트 지연을 위한 debonce 함수
+// 한글 타이핑을 빠르게 쳤을 때 마지막 input 이벤트처리가 안 되는 경우가 있어서 추가
+function debounce(func, delay) {
+  let timeoutId;
+
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+
+const handleProbSearchInput = debounce(async () => {
+  const query = probSearchInput.value.trim();
   if (query) {
     try {
       await getProblems(query, isSolvedValue)
@@ -99,12 +117,12 @@ probSearchInput.addEventListener('input', async (event) => {
     }
   } else {
     // 입력이 없는 경우 초기 상태로 복원
-    getInitialProblems()
+    getInitialProblems(isSolvedValue)
   }
-})
+}, 100)
 
 
-isSolvedBtn.addEventListener('click', async () => {
+const handleIsSolvedBtn = async () => {
   const query = probSearchInput.value.trim()
   if (isSolvedValue) {
     isSolvedValue = false
@@ -118,7 +136,15 @@ isSolvedBtn.addEventListener('click', async () => {
   } catch (error) {
     console.error(error)
   }
-});
+  probSearchInput.focus()
+}
+
+probSearchInput.addEventListener('input', handleProbSearchInput)
+isSolvedBtn.addEventListener('click', handleIsSolvedBtn)
 
 // 초기 상태에서 모든 problems를 가져와서 표시
-getInitialProblems()
+if (!isSolvedValue) {
+  getInitialProblems(isSolvedValue)
+}
+
+probSearchInput.focus()

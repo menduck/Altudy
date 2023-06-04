@@ -77,6 +77,9 @@ def logout(request):
     # 작업 성공 후 이전 페이지로 이동
     prev_url = request.META.get('HTTP_REFERER')
     if prev_url:
+        # 현재 프로필 페이지에 있다면 메인페이지로 이동
+        if '/profile/' in prev_url:
+            return redirect('main')
         return redirect(prev_url)
         
     return redirect('main')
