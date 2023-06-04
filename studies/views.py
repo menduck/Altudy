@@ -6,6 +6,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.db.models import Q
 from datetime import datetime, timedelta
+from django.utils import timezone
 from django.http import JsonResponse
 
 from reviews.models import Problem, Review
@@ -13,6 +14,7 @@ from .models import Study, Studying, Announcement
 from .forms import StudyForm, AnnouncementForm
 from .models import LANGUAGE_CHOICES
 from django.db.models import Q
+
 
 # Create your views here.
 def index(request):
@@ -231,7 +233,10 @@ def mainboard(request, study_pk: int):
         return redirect('studies:detail', study_pk)
 
     # 메인보드에서는 이번주에 추가된 문제만 보여주도록? 일단 임의로 추가
-    start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    # start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    ## Warning : warnings.warn("DateTimeField %s received a naive datetime (%s)"
+    ## 계산될 시간에 datetime.now() 대신 timezone.now() 사용해봤음
+    start_of_week = timezone.now() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
 
@@ -353,7 +358,7 @@ def announcement(request, study_pk: int):
     
     context = {
         'announcements': announcements,    
-        'study_pk': study_pk,
+        'study': study,
     }
     return render(request, 'studies/announcement.html', context)
 

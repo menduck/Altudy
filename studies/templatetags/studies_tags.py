@@ -1,7 +1,8 @@
 from django import template
-from studies.models import Study, Studying, Announcement
+from django.utils import timezone
+from datetime import timedelta
 
-from datetime import datetime, timedelta
+from studies.models import Study, Studying, Announcement
 
 register = template.Library()
 
@@ -23,7 +24,7 @@ def alarm_exists(value):
     for studying in studyings:
         announcements = Announcement.objects.filter(
             study=studying.study, 
-            updated_at__gte=datetime.now() - timedelta(days=7)
+            updated_at__gte=timezone.now() - timedelta(days=7)
             )
         if announcements.exists():
             return True
