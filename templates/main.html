@@ -25,13 +25,11 @@
       <div class="newStudies__wrapper">
         {% for myStudy in studyings %}
         <div class="newStudies__container">
-
-          {% comment %} {% if myStudy.study.announcements_count %} {% endcomment %}
+          {% if myStudy.announcements_count %}
             <div class="alarm blinking">
-              {% comment %} {{ myStudy.study.announcements_count }} {% endcomment %}
+              {{ myStudy.announcements_count }}
             </div>
-        {% comment %} {% endif %} {% endcomment %}
-
+          {% endif %}
           <div class="newStudies-title card__title">{{ myStudy.study.title }}</div>
           <div class="card__days-container">
             {% for day in myStudy.study.days %} 

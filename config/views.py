@@ -11,10 +11,10 @@ def main(request):
     # 스터디에서 접근 시 {for-each}.study.title로 접근
     if request.user.is_authenticated:
         studyings = Studying.objects.filter(user=request.user)
-        announcements_count = Announcement.objects.filter(study__in=studyings.values('study')).count()
+        for studying in studyings:
+            studying.announcements_count = Announcement.objects.filter(study=studying.study,updated_at__gte=datetime.now() - timedelta(days=7)).count()
     else:
         studyings = None
-        announcements_count = 0
     # 최신 스터디 16개
     latest_studies = Study.objects.annotate(
         member_num=Count('studying_users')
@@ -25,7 +25,6 @@ def main(request):
         'studyings': studyings,
         'latest_studies': latest_studies,
         'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
-        'announcements_count': announcements_count,
     }
     return render(request, 'main.html', context)
 
