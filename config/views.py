@@ -14,7 +14,7 @@ def main(request):
     if request.user.is_authenticated:
         studyings = Studying.objects.filter(user=request.user)
         for studying in studyings:
-            studying.announcements_count = Announcement.objects.filter(study=studying.study,updated_at__gte=datetime.now() - timedelta(days=7)).count()
+            studying.announcements_count = Announcement.objects.filter(study=studying.study,updated_at__gte=timezone.now() - timedelta(days=7)).count()
     else:
         studyings = None
     # 최신 스터디 16개
