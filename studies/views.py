@@ -6,6 +6,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.db.models import Q
 from datetime import datetime, timedelta
+from django.utils import timezone
 from django.http import JsonResponse
 
 from reviews.models import Problem, Review
@@ -13,6 +14,7 @@ from .models import Study, Studying, Announcement
 from .forms import StudyForm, AnnouncementForm
 from .models import LANGUAGE_CHOICES
 from django.db.models import Q
+
 
 # Create your views here.
 def index(request):
@@ -93,6 +95,9 @@ def update(request, study_pk: int):
         if form.is_valid():
             # taggit을 위해 commit=False 후 save_m2m()
             study = form.save(commit=False)
+            # 스터디 가입 조건-가입 불가로 변경시 모든 가입 요청 삭제
+            if study.join_condition == 3:
+                study.join_request.clear()
             study.save()
             form.save_m2m()
             
@@ -135,12 +140,13 @@ def join(request, study_pk: int):
     
     # User가 스터디에 가입되어 있지 않은 경우
     if not Studying.objects.filter(study=study, user=me).exists():
-        # 1 : 승인 필요, 2: 즉시 가입
+        # 1 : 승인 필요, 2: 즉시 가입, 3: 가입 불가
         if study.join_condition == 2:
             # Studying.objects.create(study=study, user=me)
             study.studying_users.add(me)
         elif study.join_condition == 1:
             study.join_request.add(me)
+        # join_condition == 3 - 가입불가
     
     return redirect('studies:detail', study_pk)
     
@@ -166,6 +172,10 @@ def accept(request, study_pk: int, username: int):
     person = get_user_model().objects.get(username=username)
     me = request.user
     
+    # Study 가입 조건-가입 불가 시 가입 요청 승인 불가
+    if study.join_condition == 3:
+        return redirect('studies:detail', study_pk)
+        
     # 스터디 인원 만원 시 승낙 불가
     if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
         print('Error: 스터디 만원')
@@ -231,7 +241,10 @@ def mainboard(request, study_pk: int):
         return redirect('studies:detail', study_pk)
 
     # 메인보드에서는 이번주에 추가된 문제만 보여주도록? 일단 임의로 추가
-    start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    # start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    ## Warning : warnings.warn("DateTimeField %s received a naive datetime (%s)"
+    ## 계산될 시간에 datetime.now() 대신 timezone.now() 사용해봤음
+    start_of_week = timezone.now() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
 
@@ -355,7 +368,7 @@ def announcement(request, study_pk: int):
     
     context = {
         'announcements': announcements,    
-        'study_pk': study_pk,
+        'study': study,
     }
     return render(request, 'studies/announcement.html', context)
 

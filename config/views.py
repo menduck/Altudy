@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
+import pytz
 
 from studies.models import Study, Studying, Announcement
 from django.db.models import Count
@@ -42,7 +44,7 @@ def alarm(request):
         # 최근 일주일 간의 공지만 표시
         announcements = Announcement.objects.filter(
             study=studying.study, 
-            updated_at__gte=datetime.now() - timedelta(days=7)
+            updated_at__gte=timezone.now() - timedelta(days=7)
             )
         all_announcements.append(announcements)
     

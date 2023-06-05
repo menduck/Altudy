@@ -54,7 +54,10 @@ class Study(models.Model):
     end_time = models.TimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
-    join_condition = models.PositiveSmallIntegerField(choices=[(1, '승인 필요'), (2, '바로 가입')], default=1)
+    join_condition = models.PositiveSmallIntegerField(
+        choices=[(1, '승인 필요'), (2, '바로 가입'), (3, '가입 불가'),],
+        default=1
+        )
     # 스터디 가입 요청
     join_request = models.ManyToManyField(to=settings.AUTH_USER_MODEL, related_name='study_request', blank=True)
     
