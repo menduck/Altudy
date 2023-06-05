@@ -55,6 +55,7 @@
 
 .card__language-container {
   display: flex;
+  min-height: 30.6px;
 }
 
 .card__language,
