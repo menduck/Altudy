@@ -110,3 +110,14 @@ input:focus {
 /* .teamInfo a {
   color: var(--color-gray-5);
 } */
+
+/* 알림 옆 빨간원 표시 */
+.alarm-icon {
+  width:10px; 
+  height:10px; 
+  background-color:red;
+  float: right; 
+  top: 0px; 
+  left: 0px; 
+  border-radius: 50%;
+}
