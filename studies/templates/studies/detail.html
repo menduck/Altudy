@@ -119,22 +119,24 @@
             {% endif %}
             
             {# 시간 #}
-            {% if study.start_time %}
-              {% if study.end_time %}
-                {{ study.start_time }} ~ {{ study.end_time }}
-              {% else %}
-                {{ study.start_time }} ~ 미정
-            {% endif %}
-            {% else %}
-              {% if study.end_time %}
-                미정 ~ {{ study.end_time }}
+            <div class="study-time__container">
+              {% if study.start_time %}
+                {% if study.end_time %}
+                  {{ study.start_time }} ~ {{ study.end_time }}
                 {% else %}
-                  {% if study.days%}
-                  시간 미정
-                  {% else %}
-                  {% endif %}
+                  {{ study.start_time }} ~ 미정
               {% endif %}
-            {% endif %}
+              {% else %}
+                {% if study.end_time %}
+                  미정 ~ {{ study.end_time }}
+                  {% else %}
+                    {% if study.days%}
+                    시간 미정
+                    {% else %}
+                    {% endif %}
+                {% endif %}
+              {% endif %}
+          </div>
           </div>
         </div>
         <div class="study__info-item">

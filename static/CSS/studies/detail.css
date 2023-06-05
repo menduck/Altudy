@@ -78,7 +78,8 @@
   text-align: center;
   line-height: 40px;
   font-size: var(--font-regular);
-
+  margin-bottom: 10px;
+  
   box-shadow: 2px 2px 3px var(--color-gray-3);
   position: relative;
 }
@@ -94,6 +95,10 @@
   width: 1.5em;
   height: 1.5em;
   margin-right: 5px;
+}
+
+.study-time__container {
+  margin-left : 10px;
 }
 
 .lauguage__container {
