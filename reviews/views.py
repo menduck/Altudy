@@ -52,7 +52,7 @@ def detail(request, pk):
     # tagged_items = TaggedItem.objects.filter(content_type_query&object_query)
     
     querydict = {
-        'problem': Q(problem_set=problem.id),
+        'problem': Q(problem_set=pk),
         'review': Q(review_set__in=problem.review_set.values('id')),
         'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
     }
