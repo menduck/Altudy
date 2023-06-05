@@ -13,13 +13,16 @@
 {% block content %}
 <main id="studies_list__wrapper">
   <section>
+    <div class="title">모든 스터디</div>
     <div class="language__container">
       {% for lang_name, lang_label in LANGUAGE_CHOICES  %}
         <button class='language-btn' data-lang ='{{ lang_name }}'>{{ lang_label }}</button>
       {% endfor %}
     </div>
     <div class="bottom-separator"></div>
-    <div class="selected_languages__container"></div>
+    <div class="selected_languages__container">
+
+    </div>
     <div class="joiningToggle__container">
       <div class="joiningToggel-title">모집중</div>
       <input type="checkbox" id="toggle" hidden> 
@@ -55,7 +58,7 @@
                 <div class="card__badge"></div>
                 <div class="card__username">{{ study.user }}</div>
               </div>
-              <div class="card__headCount">/{{ study.capacity }}</div>
+              <div class="card__headCount">{{ study.member_num }}/{{ study.capacity }}</div>
             </div>
           </a>
         </div>
@@ -65,4 +68,5 @@
   </section>
 </main>
 <script type="text/javascript" src="{% static 'JS/filter.js' %}"></script>
+<script type="module" src="{% static 'JS/clickBtn.js' %}"></script>
 {% endblock content %}

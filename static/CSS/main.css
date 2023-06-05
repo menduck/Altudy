@@ -179,6 +179,7 @@ swiper-container {
 
 .card__days-container{
   display: flex;
+  min-height: 30.6px;
 }
 
 /* 알람 */
