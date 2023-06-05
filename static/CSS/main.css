@@ -58,6 +58,7 @@
   opacity: 0.3;
   background-color: var(--color-white);
   box-shadow: rgba(133, 200, 152, 0.35) 0px 5px 5px;
+  z-index: 100;
 }
 
 .study-create-button:hover {
