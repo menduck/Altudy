@@ -95,6 +95,9 @@ def update(request, study_pk: int):
         if form.is_valid():
             # taggit을 위해 commit=False 후 save_m2m()
             study = form.save(commit=False)
+            # 스터디 가입 조건-가입 불가로 변경시 모든 가입 요청 삭제
+            if study.join_condition == 3:
+                study.join_request.clear()
             study.save()
             form.save_m2m()
             
@@ -137,12 +140,13 @@ def join(request, study_pk: int):
     
     # User가 스터디에 가입되어 있지 않은 경우
     if not Studying.objects.filter(study=study, user=me).exists():
-        # 1 : 승인 필요, 2: 즉시 가입
+        # 1 : 승인 필요, 2: 즉시 가입, 3: 가입 불가
         if study.join_condition == 2:
             # Studying.objects.create(study=study, user=me)
             study.studying_users.add(me)
         elif study.join_condition == 1:
             study.join_request.add(me)
+        # join_condition == 3 - 가입불가
     
     return redirect('studies:detail', study_pk)
     
@@ -168,6 +172,10 @@ def accept(request, study_pk: int, username: int):
     person = get_user_model().objects.get(username=username)
     me = request.user
     
+    # Study 가입 조건-가입 불가 시 가입 요청 승인 불가
+    if study.join_condition == 3:
+        return redirect('studies:detail', study_pk)
+        
     # 스터디 인원 만원 시 승낙 불가
     if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
         print('Error: 스터디 만원')
