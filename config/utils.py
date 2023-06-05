@@ -6,3 +6,8 @@ def custom_tag_string(tag_string):
     if not tag_string:
         return []
     return tag_string.split()
+
+
+# 수정 시 폼에 들어가는 태그 데이터들을 공백으로 구분하게
+def space_joiner(tags):
+    return ' '.join(t.name for t in tags)

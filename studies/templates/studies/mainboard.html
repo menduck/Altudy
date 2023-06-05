@@ -5,6 +5,10 @@
 {% endblock style %} {% block content %}
 <h1>{{ study }}스터디 메인보드</h1>
 <hr>
+<div>
+  <div>사이드 바</div>
+  <div>내용</div>
+</div>
 <!-- 유저별 리뷰 백분율, 그래프에 활용하세요 -->
 <div>
   <p>리뷰 그래프</p>
@@ -17,13 +21,17 @@
 <div>
   <p>멤버</p>
   {% for user in users %}
-    <p>{{ user }}</p>
+    <p>
+      {% if user == study.user %}<span style="color: grey;">🐉[스터디장]</span>{% endif %}
+      <span>{{ user }}</span>
+    </p>
   {% endfor %}
 </div>
 <hr>
 
 <div>
   <h3>문제</h3>
+  <a href="{% url 'reviews:create' %}?study={{ study.pk }}" style="color:blue;">문제 생성하기</a>
   <br>
   {% for prob in problems %}
     <p><a href="#">{{ prob }}</a></p>
@@ -32,7 +40,9 @@
 <hr>
 
 <div>
-  <h3>공지</h3>
+  <h3 style="color: blue;">
+    <a href="{% url 'studies:announcement' study.pk %}">공지</a>
+  </h3>
   <br>
   {% for announcement in announcements %}
     <a href="{% url 'studies:announcement_detail' study.pk announcement.pk %}">
@@ -41,6 +51,48 @@
   {% endfor %}
 </div>
 <hr>
+
+
+{% if request.user == study.user %}
+<div>
+  <p>스터디장 양도</p>
+  {% for user in users %}
+    <p>
+      {% if user != request.user %}
+      <a href="{% url 'studies:appoint' study.pk user 3 %}" style="color: blue;">{{ user }}</a>
+      {% endif %}
+    </p>
+  {% endfor %}
+</div>
+<hr>
+
+{# 로직 구성중 #}
+{% comment %} 
+<div>
+  <p>부스터디장 임명</p>
+  {% for user in users %}
+    <p>
+      {% if user != request.user %}
+      <a href="{% url 'studies:appoint' study.pk user 2 %}" style="color: blue;">{{ user }}</a>
+      {% endif %}
+    </p>
+  {% endfor %}
+</div>
+<hr> 
+
+<div>
+  <p>부스터디장 해임</p>
+  {% for user in users %}
+    <p>
+      {% if user.permission == 2 %}
+      <a href="{% url 'studies:dismiss' study.pk user %}" style="color: blue;">{{ user }}</a>
+      {% endif %}
+    </p>
+  {% endfor %}
+</div>
+<hr> {% endcomment %}
+
+{% endif %}
 
 
 {% endblock content %}

@@ -6,12 +6,14 @@
 {% block content %}
 <h1 class="">모든 스터디 공지</h1>
 
-<a href="{% url 'studies:announcement_create' study_pk %}">스터디 공지 생성</a>
+{% if request.user == study.user %}
+<a href="{% url 'studies:announcement_create' study.pk %}" style="color: blue;">스터디 공지 생성</a>
+{% endif %}
 
 <hr>
 
 {% for announcement in announcements %}
-<a href="{% url 'studies:announcement_detail' study_pk announcement.pk %}">
+<a href="{% url 'studies:announcement_detail' study.pk announcement.pk %}">
   <p>[{{ announcement.pk }}] - {{ announcement.title }}</p>
 </a>
 {% endfor %}

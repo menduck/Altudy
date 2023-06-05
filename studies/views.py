@@ -6,6 +6,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.db.models import Q
 from datetime import datetime, timedelta
+from django.utils import timezone
 from django.http import JsonResponse
 
 from reviews.models import Problem, Review
@@ -13,20 +14,26 @@ from .models import Study, Studying, Announcement
 from .forms import StudyForm, AnnouncementForm
 from .models import LANGUAGE_CHOICES
 from django.db.models import Q
+import re
+
 
 # Create your views here.
 def index(request):
-    studies = Study.objects.all()
-
-    language_list = []
+    studies = Study.objects.annotate(
+        member_num=Count('studying_users')
+        ).order_by('-created_at')
+    
     selected_langs = request.GET.get('lang')
     print(selected_langs)
 
     if selected_langs:
-        studies = studies.filter(language__contains=selected_langs)
-        
-        
-    
+        selected_langs_list = selected_langs.split(',') 
+        filter_query = Q()
+        for lang in selected_langs_list:
+            filter_query |= Q(language__regex=r'\b{}\b'.format(re.escape(lang.strip())))
+        studies = studies.filter(filter_query).distinct()
+        print(studies)
+
     context = {
         'studies': studies,
         'LANGUAGE_CHOICES' : LANGUAGE_CHOICES,
@@ -93,6 +100,9 @@ def update(request, study_pk: int):
         if form.is_valid():
             # taggit을 위해 commit=False 후 save_m2m()
             study = form.save(commit=False)
+            # 스터디 가입 조건-가입 불가로 변경시 모든 가입 요청 삭제
+            if study.join_condition == 3:
+                study.join_request.clear()
             study.save()
             form.save_m2m()
             
@@ -135,11 +145,13 @@ def join(request, study_pk: int):
     
     # User가 스터디에 가입되어 있지 않은 경우
     if not Studying.objects.filter(study=study, user=me).exists():
-        # 1 : 승인 필요, 2: 즉시 가입
+        # 1 : 승인 필요, 2: 즉시 가입, 3: 가입 불가
         if study.join_condition == 2:
-            studying = Studying.objects.create(study=study, user=me)
-        else:
-            study.join_request.add(request.user)
+            # Studying.objects.create(study=study, user=me)
+            study.studying_users.add(me)
+        elif study.join_condition == 1:
+            study.join_request.add(me)
+        # join_condition == 3 - 가입불가
     
     return redirect('studies:detail', study_pk)
     
@@ -150,24 +162,10 @@ def withdraw(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     me = request.user
     
-    # studying = Studying.objects.filter(study=study, user=me)
-    # if studying.exists():
-    #   studying.first().delete()
-    studying = get_object_or_404(study=study, user=me)
-    if studying:
-        studying.delete()
-        # 스터디장이 탈퇴할때
-        if me == study.user:
-            # 남은 스터디원이 있을 경우 다음 스터디장(가입 빠른순) 지정
-            if Study.objects.filter(study=study).exists():
-                next_studying = Studying.objects.filter(study=study).first()
-                next_studying.permission = 3
-                new_leader = next_studying.user
-                study.user = new_leader
-            else:
-                # 스터디에 남은 인원이 0명일 경우?
-                # code ... 
-                pass
+    if study.studying_users.filter(pk=me.pk).exists():
+        # 스터디장 탈퇴 불가
+        if me != study.user:
+            study.studying_users.remove(me)
         
     return redirect('studies:detail', study_pk)
 
@@ -179,12 +177,16 @@ def accept(request, study_pk: int, username: int):
     person = get_user_model().objects.get(username=username)
     me = request.user
     
+    # Study 가입 조건-가입 불가 시 가입 요청 승인 불가
+    if study.join_condition == 3:
+        return redirect('studies:detail', study_pk)
+        
     # 스터디 인원 만원 시 승낙 불가
     if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
         print('Error: 스터디 만원')
         return redirect('studies:detail', study_pk)
     
-    # 스터디장 혹은 부스터디장(permission > 1)인 유저만 스터디 가입 요청 허가
+    # 스터디장 혹은 부스터디장(permission > 1)인 유저만 요청 허가 가능
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         Studying.objects.get_or_create(study=study, user=person)
         study.join_request.remove(person)
@@ -215,7 +217,8 @@ def expel(request, study_pk: int, username: int):
     # 스터디장인 유저만 스터디원 방출 가능
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         studying = Studying.objects.filter(study=study, user=person)
-        studying.first().delete()
+        if studying.permission <= 2:
+            studying.first().delete()
     
     return redirect('studies:detail', study_pk)
 
@@ -243,7 +246,10 @@ def mainboard(request, study_pk: int):
         return redirect('studies:detail', study_pk)
 
     # 메인보드에서는 이번주에 추가된 문제만 보여주도록? 일단 임의로 추가
-    start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    # start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    ## Warning : warnings.warn("DateTimeField %s received a naive datetime (%s)"
+    ## 계산될 시간에 datetime.now() 대신 timezone.now() 사용해봤음
+    start_of_week = timezone.now() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
 
@@ -290,12 +296,14 @@ def member(request, study_pk: int):
     if not Studying.objects.filter(study=study, user=request.user, permission__gte=2).exists():
         return redirect('studies:mainboard', study_pk)
     
-    users = study.studying_users.all()
+    users = study.studying_users.all().order_by('-studying__permission')
     join_requests = study.join_request.all()
+    study_members = Studying.objects.filter(study=study)
+    print(study_members)
 
     context = {
         'study': study,
-        'users': users,
+        'study_members': study_members,
         'join_requests': join_requests,
     }
     return render(request, 'studies/member.html', context)
@@ -365,7 +373,7 @@ def announcement(request, study_pk: int):
     
     context = {
         'announcements': announcements,    
-        'study_pk': study_pk,
+        'study': study,
     }
     return render(request, 'studies/announcement.html', context)
 
@@ -447,9 +455,51 @@ def announcement_delete(request, study_pk: int, announcement_pk: int):
     # 스터디장만 announcement 삭제 가능
     if study.user != request.user:
         return redirect('studies:announcement_detail', study_pk, announcement_pk)
-    announcement = get_object_or_404(Announcement, pk=announcement_pk)
     
-    # announcement.delete()
+    announcement = get_object_or_404(Announcement, pk=announcement_pk)
+    announcement.delete()
     
     return redirect('studies:announcement')
 
+
+def appoint(request, study_pk: int, username: str, permission: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    person = get_user_model().objects.get(username=username)
+    me = request.user 
+    
+    # 스터디장만 권한 부여 가능 + 자기 자신일때 취소
+    if me != study.user or me == person:
+        print('Error: 잘못된 접근!')
+        return redirect('studies:mainboard', study_pk)
+    
+    # 스터디장 권한 양도
+    if permission == 3:
+        study.user = person
+        study.save()
+        new_leader = Studying.objects.get(study=study, user=person)
+        new_leader.permission = 3
+        old_leader = Studying.objects.get(study=study, user=me)
+        old_leader.permission = 1
+        new_leader.save()
+        old_leader.save()
+    # 부스터디장 임명
+    elif permission == 2:
+        study.studying_users.get(user=person).permission = 2
+
+    return redirect('studies:mainboard', study_pk)
+
+
+def dismiss(request, study_pk: int, username: str):
+    study = get_object_or_404(Study, pk=study_pk)
+    person = get_user_model().objects.get(username=username)
+    me = request.user 
+    
+    # 스터디장만 타 유저 해임 가능 + 자기 자신 해임 요청일때 취소
+    if me != study.user or me == person:
+        print('Error: 잘못된 접근!')
+        return redirect('studies:mainboard', study_pk)
+    
+    studying = Studying.objects.get(study=study, user=person)
+    studying.permission = 1
+    
+    return redirect('studies:mainboard', study_pk)

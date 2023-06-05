@@ -56,6 +56,10 @@
 .study__info-margin-top{
   transform: translate(0,-12px);
 }
+
+.study__info-margin-top .cancel-margintop{
+  transform: translate(0,+12px);
+}
 .separator {
   width: 3px;
   height: 20px;
@@ -74,7 +78,8 @@
   text-align: center;
   line-height: 40px;
   font-size: var(--font-regular);
-
+  margin-bottom: 10px;
+  
   box-shadow: 2px 2px 3px var(--color-gray-3);
   position: relative;
 }
@@ -90,6 +95,10 @@
   width: 1.5em;
   height: 1.5em;
   margin-right: 5px;
+}
+
+.study-time__container {
+  margin-left : 10px;
 }
 
 .lauguage__container {

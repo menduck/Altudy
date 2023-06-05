@@ -1,0 +1,96 @@
+.main__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.probelm-box {
+  width: 600px;
+  height: auto;
+  padding: 10px;
+  margin-top: 30px;
+  background-color: aqua;
+}
+
+.problem-button-box {
+  display: flex;
+  justify-content: flex-end;
+  width: 500px;
+  height: auto;
+  padding: 10px;
+  margin-top: 15px;
+  background-color: rgb(84, 91, 232);
+}
+
+.submit-button {
+  display: flex;
+  justify-content: center;
+  width: 500px;
+  height: auto;
+  padding: 10px;
+  background-color: rgb(117, 162, 231);
+}
+
+.review-box {
+  width: 600px;
+  height: auto;
+  padding: 10px;
+  margin-top: 30px;
+  background-color: rgb(138, 216, 156);
+}
+
+.review {
+  width: 550px;
+  height: auto;
+  padding: 10px;
+  background-color: rgb(8, 136, 31);
+}
+
+.review-content {
+  margin-bottom: 15px;
+  background-color: rgb(164, 180, 166);
+}
+
+.review-button-box {
+  display: flex;
+  justify-content: flex-end;
+  width: 500px;
+  height: auto;
+  padding: 10px;
+  background-color: rgb(101, 215, 97);
+}
+
+.like {
+  color: var(--color-white);
+  margin: 0 10px;
+}
+
+/* 버튼 스타일 초기화 */
+.reset-style {
+  border: none;
+  background: none;
+  font: inherit;
+  outline: inherit;
+}
+
+.reset-style input[type="submit"] {
+  border: none;
+  background: none;
+  font: inherit;
+  outline: inherit;
+}
+
+.joinbutton {
+  height: 30px;
+  background-color: var(--color-green);
+  color: var(--color-white);
+  text-align: center;
+  line-height: 30px;
+}
+
+.joinbutton:hover {
+  border: 1px solid var(--color-green);
+  background-color: var(--color-white);
+  color: var(--color-green);
+  font-weight: var(--weight-semi-bold);
+}
