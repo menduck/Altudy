@@ -107,10 +107,34 @@
             <div class="separator"></div>
           </div>
           <div class="study__info-item-right study__info-margin-top">
+            {# 요일 #}
+            {% if study.days %}
             {% for day in study.days %} 
             <div class="study__info-circle">{{ day }}</div>
             {% endfor %}
-            {{ study.start_time }} ~ {{ study.end_time }} 
+            {% else %}
+            <div class="cancel-margintop">
+              미정
+            </div>
+            {% endif %}
+            
+            {# 시간 #}
+            {% if study.start_time %}
+              {% if study.end_time %}
+                {{ study.start_time }} ~ {{ study.end_time }}
+              {% else %}
+                {{ study.start_time }} ~ 미정
+            {% endif %}
+            {% else %}
+              {% if study.end_time %}
+                미정 ~ {{ study.end_time }}
+                {% else %}
+                  {% if study.days%}
+                  시간 미정
+                  {% else %}
+                  {% endif %}
+              {% endif %}
+            {% endif %}
           </div>
         </div>
         <div class="study__info-item">
@@ -119,7 +143,19 @@
             <div class="separator"></div>
           </div>
           <div class="study__info-item-right">
-            {{ study.start_date }} ~ {{ study.end_date }}
+            {% if study.start_date %}
+              {% if study.end_date %}
+                {{ study.start_date }} ~ {{ study.end_date }}
+              {% else %}
+                {{ study.start_date }} ~ 미정
+              {% endif %}
+            {% else %}
+              {% if study.end_date %}
+                미정 ~ {{ study.end_date }}
+              {% else %}
+                미정
+              {% endif %}
+            {% endif %}
           </div>
         </div>
         <div class="study__info-item">
@@ -128,18 +164,24 @@
             <div class="separator"></div>
           </div>
           <div class="study__info-item-right study__info-margin-top"> 
-            {% for language in study.language %}
-            {% for lang_code, lang_name in LANGUAGE_CHOICES %}
-            {% if lang_code == language %}
-            <div class="study__info-circle custom-circle">
-              <div class="lauguage__container">
-                <img src="{% static 'IMAGE/hashlogo/'|add:lang_code|add:'.png' %}" alt="{{ lang_name }} 언어 로고">
-                <div>{{ lang_name }}</div>
-              </div>
-            </div>
+            {% if study.language %}
+              {% for language in study.language %}
+              {% for lang_code, lang_name in LANGUAGE_CHOICES %}
+              {% if lang_code == language %}
+                <div class="study__info-circle custom-circle">
+                  <div class="lauguage__container">
+                    <img src="{% static 'IMAGE/hashlogo/'|add:lang_code|add:'.png' %}" alt="{{ lang_name }} 언어 로고">
+                    <div>{{ lang_name }}</div>
+                  </div>
+                </div>
               {% endif %}
               {% endfor %}
               {% endfor %}
+            {% else %}
+              <div class="cancel-margintop">
+                미정
+              </div>
+            {% endif %}
             </div>
         </div>
       </div>

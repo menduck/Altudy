@@ -56,6 +56,10 @@
 .study__info-margin-top{
   transform: translate(0,-12px);
 }
+
+.study__info-margin-top .cancel-margintop{
+  transform: translate(0,+12px);
+}
 .separator {
   width: 3px;
   height: 20px;
