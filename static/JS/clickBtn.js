@@ -1,5 +1,8 @@
-const languageBtns = document.querySelectorAll('.language-btn');
-const selectedLanguagesContainer = document.querySelector('.selected_languages__container');
+langBtnActive()
+
+export function langBtnActive() {
+  const languageBtns = document.querySelectorAll('.language-btn');
+  const selectedLanguagesContainer = document.querySelector('.selected_languages__container');
 
 languageBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -17,9 +20,10 @@ languageBtns.forEach((btn) => {
         selectedLanguagesContainer.removeChild(newClonedBtn);
         btn.classList.remove('selected-btn');
       });
-
+      
       btn.classList.add('selected-btn');
     }
   });
 });
 
+}

@@ -13,6 +13,7 @@ from .models import Study, Studying, Announcement
 from .forms import StudyForm, AnnouncementForm
 from .models import LANGUAGE_CHOICES
 from django.db.models import Q
+import re
 
 # Create your views here.
 def index(request):
@@ -24,10 +25,13 @@ def index(request):
     print(selected_langs)
 
     if selected_langs:
-        studies = studies.filter(language__contains=selected_langs)
-        
-        
-    
+        selected_langs_list = selected_langs.split(',') 
+        filter_query = Q()
+        for lang in selected_langs_list:
+            filter_query |= Q(language__regex=r'\b{}\b'.format(re.escape(lang.strip())))
+        studies = studies.filter(filter_query).distinct()
+        print(studies)
+
     context = {
         'studies': studies,
         'LANGUAGE_CHOICES' : LANGUAGE_CHOICES,
