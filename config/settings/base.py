@@ -159,7 +159,7 @@ TAGGIT_CASE_INSENSITIVE = True
 
 # django-taggit customization (config/utils.py 참고)
 TAGGIT_TAGS_FROM_STRING = 'config.utils.custom_tag_string'
-
+TAGGIT_STRING_FROM_TAGS = 'config.utils.space_joiner'
 
 # -------- allauth --------
 ## secret
