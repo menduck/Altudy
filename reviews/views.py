@@ -1,16 +1,19 @@
 import json
+import operator
+from functools import reduce
 
 from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import Count, Q, Prefetch
+# from django.contrib.contenttypes.models import ContentType
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
-from rest_framework.decorators import api_view
+# from rest_framework.decorators import api_view
 from taggit.models import Tag, TaggedItem
 
-from studies.models import Study
+# from .apps import ReviewsConfig
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
+from studies.models import Study
 
 '''다른 스터디 선택하기 기능이 추가되어야 한다'''
 # Create your views here.
@@ -30,40 +33,44 @@ def detail(request, pk):
         pk=pk
     )
 
-    '''
-    SELECT DISTINCT tag.name FROM tag
-    INNER JOIN (
-        SELECT tag_id FROM taggeditem
-        WHERE object_id = pk
-        OR object_id IN (
-            SELECT id FROM review
-            WHERE problem_id = pk
-        ) OR object_id IN (
-            SELECT comment.id FROM comment
-            INNER JOIN (
-                SELECT id FROM review
-                WHERE problem_id = pk
-            ) AS review ON review.id = comment.review_id
-        )
-    ) AS t ON t.tag_id = tag.id
-    '''
-    query = Q(object_id=pk) | Q(object_id__in=Review.objects.filter(problem=problem)) | Q(object_id__in=Comment.objects.select_related('review').filter(review__problem=problem))
-    q = Q(id__in=TaggedItem.objects.filter(query))
+    # querydict_for_content_type_id = {
+    #     'current_app_label_query' : Q(app_label=ReviewsConfig.name),
+    #     'model_name_query' : Q(model__in=['problem', 'review', 'comment'])
+    # }
 
-    tags = Tag.objects.filter(q).distinct()
+    # # used in content_type_query
+    # query_for_content_type_id = reduce(operator.__and__, querydict_for_content_type_id.values())
 
-    tags = TaggedItem.objects.annotate(freq=Count('tag')).order_by('-freq').filter(id__in=tags).prefetch_related('review_set', 'comment_set')
+    # # Query relevant content_type from TaggedItem model.    
+    # content_type_query = Q(content_type_id__in=ContentType.objects.filter(query_for_content_type_id))
+
+    # # Query relevant object_id from TaggedItem model.
+    # object_query = Q(object_id=pk) | Q(object_id__in=problem.review_set.all())
+    # for review in problem.review_set.all():
+    #     object_query |= Q(object_id__in=review.comment_set.all())
+
+    # tagged_items = TaggedItem.objects.filter(content_type_query&object_query)
     
+    querydict = {
+        'problem': Q(problem_set=pk),
+        'review': Q(review_set__in=problem.review_set.values('id')),
+        'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
+    }
+
+    tags = Tag.objects.filter(reduce(operator.__or__, querydict.values()))
+    tags = tags.annotate(freq=Count('name'))
+    ordered_tags = tags.order_by('-freq').values('name')
+
     context = {
         'problem': problem,
-        'tags': tags,
+        'tags': ordered_tags.values(),
     }
     return render(request, 'reviews/detail.html', context)
 
 
 @login_required
 def create(request):
-    study_id = request.GET.get('study_id', request.session.get('study_id'))
+    study_id = request.GET.get('study', request.session.get('study_id'))
     if study_id is None:
         return redirect('studies:index')
     request.session['study_id'] = study_id
@@ -151,7 +158,8 @@ def review_update(request, review_pk):
     if request.method == 'POST':
         form = ReviewForm(data=request.POST, instance=review)
         if form.is_valid():
-            form.save()
+            review = form.save(commit=False)
+            review.save()
             form.save_m2m()
             return redirect('reviews:detail', review.problem.pk)
     else:
@@ -202,7 +210,8 @@ def comment_update(request, comment_pk):
     if request.method == 'POST':
         form = CommentForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            comment = form.save(commit=False)
+            comment.save()
             form.save_m2m()
             return redirect('reviews:detail', comment.review.problem.pk)
     else:
