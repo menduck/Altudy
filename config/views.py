@@ -31,25 +31,25 @@ def main(request):
     return render(request, 'main.html', context)
 
 
-@login_required
-def alarm(request):
-    lead_studies = Study.objects.filter(user=request.user)
-    all_requests = list()
-    for study in lead_studies:
-        all_requests.append((study, study.join_request.all()))
+# @login_required
+# def alarm(request):
+#     lead_studies = Study.objects.filter(user=request.user)
+#     all_requests = list()
+#     for study in lead_studies:
+#         all_requests.append((study, study.join_request.all()))
     
-    all_announcements = list()
-    studyings = Studying.objects.filter(user=request.user)
-    for studying in studyings:
-        # 최근 일주일 간의 공지만 표시
-        announcements = Announcement.objects.filter(
-            study=studying.study, 
-            updated_at__gte=timezone.now() - timedelta(days=7)
-            )
-        all_announcements.append(announcements)
+#     all_announcements = list()
+#     studyings = Studying.objects.filter(user=request.user)
+#     for studying in studyings:
+#         # 최근 일주일 간의 공지만 표시
+#         announcements = Announcement.objects.filter(
+#             study=studying.study, 
+#             updated_at__gte=timezone.now() - timedelta(days=7)
+#             )
+#         all_announcements.append(announcements)
     
-    context = {
-        'all_requests': all_requests,
-        'all_announcements': all_announcements,
-    }
-    return render(request, 'alarm.html', context)
+#     context = {
+#         'all_requests': all_requests,
+#         'all_announcements': all_announcements,
+#     }
+#     return render(request, 'alarm.html', context)

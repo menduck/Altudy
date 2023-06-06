@@ -66,7 +66,7 @@
             </button>
           </form>
           {% if user.is_authenticated %}
-            <a href="{% url 'alarm' %}">
+            {% comment %} <a href="{% url 'alarm' %}">
               <div class="nav__item">알림
                 {# 알림 뱃지, 조건 작성중... #}
                 {% if request.user|alarm_exists %}
@@ -74,7 +74,54 @@
                 float: right; top: 0px; left: 0px; border-radius: 50%;"></div>
                 {% endif %}
               </div>
-            </a>
+            </a> {% endcomment %}
+            <div class="nav__item dropdown">
+              <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                알림
+                {% if request.user|alarm_exists %}
+                <div style="width:10px; height:10px; background-color:red;
+                float: right; top: 0px; left: 0px; border-radius: 50%;"></div>
+                {% endif %}
+              </button>
+              <ul class="dropdown-menu">
+                <div class="dropdown-menu-title">
+                  📢 내 알림
+                </div>
+                {% if all_requests %}
+                <li><hr class="dropdown-divider"></li>
+                <h2>💓 스터디 가입 요청</h2>
+                {% for study_requests in all_requests %}
+                {% with study_requests|first as study %}
+                  {% for request in study_requests|last %}
+                    <div>
+                      <div>{{ study.title }} - {{ request }}</div>
+                      <form action="{% url 'studies:accept' study.pk request %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">승인</button>
+                      </form>
+                      <form action="{% url 'studies:reject' study.pk request %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">거절</button>
+                      </form>
+                    </div>
+                  {% endfor %}
+                {% endwith %}
+                {% endfor %}
+                {% endif %}
+                {% if all_announcements %}
+                <hr>
+                <h2>📌 공지사항</h2>
+
+                {% for study_announcements in all_announcements %}
+                  {% for announcement in study_announcements %}
+                    <a href="{% url 'studies:announcement_detail' announcement.study.pk announcement.pk %}">
+                      <div>👉 {{ announcement.study.title }} {{ announcement.title }}</div>
+                    </a>
+                  {% endfor %}
+                {% endfor %}
+                {% endif %}
+              </ul>
+            </div>
             <a href="{% url 'accounts:profile' request.user %}">
               <div class="nav__item">내 프로필</div>
             </a>
@@ -120,6 +167,17 @@
   
   {# ToastUI #}
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+  {% comment %} <script>
+    fetch('/alarm')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  </script> {% endcomment %}
 
 </body>
 
