@@ -13,7 +13,7 @@ class Problem(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_problems')
     
     # url shortener + 미리보기 + Validator
-    url = models.CharField('문제 링크', max_length=1000)
+    url = models.URLField('문제 링크', max_length=1000)
     tags = TaggableManager(blank=True, related_name='problem_set')
     description = models.TextField('설명')
 
