@@ -4,13 +4,13 @@ asgiref==3.6.0
 asttokens==2.2.1
 async-timeout==4.0.2
 attrs==23.1.0
-autobahn==23.1.2
+autobahn==23.6.1
 Automat==22.10.0
 backcall==0.2.0
-billiard==3.6.4.0
-boto3==1.26.144
-botocore==1.29.144
-celery==5.2.7
+billiard==4.1.0
+boto3==1.26.147
+botocore==1.29.147
+celery==5.3.0
 certifi==2023.5.7
 cffi==1.15.1
 channels==4.0.0
@@ -21,7 +21,7 @@ click-plugins==1.1.1
 click-repl==0.2.0
 cmarkgfm==2022.10.27
 constantly==15.1.0
-cryptography==41.0.0
+cryptography==41.0.1
 daphne==4.0.0
 decorator==5.1.1
 defusedxml==0.7.1
@@ -29,7 +29,7 @@ Django==3.2.18
 django-allauth==0.54.0
 django-appconf==1.0.5
 django-debug-toolbar==4.1.0
-django-extensions==3.2.1
+django-extensions==3.2.3
 django-imagekit==4.1.0
 django-multiselectfield==0.1.12
 django-rest-framework==0.1.0
@@ -40,10 +40,10 @@ executing==1.2.0
 hyperlink==21.0.0
 idna==3.4
 incremental==22.10.0
-ipython==8.13.2
+ipython==8.14.0
 jedi==0.18.2
 jmespath==1.0.1
-kombu==5.2.4
+kombu==5.3.0
 Markdown==3.4.3
 matplotlib-inline==0.1.6
 msgpack==1.0.5
@@ -63,6 +63,7 @@ pycparser==2.21
 Pygments==2.15.1
 PyJWT==2.7.0
 pyOpenSSL==23.2.0
+pyshorteners==1.0.1
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python3-openid==3.2.0
@@ -78,7 +79,8 @@ stack-data==0.6.2
 traitlets==5.9.0
 Twisted==22.10.0
 txaio==23.1.1
-typing_extensions==4.6.2
+typing_extensions==4.6.3
+tzdata==2023.3
 urllib3==1.26.16
 vine==5.0.0
 wcwidth==0.2.6
