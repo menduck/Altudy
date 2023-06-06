@@ -100,9 +100,18 @@ def update(request, study_pk: int):
         if form.is_valid():
             # taggit을 위해 commit=False 후 save_m2m()
             study = form.save(commit=False)
-            # 스터디 가입 조건-가입 불가로 변경시 모든 가입 요청 삭제
+            # 스터디 가입 조건-가입 불가로 변경시 모든 가입 요청 삭제, 모집 마감
             if study.join_condition == 3:
                 study.join_request.clear()
+                study.is_recruiting = 2
+
+            # 스터디 정원 늘어난 경우 - 가입 불가 상태가 아니고, 기존에 모집 마감상태였다면 모집 중으로 다시 변경
+            if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+                study.is_recruiting = 1
+            # 스터디 정원을 현재 인원만큼 줄인 경우 - 가입 불가 상태가 아니고, 기존에 모집 중 상태였다면 모집 마감으로 다시 변경
+            elif Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] == study.capacity and study.join_condition != 3 and study.is_recruiting == 1:
+                study.is_recruiting = 2
+            
             study.save()
             form.save_m2m()
             
@@ -153,6 +162,11 @@ def join(request, study_pk: int):
             study.join_request.add(me)
         # join_condition == 3 - 가입불가
     
+    # 가입 후 스터디 인원 만원 시 모집 마감
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
+        study.is_recruiting = 2
+        study.save()
+
     return redirect('studies:detail', study_pk)
     
 
@@ -166,6 +180,11 @@ def withdraw(request, study_pk: int):
         # 스터디장 탈퇴 불가
         if me != study.user:
             study.studying_users.remove(me)
+    
+    # 탈퇴 후에 정원이 남아있고, 가입 불가 상태가 아니고, 모집 마감상태라면 모집 중으로 다시 변경
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+        study.is_recruiting = 1
+        study.save()
         
     return redirect('studies:detail', study_pk)
 
@@ -191,6 +210,11 @@ def accept(request, study_pk: int, username: int):
         Studying.objects.get_or_create(study=study, user=person)
         study.join_request.remove(person)
     
+    # 가입 후 스터디 인원 만원 시 모집 마감
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
+        study.is_recruiting = 2
+        study.save()
+
     return redirect('studies:detail', study_pk)
 
 # 스터디 가입 요청 시 거절
@@ -217,9 +241,15 @@ def expel(request, study_pk: int, username: int):
     # 스터디장인 유저만 스터디원 방출 가능
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         studying = Studying.objects.filter(study=study, user=person)
-        if studying.permission <= 2:
+        if studying.first().permission <= 2:
             studying.first().delete()
     
+
+    # 방출 후에 정원이 남아있고, 가입 불가 상태가 아니고, 모집 마감상태라면 모집 중으로 다시 변경
+        if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+            study.is_recruiting = 1
+            study.save()
+
     return redirect('studies:detail', study_pk)
 
 
@@ -503,3 +533,18 @@ def dismiss(request, study_pk: int, username: str):
     studying.permission = 1
     
     return redirect('studies:mainboard', study_pk)
+
+
+def condition(request, study_pk: int, condition_num: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    if request.method == 'POST':
+        if condition_num in [1, 2, 3]:
+            study.join_condition = condition_num
+            study.save()
+            return redirect('studies:mainboard', study_pk)
+        else:
+            print('올바르지 않은 조건 번호입니다.')
+            return redirect('studies:mainboard', study_pk)
+    else:
+        print('잘못된 요청입니다.')
+        return redirect('studies:mainboard', study_pk)
