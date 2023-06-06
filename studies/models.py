@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from taggit.managers import TaggableManager
 from multiselectfield import MultiSelectField
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 LANGUAGE_CHOICES = [
@@ -58,6 +59,13 @@ class Study(models.Model):
         choices=[(1, '승인 필요'), (2, '바로 가입'), (3, '가입 불가'),],
         default=1
         )
+    
+    # 현재 모집 중인지 (정원 초과 or 가입 불가 선택)
+    is_recruiting = models.PositiveSmallIntegerField(
+        choices=[(1, '모집 중'), (2, '모집 마감'),],
+        default=1
+    )
+
     # 스터디 가입 요청
     join_request = models.ManyToManyField(to=settings.AUTH_USER_MODEL, related_name='study_request', blank=True)
     
@@ -78,6 +86,11 @@ class Studying(models.Model):
     permission = models.PositiveSmallIntegerField(default=1)
     joined_at = models.DateTimeField(auto_now_add=True)
     
+    # def clean(self):
+    #     super().clean()
+    #     study = self.study
+    #     if Studying.objects.filter(study=study).count() < study.capacity_min:
+    #         raise ValidationError({'study': '스터디 최소 인원 수를 충족하지 않습니다.'})
     
 class Announcement(models.Model):
     study = models.ForeignKey(to=Study, on_delete=models.CASCADE, related_name='announcements')

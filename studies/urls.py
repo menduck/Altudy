@@ -10,6 +10,8 @@ urlpatterns = [
     path('create/', views.create, name='create'),
     path('<int:study_pk>/delete/', views.delete, name='delete'),
     path('<int:study_pk>/update/', views.update, name='update'),
+    # 스터디 join_conditoin 변경
+    path('<int:study_pk>/condition/<int:condition_num>/', views.condition, name='condition'),
     
     # 스터디 가입 요청 관련 {POST}
     path('<int:study_pk>/join/', views.join, name='join'), # 스터디 가입, 가입 요청
