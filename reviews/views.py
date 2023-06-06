@@ -234,12 +234,15 @@ def comment_delete(request, comment_pk):
 def like(request):
     try:
         data = json.loads(request.body)
-        object_identifier = data.get('objectIdentifier')
-        if object_identifier is not None:
-            model, pk = object_identifier.split('-')
-            obj = get_object_or_404(eval(model), pk=pk)
     except:
         raise Http404("Request not valid")
+    
+    object_identifier = data.get('objectIdentifier')
+    if object_identifier is not None:
+        model, pk = object_identifier.split('-')
+        if model not in {'Problem', 'Review', 'Comment'}:
+            raise Http404("Request not valid")
+        obj = get_object_or_404(eval(model), pk=pk)
 
     # 조건문 추가해 Problem, Review, Comment 별로 swap_text 수정 가능
     if request.user in obj.like_users.all():
