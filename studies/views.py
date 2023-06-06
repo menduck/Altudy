@@ -537,9 +537,22 @@ def dismiss(request, study_pk: int, username: str):
 
 def condition(request, study_pk: int, condition_num: int):
     study = get_object_or_404(Study, pk=study_pk)
+
+    # 스터디 장만 변경 가능
+    if request.user != study.user:
+        return redirect('studies:mainboard', study_pk)
+    
     if request.method == 'POST':
         if condition_num in [1, 2, 3]:
             study.join_condition = condition_num
+
+            if study.join_condition == 3:
+                study.is_recruiting = 2
+            elif Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+                study.is_recruiting = 1
+            elif Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] == study.capacity and study.join_condition != 3 and study.is_recruiting == 1:
+                study.is_recruiting = 2
+                
             study.save()
             return redirect('studies:mainboard', study_pk)
         else:
