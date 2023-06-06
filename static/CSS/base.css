@@ -91,6 +91,34 @@ input:focus {
   margin: 0 8px;
 }
 
+/* 알림 드롭다운 */
+.dropdown-toggle{
+  background-color: inherit;
+  border: none;
+  color: inherit;
+}
+
+.dropdown-menu{
+  width: 350px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-2);
+  color: var(--color-gray-7);
+  padding: 20px;
+}
+
+.dropdown-menu hr {
+  margin: 10px 0;
+}
+
+.dropdown-menu h2 {
+  font-weight: var(--weight-semi-bold);
+  margin: 5px 0;
+}
+.dropdown-menu-title{
+  font-size: var(--font-regular);
+  font-weight: var(--weight-bold);
+}
+
 /* footer */
 .footer__container {
   display: flex;

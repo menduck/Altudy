@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
+{% comment %} {% extends 'base.html' %}
 
 {% block title %}{% endblock title %}
 
 
 {% block content %}
-<h1 class="">임시 알람 페이지</h1>
-
-<hr>
+<h1 class="">임시 알람 페이지</h1> {% endcomment %}
 
 <h2>스터디 가입 요청</h2>
 {% for study_requests in all_requests %}
@@ -38,5 +36,5 @@
     </a>
   {% endfor %}
 {% endfor %}
-
-{% endblock content %}
+{% comment %} 
+{% endblock content %} {% endcomment %}
