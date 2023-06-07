@@ -97,7 +97,7 @@ class Announcement(models.Model):
     study = models.ForeignKey(to=Study, on_delete=models.CASCADE, related_name='announcements')
     
     title = models.CharField(max_length=20)
-    content = models.CharField(max_length=100)
+    content = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -118,3 +118,11 @@ class AnnouncementRead(models.Model):
     
 #     start_time = models.TimeField(blank=True, null=True)
 #     end_time = models.TimeField(blank=True, null=True)
+
+
+class StudyComment(models.Model):
+    study = models.ForeignKey(to=Study, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+    content = models.CharField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)

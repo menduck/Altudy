@@ -1,5 +1,5 @@
 from django import forms
-from .models import Study, Announcement, Studying
+from .models import Study, Announcement, Studying, StudyComment
 from taggit.forms import TagWidget, TagField
 
 from reviews.fields import SpaceSeparatedTagsField
@@ -72,5 +72,17 @@ class AnnouncementForm(forms.ModelForm):
         }
         widgets = {
             'title': forms.TextInput(attrs={}),
+            'content': forms.Textarea(attrs={}),
+        }
+        
+        
+class StudyCommentForm(forms.ModelForm):
+    class Meta:
+        model = StudyComment
+        fields = ('content',)
+        labels = {
+            # 'content': '',
+        }
+        widgets = {
             'content': forms.Textarea(attrs={}),
         }
