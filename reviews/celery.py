@@ -23,6 +23,4 @@ export PATH=$PATH:/usr/local/sbin
 rabbitmq-server (또는 brew services start/stop rabbitmq)
 
 MacOS does not have Supervisor pre-installed but there's an alternative called launchd - native service management framework for MacOS.
-
-작동이 잘 되고 있는건가?
 '''
