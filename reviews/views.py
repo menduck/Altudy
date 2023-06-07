@@ -119,12 +119,8 @@ def update(request, pk):
 def delete(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
     if request.user == problem.user:
-        try:
-            problem.delete()
-            return redirect('studies:mainboard')
-        finally:
-            # 레이스 컨디션 테스트 어떻게?
-            Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
+        problem.delete()
+        return redirect('studies:mainboard')
     # 권한이 없는 페이지 만들기?
     # 왔던 곳으로 되돌아가게 하려면?
     return redirect('reviews:detail', pk)
@@ -175,11 +171,8 @@ def review_update(request, review_pk):
 def review_delete(request, review_pk):
     review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
     if request.user == review.user:
-        try:
-            review.delete()
-            return redirect('studies:index')
-        finally:
-            Tag.objects.annotate(ntag=Count('taggit_taggeditem_items')).filter(ntag=0).delete()
+        review.delete()
+        return redirect('studies:index')
     return redirect('reviews:detail', review.problem.pk)
 
 
