@@ -49,7 +49,7 @@
   <a href="{% url 'reviews:create' %}?study={{ study.pk }}" style="color:blue;">문제 생성하기</a>
   <br>
   {% for prob in problems %}
-    <p><a href="#">{{ prob }}</a></p>
+    <p><a href="{% url 'reviews:detail' prob.pk %}">{{ prob }}</a></p>
   {% endfor %}
 </div>
 <hr>
