@@ -4,22 +4,39 @@
   align-items: center;
 }
 
+/* 문제 */
 .probelm-box {
   width: 600px;
   height: auto;
   padding: 10px;
   margin-top: 30px;
-  background-color: aqua;
+}
+
+hgroup {
+  padding: 10px;
+  border-bottom: 1px solid var(--color-gray-3);
+}
+
+.probelm-content-box {
+  padding: 10px;
+}
+
+.problem-title {
+  margin-bottom: 10px;
+  font-size: var(--font-medium);
+  font-weight: var(--weight-bold);
+}
+
+.problem-description {
+  padding: 10px;
 }
 
 .problem-button-box {
   display: flex;
-  justify-content: flex-end;
-  width: 500px;
+  justify-content: space-between;
+  width: 600px;
   height: auto;
-  padding: 10px;
   margin-top: 15px;
-  background-color: rgb(84, 91, 232);
 }
 
 .submit-button {
@@ -27,28 +44,31 @@
   justify-content: center;
   width: 500px;
   height: auto;
+  margin: 0 auto;
   padding: 10px;
-  background-color: rgb(117, 162, 231);
 }
 
+/* 리뷰 */
 .review-box {
   width: 600px;
   height: auto;
   padding: 10px;
   margin-top: 30px;
-  background-color: rgb(138, 216, 156);
 }
 
 .review {
-  width: 550px;
-  height: auto;
-  padding: 10px;
-  background-color: rgb(8, 136, 31);
+  width: 600px;
+  border-top: 1px solid var(--color-gray-3);
+  padding: 10px 0;
 }
 
 .review-content {
+  width: 100%;
   margin-bottom: 15px;
-  background-color: rgb(164, 180, 166);
+  padding: 20px 20px 10px;
+  background-color: var(--color-gray-2);
+  border-radius: var(--border-radius-soft);
+  font-size: var(--font-regular);
 }
 
 .review-button-box {
@@ -56,13 +76,8 @@
   justify-content: flex-end;
   width: 500px;
   height: auto;
-  padding: 10px;
-  background-color: rgb(101, 215, 97);
-}
-
-.like {
-  color: var(--color-white);
-  margin: 0 10px;
+  margin-left: auto;
+  padding: 10px 0;
 }
 
 /* 버튼 스타일 초기화 */
@@ -81,10 +96,16 @@
 }
 
 .joinbutton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 0 5px;
   height: 30px;
+  border: 1px solid var(--color-green);
   background-color: var(--color-green);
   color: var(--color-white);
-  text-align: center;
+  font-size: var(--font-small);
   line-height: 30px;
 }
 
@@ -92,5 +113,29 @@
   border: 1px solid var(--color-green);
   background-color: var(--color-white);
   color: var(--color-green);
-  font-weight: var(--weight-semi-bold);
+}
+
+#like-forms input[type="submit"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+  height: 30px;
+  margin: 0 10px;
+  border: 1px solid var(--color-green);
+  border-radius: var(--border-radius-soft);
+  background-color: var(--color-green);
+  color: var(--color-white);
+  line-height: 30px;
+}
+
+#like-forms input[type="submit"]:hover {
+  border: 1px solid var(--color-green);
+  background-color: var(--color-white);
+  color: var(--color-green);
+}
+
+.gray-button {
+  border: none;
+  background-color: var(--color-gray-6);
 }

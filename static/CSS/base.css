@@ -124,6 +124,25 @@ input:focus {
   font-weight: var(--weight-bold);
 }
 
+.content-box {
+  margin-top: 10px;
+}
+
+.button-box {
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  padding: 5px 10px;
+  margin: 5px 5px 0;
+  background-color: var(--color-gray-5);
+}
+
+.button:hover {
+  background-color: var(--color-green);
+}
+
 /* footer */
 .footer__container {
   display: flex;
@@ -155,4 +174,14 @@ input:focus {
   border-radius: 50%;
 
   position: absolute;
+}
+
+.dropdown-menu__no-message {
+  color:grey; 
+  margin-top: 1rem;
+}
+
+.dropdown-menu__study {
+  font-weight: bold;
+  color: var(--color-green);
 }

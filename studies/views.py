@@ -24,7 +24,9 @@ def index(request):
         ).order_by('-created_at')
     
     selected_langs = request.GET.get('lang')
-    print(selected_langs)
+    is_recruit = request.GET.get('recruits')
+    if is_recruit == 'true':
+        studies = studies.filter(is_recruiting=1)
 
     if selected_langs:
         selected_langs_list = selected_langs.split(',') 
