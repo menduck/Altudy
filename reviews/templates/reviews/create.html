@@ -11,7 +11,6 @@
 {% block content %}
 <div class="main__container">
   <form id="form" action="{% url 'reviews:create' %}" method="post">
-    {% comment %} <input type="hidden" name="study" value="{{ study_id }}"> {% endcomment %}
     {% csrf_token %}
     
     {% with form.title as title %}
@@ -24,7 +23,7 @@
     {% with form.url as url %}
     <div class="form-group">
       <label for="{{ url.id_for_label }}">{{ url.label }}</label>
-      <input type="{{ url.field.widget.input_type }}" class="form-control" id="" placeholder="{{ url.label }}" name="{{ url.name }}" />
+      <input type="{{ url.field.widget.input_type }}" class="form-control" id="" placeholder="{{ url.label }}" name="{{ url.name }}" value="https://"/>
     </div>
     {% endwith %}
 

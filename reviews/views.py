@@ -93,7 +93,8 @@ def update(request, pk):
     if request.method == 'POST':
         form = ProblemForm(data=request.POST, instance=problem)
         if form.is_valid():
-            form.save()
+            updated_form = form.save(commit=False)
+            updated_form.save()
             form.save_m2m()
             return redirect('reviews:detail', problem.pk)
     else:
