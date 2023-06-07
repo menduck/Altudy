@@ -4,6 +4,21 @@
 
 {% endblock style %} {% block content %}
 <h1>{{ study }}스터디 메인보드</h1>
+
+<form id="condition-form" method="post" action="{% url 'studies:condition' study_pk=study.pk condition_num=0 %}">
+  {% csrf_token %}
+  
+  <select id="condition-select" name="condition_num" data-condition="{{ study.join_condition }}" onchange="updateAction(this)">
+    <option value="1" {% if study.join_condition == 1 %}selected{% endif %}>승인 필요</option>
+    <option value="2" {% if study.join_condition == 2 %}selected{% endif %}>바로 가입</option>
+    <option value="3" {% if study.join_condition == 3 %}selected{% endif %}>가입 불가</option>
+  </select>
+  
+  <noscript>
+    <input type="submit" value="조건 업데이트">
+  </noscript>
+</form>
+
 <hr>
 <div>
   <div>사이드 바</div>
@@ -94,5 +109,5 @@
 
 {% endif %}
 
-
+<script src="{% static 'studies/condition_change.js' %}"></script>
 {% endblock content %}
