@@ -28,6 +28,7 @@ django-rest-framework = "*"
 celery = "*"
 cryptography = "*"
 graphene-django = "*"
+graphene = "*"
 
 [dev-packages]
 
