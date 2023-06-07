@@ -229,3 +229,13 @@ EMAIL_USE_TLS = True  # TLS 보안 방법
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 사이트와 관련한 자동응답 받을 이메일 주소
 
 # -------- end allauth --------
+
+# Celery CRONJOB
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'remove-unused-tags-every-day': {
+        'task': 'reviews.tasks.remove_unused_tags',
+        'schedule': crontab(hour=5, minute=0),
+    },
+}
