@@ -3,6 +3,7 @@ const userPercentages = JSON.parse(
   document.getElementById('user_percentages').textContent
 );
 let delayed;
+console.log(userPercentages)
 
 new Chart(attendanceChart, {
   type: 'bar',

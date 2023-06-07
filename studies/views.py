@@ -296,17 +296,16 @@ def mainboard(request, study_pk: int):
     total_reviews = 0
 
     for user in users:
-            reviews_count = Review.objects.filter(problem__study=study, user=user).count()
-            user_reviews[user.username] = reviews_count
-            total_reviews += reviews_count
+        reviews_count = Review.objects.filter(problem__study=study, user=user).count()
+        user_percentages[user.emoji_username()] = reviews_count
+        total_reviews += reviews_count
 
     for user, reviews_count in user_reviews.items():
-            if total_reviews:
-                # Division 0 Error 발생 가능
-                percentage = (reviews_count / total_reviews) * 100
-            else:
-                percentage = 0
-            user_percentages[user] = int(percentage)
+        if total_reviews:
+            percentage = (reviews_count / total_reviews) * 100
+        else:
+            percentage = 0
+        user_percentages[user.emoji_username()] = int(percentage)
 
     # 상위 3명의 유저
     user_reviews = sorted(user_reviews.items(), key=lambda x: x[1], reverse=True)[:3]
