@@ -148,8 +148,8 @@ def review_create(request, pk):
 
 @login_required
 def review_update(request, review_pk):
-    review = get_object_or_404(Review.objects.select_related(
-        'problem__study').prefetch_related('problem__study__studying_users'),
+    review = get_object_or_404(
+        Review.objects.select_related('problem__study'),
         pk=review_pk,
     )
     
