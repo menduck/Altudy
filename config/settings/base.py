@@ -212,8 +212,8 @@ SOCIALACCOUNT_AUTO_SIGNUP = False
 ## 부가정보 자동 입력을 위한 Adpater 연결
 SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
 
+ACCOUNT_EMAIL_REQUIRED = True
 # 회원가입 메일 인증 관련
-# ACCOUNT_EMAIL_REQUIRED = True
 ## 회원가입 시 이메일 인증 여부
 # ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ## get 방식으로 email 인증에 접속했을 때 허용시켜주는 옵션
