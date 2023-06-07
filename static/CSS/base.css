@@ -156,3 +156,13 @@ input:focus {
 
   position: absolute;
 }
+
+.dropdown-menu__no-message {
+  color:grey; 
+  margin-top: 1rem;
+}
+
+.dropdown-menu__study {
+  font-weight: bold;
+  color: var(--color-green);
+}
