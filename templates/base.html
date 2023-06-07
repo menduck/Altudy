@@ -88,16 +88,18 @@
                 {% for study_requests in all_requests %}
                 {% with study_requests|first as study %}
                   {% for request in study_requests|last %}
-                    <div>
+                    <div class="content-box">
                       <div>{{ study.title }} - {{ request }}</div>
-                      <form action="{% url 'studies:accept' study.pk request %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">승인</button>
-                      </form>
-                      <form action="{% url 'studies:reject' study.pk request %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">거절</button>
-                      </form>
+                      <div class="button-box">
+                        <form action="{% url 'studies:accept' study.pk request %}" method="post">
+                          {% csrf_token %}
+                          <button class="button button-small" type="submit">승인</button>
+                        </form>
+                        <form action="{% url 'studies:reject' study.pk request %}" method="post">
+                          {% csrf_token %}
+                          <button class="button button-small" type="submit">거절</button>
+                        </form>
+                      </div>
                     </div>
                   {% endfor %}
                 {% endwith %}
