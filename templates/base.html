@@ -77,7 +77,12 @@
                 <div class="dropdown-menu-title">
                   📢 내 알림
                 </div>
-                {% if all_requests %}
+
+                {% if not requests_exist and not announcements_exist %}
+                  <p class="dropdown-menu__no-message">알림 없음</p>
+                {% endif %}
+
+                {% if requests_exist %}
                 <li><hr class="dropdown-divider"></li>
                 <h2>💓 스터디 가입 요청</h2>
                 {% for study_requests in all_requests %}
@@ -98,16 +103,23 @@
                 {% endwith %}
                 {% endfor %}
                 {% endif %}
-                {% if all_announcements %}
+
+                {% if announcements_exist %}
                 <hr>
                 <h2>📌 공지사항</h2>
 
                 {% for study_announcements in all_announcements %}
-                  {% for announcement in study_announcements %}
-                    <a href="{% url 'studies:announcement_detail' announcement.study.pk announcement.pk %}">
-                      <div>👉 {{ announcement.study.title }} {{ announcement.title }}</div>
-                    </a>
-                  {% endfor %}
+                  {% with study_announcements|first as study %}
+                  {% if study_announcements|last %}
+                  <hr>
+                    <p class="dropdown-menu__study">{{ study.title }}</p>
+                  {% endif %}
+                    {% for announcement in study_announcements|last %}
+                      <a href="{% url 'studies:announcement_detail' announcement.study.pk announcement.pk %}">
+                        <div>👉 {{ announcement.title }}</div>
+                      </a>
+                    {% endfor %}
+                  {% endwith %}
                 {% endfor %}
                 {% endif %}
               </ul>
