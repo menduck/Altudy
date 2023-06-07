@@ -107,7 +107,7 @@ def update(request, pk):
 @login_required
 def delete(request, pk):
     problem = get_object_or_404(
-        Problem.objects.select_related('study').prefetch_related('studying_users'), pk=pk,
+        Problem.objects.select_related('study'), pk=pk,
     )
     if not problem.study.studying_users.filter(username=request.user).exists():
         return redirect('studies:detail', problem.study.pk)
