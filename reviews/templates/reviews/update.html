@@ -16,14 +16,14 @@
     {% with form.title as title %}
     <div class="form-group">
       <label for="{{ title.id_for_label }}">{{ title.label }}</label>
-      <input type="{{ title.field.widget.input_type }}" class="form-control" id="" placeholder="{{ title.label }}" name="{{ title.name }}" value="{{ title.value }}"/>
+      <input type="{{ title.field.widget.input_type }}" class="form-control" id="" placeholder="{{ title.label }}" name="{{ title.name }}" value="{{ form.instance.title }}"/>
     </div>
     {% endwith %}
 
     {% with form.url as url %}
     <div class="form-group">
       <label for="{{ url.id_for_label }}">{{ url.label }}</label>
-      <input type="{{ url.field.widget.input_type }}" class="form-control" id="" placeholder="{{ url.label }}" name="{{ url.name }}" value="{{ url.value }}"/>
+      <input type="{{ url.field.widget.input_type }}" class="form-control" id="" placeholder="{{ url.label }}" name="{{ url.name }}" value="{{ form.instance.url }}"/>
     </div>
     {% endwith %}
 
@@ -41,10 +41,9 @@
     {% with form.tags as tags %}
     <div class="form-group">
       <label for="{{ tags.id_for_label }}">{{ tags.label }}</label>
-      <input type="{{ tags.field.widget.input_type }}" class="form-control" id="" placeholder="{{ tags.label }}" name="{{ tags.name }}"/>
+      <input type="{{ tags.field.widget.input_type }}" class="form-control" id="" placeholder="{{ tags.label }}" name="{{ tags.name }}" value="{% for tag in form.instance.tags.all %}{{ tag }} {% endfor %}"/>
     </div>
     {% endwith %}
-    
     <button class="submit-button button-small" type="submit">문제 수정하기</button>
   </form>
 </div>
