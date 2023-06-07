@@ -92,6 +92,11 @@ input:focus {
 }
 
 /* 알림 드롭다운 */
+
+.dropdown{
+  position: relative;
+}
+
 .dropdown-toggle{
   background-color: inherit;
   border: none;
@@ -138,3 +143,16 @@ input:focus {
 /* .teamInfo a {
   color: var(--color-gray-5);
 } */
+
+/* 알림 옆 빨간원 표시 */
+.alarm-icon {
+  width:10px; 
+  height:10px; 
+  background-color:red;
+  /* float: left;  */
+  top: -5px; 
+  left: 34px; 
+  border-radius: 50%;
+
+  position: absolute;
+}

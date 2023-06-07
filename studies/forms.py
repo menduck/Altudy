@@ -1,5 +1,5 @@
 from django import forms
-from .models import Study, Announcement
+from .models import Study, Announcement, Studying
 from taggit.forms import TagWidget, TagField
 
 from reviews.fields import SpaceSeparatedTagsField
@@ -50,6 +50,16 @@ class StudyForm(forms.ModelForm):
             'category': '태그를 입력하세요. 공백문자로 태그를 구분하며 대소문자를 구분하지 않습니다.',
             'capacity': '최대 인원 수는 10명입니다.',
         }
+
+
+    # 정원을 현재 스터디 인원보다 낮게 수정하려 하는 경우 capacity 필드에 에러메시지 전송
+    def clean(self):
+        cleaned_data = super().clean()
+        capacity = cleaned_data.get('capacity')
+        studying_count = Studying.objects.filter(study=self.instance).count()
+
+        if capacity and studying_count > capacity:
+            self.add_error('capacity', f"현재 스터디 인원({studying_count}명)보다 정원을 줄일 수 없습니다.")
         
         
 class AnnouncementForm(forms.ModelForm):

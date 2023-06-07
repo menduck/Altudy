@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
+from django.db import models, transaction
 # from django.urls import reverse_lazy
 from taggit.managers import TaggableManager
 
@@ -13,8 +13,8 @@ class Problem(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_problems')
     
     # url shortener + 미리보기 + Validator
-    url = models.CharField('문제 링크', max_length=1000)
-    tags = TaggableManager(blank=True)
+    url = models.URLField('문제 링크', max_length=1000)
+    tags = TaggableManager(blank=True, related_name='problem_set')
     description = models.TextField('설명')
 
     study = models.ForeignKey("studies.Study", verbose_name='스터디', on_delete=models.CASCADE, default=1)
@@ -29,10 +29,10 @@ class Problem(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    @transaction.atomic
     def save(self, *args, **kwargs):
         self.post_num = self.study.post_index
         self.study.post_index = models.F('post_index') + 1
-        # self.study.save(update_fields=['post_index'])
         self.study.save()
         super().save(*args, **kwargs)
 
@@ -45,7 +45,7 @@ class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='작성자', on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
     problem = models.ForeignKey("reviews.Problem", verbose_name='문제', on_delete=models.CASCADE)
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager(blank=True, related_name='review_set')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,7 +63,7 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='작성자', on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
     review = models.ForeignKey("reviews.Review", verbose_name='리뷰', on_delete=models.CASCADE)
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager(blank=True, related_name='comment_set')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

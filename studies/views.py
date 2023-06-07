@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 
 from reviews.models import Problem, Review
-from .models import Study, Studying, Announcement
+from .models import Study, Studying, Announcement, AnnouncementRead
 from .forms import StudyForm, AnnouncementForm
 from .models import LANGUAGE_CHOICES
 from django.db.models import Q
@@ -100,9 +100,18 @@ def update(request, study_pk: int):
         if form.is_valid():
             # taggit을 위해 commit=False 후 save_m2m()
             study = form.save(commit=False)
-            # 스터디 가입 조건-가입 불가로 변경시 모든 가입 요청 삭제
+            # 스터디 가입 조건-가입 불가로 변경시 모든 가입 요청 삭제, 모집 마감
             if study.join_condition == 3:
                 study.join_request.clear()
+                study.is_recruiting = 2
+
+            # 스터디 정원 늘어난 경우 - 가입 불가 상태가 아니고, 기존에 모집 마감상태였다면 모집 중으로 다시 변경
+            if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+                study.is_recruiting = 1
+            # 스터디 정원을 현재 인원만큼 줄인 경우 - 가입 불가 상태가 아니고, 기존에 모집 중 상태였다면 모집 마감으로 다시 변경
+            elif Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] == study.capacity and study.join_condition != 3 and study.is_recruiting == 1:
+                study.is_recruiting = 2
+            
             study.save()
             form.save_m2m()
             
@@ -149,10 +158,18 @@ def join(request, study_pk: int):
         if study.join_condition == 2:
             # Studying.objects.create(study=study, user=me)
             study.studying_users.add(me)
+            # AnnouncementRead 공지 읽음 여부 테이블에 추가
+            for announcement in study.announcements.all():
+                announcement.announcement_reads.add(me)
         elif study.join_condition == 1:
             study.join_request.add(me)
         # join_condition == 3 - 가입불가
     
+    # 가입 후 스터디 인원 만원 시 모집 마감
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
+        study.is_recruiting = 2
+        study.save()
+
     return redirect('studies:detail', study_pk)
     
 
@@ -166,6 +183,11 @@ def withdraw(request, study_pk: int):
         # 스터디장 탈퇴 불가
         if me != study.user:
             study.studying_users.remove(me)
+    
+    # 탈퇴 후에 정원이 남아있고, 가입 불가 상태가 아니고, 모집 마감상태라면 모집 중으로 다시 변경
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+        study.is_recruiting = 1
+        study.save()
         
     return redirect('studies:detail', study_pk)
 
@@ -189,8 +211,15 @@ def accept(request, study_pk: int, username: int):
     # 스터디장 혹은 부스터디장(permission > 1)인 유저만 요청 허가 가능
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         Studying.objects.get_or_create(study=study, user=person)
+        for announcement in study.announcements.all():
+            announcement.announcement_reads.add(person)
         study.join_request.remove(person)
     
+    # 가입 후 스터디 인원 만원 시 모집 마감
+    if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
+        study.is_recruiting = 2
+        study.save()
+
     return redirect('studies:detail', study_pk)
 
 # 스터디 가입 요청 시 거절
@@ -217,9 +246,15 @@ def expel(request, study_pk: int, username: int):
     # 스터디장인 유저만 스터디원 방출 가능
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         studying = Studying.objects.filter(study=study, user=person)
-        if studying.permission <= 2:
+        if studying.first().permission <= 2:
             studying.first().delete()
     
+
+    # 방출 후에 정원이 남아있고, 가입 불가 상태가 아니고, 모집 마감상태라면 모집 중으로 다시 변경
+        if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+            study.is_recruiting = 1
+            study.save()
+
     return redirect('studies:detail', study_pk)
 
 
@@ -401,6 +436,11 @@ def announcement_create(request, study_pk: int):
             announcement = form.save(commit=False)
             announcement.study = study
             announcement.save()
+            
+            # AnnouncementRead 공지 읽음 여부 테이블에 추가
+            for person in study.studying_users.all():
+                announcement.announcement_reads.add(person)
+            
             return redirect('studies:announcement_detail', study_pk, announcement.pk)
     else:
         form = AnnouncementForm()
@@ -415,6 +455,11 @@ def announcement_create(request, study_pk: int):
 def announcement_detail(request, study_pk: int, announcement_pk: int):
     announcement = get_object_or_404(Announcement, pk=announcement_pk)
     leader = get_object_or_404(Study, pk=study_pk).user
+    
+    # 읽음 상태로 전환
+    announcement_read = AnnouncementRead.objects.get(announcement=announcement, user=request.user)
+    announcement_read.is_read = True
+    announcement_read.save()
     
     context = {
         'announcement': announcement,
@@ -436,7 +481,13 @@ def announcement_update(request, study_pk: int, announcement_pk: int):
     if request.method == 'POST':
         form = AnnouncementForm(data=request.POST, instance=announcement)
         if form.is_valid():
-            form.save()
+            announcement = form.save()
+            # 공지 업데이트 시 읽음 상태 초기화
+            announcement_reads = AnnouncementRead.objects.filter(announcement=announcement)
+            for announcement_read in announcement_reads:
+                announcement_read.is_read = False
+                announcement_read.save()
+            
             return redirect('studies:announcement_detail', study_pk, announcement_pk)
     else:
         form = AnnouncementForm(instance = announcement)
@@ -459,7 +510,7 @@ def announcement_delete(request, study_pk: int, announcement_pk: int):
     announcement = get_object_or_404(Announcement, pk=announcement_pk)
     announcement.delete()
     
-    return redirect('studies:announcement')
+    return redirect('studies:announcement', study_pk)
 
 
 def appoint(request, study_pk: int, username: str, permission: int):
@@ -489,6 +540,7 @@ def appoint(request, study_pk: int, username: str, permission: int):
     return redirect('studies:mainboard', study_pk)
 
 
+# 부스터디장 해임
 def dismiss(request, study_pk: int, username: str):
     study = get_object_or_404(Study, pk=study_pk)
     person = get_user_model().objects.get(username=username)
@@ -503,3 +555,31 @@ def dismiss(request, study_pk: int, username: str):
     studying.permission = 1
     
     return redirect('studies:mainboard', study_pk)
+
+
+def condition(request, study_pk: int, condition_num: int):
+    study = get_object_or_404(Study, pk=study_pk)
+
+    # 스터디 장만 변경 가능
+    if request.user != study.user:
+        return redirect('studies:mainboard', study_pk)
+    
+    if request.method == 'POST':
+        if condition_num in [1, 2, 3]:
+            study.join_condition = condition_num
+
+            if study.join_condition == 3:
+                study.is_recruiting = 2
+            elif Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] < study.capacity and study.join_condition != 3 and study.is_recruiting == 2:
+                study.is_recruiting = 1
+            elif Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] == study.capacity and study.join_condition != 3 and study.is_recruiting == 1:
+                study.is_recruiting = 2
+                
+            study.save()
+            return redirect('studies:mainboard', study_pk)
+        else:
+            print('올바르지 않은 조건 번호입니다.')
+            return redirect('studies:mainboard', study_pk)
+    else:
+        print('잘못된 요청입니다.')
+        return redirect('studies:mainboard', study_pk)
