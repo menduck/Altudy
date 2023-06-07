@@ -308,11 +308,12 @@ def mainboard(request, study_pk: int):
                 percentage = 0
             user_percentages[user] = int(percentage)
 
-    user_reviews = sorted(user_reviews.items(), key=lambda x: x[1], reverse=True)
-    user_percentages = sorted(user_percentages.items(), key=lambda x: x[1], reverse=True)
+    # 상위 3명의 유저
+    user_reviews = sorted(user_reviews.items(), key=lambda x: x[1], reverse=True)[:3]
+    user_percentages = sorted(user_percentages.items(), key=lambda x: x[1], reverse=True)[:3]
 
     # 메인보드에서 보여줄 공지
-    announcements = Announcement.objects.filter(study=study)
+    announcements = Announcement.objects.filter(study=study).order_by('-created_at')[:2]
     
     context = {
         'problems': problems,
