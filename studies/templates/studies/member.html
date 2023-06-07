@@ -34,7 +34,7 @@
   <p>멤버 관리</p>
   {% for member in study_members %}
   <div>
-    <span>{{ member.user }}</span>
+    <span>{{ member.user.emoji_username }}</span>
     {% if member.permission == 3 %}
       <span> - 조장</span>
     {% else %}

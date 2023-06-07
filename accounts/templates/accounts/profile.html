@@ -12,7 +12,7 @@
   <div class="main__logobox">
     <img src="{% static 'IMAGE/altudy.png' %}" alt="알터디 로고" class="main__altudylogo">
   </div>
-  <h1 class="main__title"><span>{{ request.user }} </span>님의 프로필</h1>
+  <h1 class="main__title"><span>{{ request.user.emoji_username }} </span>님의 프로필</h1>
   <div class="main__content"><span>아이디 </span>{{ person.username }}</div>
   <div class="main__content"><span>이메일 </span>{{ person.email }}</div>
   <div class="button-box">
