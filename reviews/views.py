@@ -120,7 +120,7 @@ def delete(request, pk):
     problem = get_object_or_404(Problem, pk=pk)
     if request.user == problem.user:
         problem.delete()
-        return redirect('studies:mainboard')
+        return redirect('studies:mainboard', problem.study.pk)
     # 권한이 없는 페이지 만들기?
     # 왔던 곳으로 되돌아가게 하려면?
     return redirect('reviews:detail', pk)
