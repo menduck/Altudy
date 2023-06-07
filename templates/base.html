@@ -68,10 +68,9 @@
           {% if user.is_authenticated %}
             <a href="{% url 'alarm' %}">
               <div class="nav__item">알림
-                {# 알림 뱃지, 조건 작성중... #}
+                {# 알림 뱃지, 빨간색 원 #}
                 {% if request.user|alarm_exists %}
-                <div style="width:10px; height:10px; background-color:red;
-                float: right; top: 0px; left: 0px; border-radius: 50%;"></div>
+                <div class="alarm-icon"></div>
                 {% endif %}
               </div>
             </a>

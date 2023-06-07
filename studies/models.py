@@ -74,10 +74,10 @@ class Study(models.Model):
 
     post_index = models.IntegerField('게시글 번호', default=1)
     
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
     
-    
+
 # study - user M:N 중개 테이블
 class Studying(models.Model):
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -92,6 +92,7 @@ class Studying(models.Model):
     #     if Studying.objects.filter(study=study).count() < study.capacity_min:
     #         raise ValidationError({'study': '스터디 최소 인원 수를 충족하지 않습니다.'})
     
+    
 class Announcement(models.Model):
     study = models.ForeignKey(to=Study, on_delete=models.CASCADE, related_name='announcements')
     
@@ -100,6 +101,15 @@ class Announcement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    announcement_reads = models.ManyToManyField(to=settings.AUTH_USER_MODEL, related_name='user_reads', through='AnnouncementRead')
+
+
+class AnnouncementRead(models.Model):
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    announcement = models.ForeignKey(to=Announcement, on_delete=models.CASCADE)
+    
+    is_read = models.BooleanField(default=False)
+    
 
 # 라이브 스터디방(?) 테이블
 # class Attendance(models.Model):

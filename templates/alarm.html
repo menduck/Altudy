@@ -4,7 +4,7 @@
 
 
 {% block content %}
-<h1 class="">임시 알람 페이지</h1>
+<h1 class="">알람</h1>
 
 <hr>
 
@@ -34,7 +34,7 @@
 {% for study_announcements in all_announcements %}
   {% for announcement in study_announcements %}
     <a href="{% url 'studies:announcement_detail' announcement.study.pk announcement.pk %}">
-      <div>✉️ {{ announcement.title }}</div>
+      <div>✉️ [{{announcement.study}}] {{ announcement.title }}</div>
     </a>
   {% endfor %}
 {% endfor %}
