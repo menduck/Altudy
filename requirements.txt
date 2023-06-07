@@ -69,7 +69,6 @@ pycparser==2.21
 Pygments==2.15.1
 PyJWT==2.7.0
 pyOpenSSL==23.2.0
-pyshorteners==1.0.1
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python3-openid==3.2.0
