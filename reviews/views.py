@@ -64,6 +64,7 @@ def detail(request, pk):
     context = {
         'problem': problem,
         'tags': ordered_tags.values(),
+        'comment_form': CommentForm(),
     }
     return render(request, 'reviews/detail.html', context)
 
