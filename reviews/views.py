@@ -27,11 +27,15 @@ def detail(request, pk):
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
-            'review_set__tags',
             'review_set__comment_set__tags',
+            'review_set__tags',
+            'study__studying_users',
         ),
         pk=pk
     )
+
+    if not problem.study.studying_users.filter(username=request.user).exists():
+        return redirect('studies:detail', problem.study.pk)
 
     # querydict_for_content_type_id = {
     #     'current_app_label_query' : Q(app_label=ReviewsConfig.name),
@@ -72,8 +76,13 @@ def detail(request, pk):
 @login_required
 def create(request):
     study_id = request.GET.get('study', request.session.get('study_id'))
-    if study_id is None:
-        return redirect('studies:index')
+    member = get_object_or_404(
+        Study, pk=study_id,
+    ).studying_users.filter(username=request.user).exists()
+    
+    if study_id is None or not member:
+        return redirect('studies:detail', study_id)
+    
     request.session['study_id'] = study_id
     
     if request.method == 'POST':
@@ -90,14 +99,19 @@ def create(request):
         form = ProblemForm()
     context = {
         'form': form,
-        # 'study_id': study_id,
     }
     return render(request, 'reviews/create.html', context)
 
 
 @login_required
 def update(request, pk):
-    problem = get_object_or_404(Problem, pk=pk)
+    problem = get_object_or_404(Problem.objects.select_related('study'), pk=pk)
+    
+    # reviews:detail에서 studies:detail로 가는 코드가 있지만,
+    # 네트워크 비용 감소를 위해 바로 studies:detail로 가도록 작성
+    if not problem.study.studying_users.filter(username=request.user).exists():
+        return redirect('studies:detail', problem.study.pk)
+    
     if request.user != problem.user:
         return redirect('reviews:detail', problem.pk)
     
@@ -117,18 +131,28 @@ def update(request, pk):
 
 @login_required
 def delete(request, pk):
-    problem = get_object_or_404(Problem, pk=pk)
+    problem = get_object_or_404(
+        Problem.objects.select_related('study').prefetch_related('studying_users'), pk=pk,
+    )
+    if not problem.study.studying_users.filter(username=request.user).exists():
+        return redirect('studies:detail', problem.study.pk)
+
     if request.user == problem.user:
         problem.delete()
         return redirect('studies:mainboard', problem.study.pk)
-    # 권한이 없는 페이지 만들기?
-    # 왔던 곳으로 되돌아가게 하려면?
     return redirect('reviews:detail', pk)
     
 
 @login_required
 def review_create(request, pk):
-    problem = get_object_or_404(Problem, pk=pk)
+    problem = get_object_or_404(
+        Problem.objects.select_related('study').prefetch_related('studying_users'),
+        pk=pk,
+    )
+    
+    if not problem.study.studying_users.filter(username=request.user).exists():
+        return redirect('studies:detail', problem.study.pk)
+    
     if request.method == 'POST':
         form = ReviewForm(data=request.POST)
         if form.is_valid():
@@ -148,7 +172,14 @@ def review_create(request, pk):
 
 @login_required
 def review_update(request, review_pk):
-    review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
+    review = get_object_or_404(Review.objects.select_related(
+        'problem__study').prefetch_related('problem__study__studying_users'),
+        pk=review_pk,
+    )
+    
+    if not review.problem.study.studying_users.filter(username=request.user).exists():
+        return redirect('studies:detail', review.problem.study.pk)
+    
     if request.user != review.user:
         return redirect('reviews:detail', review.problem.pk)
     
@@ -169,7 +200,13 @@ def review_update(request, review_pk):
 
 @login_required
 def review_delete(request, review_pk):
-    review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
+    review = get_object_or_404(
+        Review.objects.select_related('problem__study').prefetch_related('problem__study__studying_users'),
+        pk=review_pk
+    )
+    if not review.problem.study.studying_users.filter(username=request.user).exists():
+        return redirect('studies:detail', review.problem.study.pk)
+    
     if request.user == review.user:
         review.delete()
         return redirect('studies:index')
@@ -178,11 +215,17 @@ def review_delete(request, review_pk):
 
 @login_required
 def comment_create(request, review_pk):
+    review = get_object_or_404(
+        Review.objects.select_related('problem__study').prefetch_related('problem__study__studying_users'),
+        pk=review_pk
+    )
+    if not review.problem.study.studying_users.filter(username=request.user).exists():
+        return
+    
     if request.method == 'POST':
         form = CommentForm(data=request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            review = get_object_or_404(Review.objects.select_related('problem'), pk=review_pk)
             comment.user, comment.review = request.user, review
             comment.save()
             form.save_m2m()
@@ -197,7 +240,13 @@ def comment_create(request, review_pk):
 
 @login_required
 def comment_update(request, comment_pk):
-    comment = get_object_or_404(Comment.objects.select_related('review__problem'), pk=comment_pk)
+    comment = get_object_or_404(
+        Comment.objects.select_related('review__problem__study').prefetch_related('review__problem__study__studying_users'),
+        pk=comment_pk
+    )
+    if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
+        return
+    
     if request.user != comment.user:
         return redirect('reviews:detail', comment.review.problem.pk)
     
@@ -218,7 +267,13 @@ def comment_update(request, comment_pk):
 
 @login_required
 def comment_delete(request, comment_pk):
-    comment = get_object_or_404(Comment.objects.select_related('review__problem'), pk=comment_pk)
+    comment = get_object_or_404(
+        Comment.objects.select_related('review__problem__study').prefetch_related('review__problem__study__studying_users'),
+        pk=comment_pk
+    )
+    if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
+        return
+    
     if request.user == comment.user:
         comment.delete()
     return redirect('reviews:detail', comment.review.problem.pk)
