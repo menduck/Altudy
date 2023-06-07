@@ -27,7 +27,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
     path('', views.main, name='main'),
-    path('alarm/', views.alarm, name='alarm'),
+    # path('alarm/', views.alarm, name='alarm'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
