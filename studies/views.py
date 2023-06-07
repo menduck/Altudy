@@ -397,7 +397,8 @@ def problem_search(request, study_pk: int):
 
     return JsonResponse({'problems': problems_list})
 
-  
+
+@login_required
 def announcement(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     announcements = Announcement.objects.filter(study=study)
@@ -421,7 +422,8 @@ def check_study_leader(request, leader: str, target_url: str, *url_args):
             return redirect(target_url, url_args)
         return redirect(target_url)
     
-    
+
+@login_required
 def announcement_create(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     # check_study_leader(request, study.user, 'studies:announcement', study_pk)
@@ -452,6 +454,7 @@ def announcement_create(request, study_pk: int):
     return render(request, 'studies/announcement_create.html', context)
 
 
+@login_required
 def announcement_detail(request, study_pk: int, announcement_pk: int):
     announcement = get_object_or_404(Announcement, pk=announcement_pk)
     leader = get_object_or_404(Study, pk=study_pk).user
@@ -469,6 +472,7 @@ def announcement_detail(request, study_pk: int, announcement_pk: int):
     return render(request, 'studies/announcement_detail.html', context)
     
     
+@login_required
 def announcement_update(request, study_pk: int, announcement_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
@@ -499,7 +503,8 @@ def announcement_update(request, study_pk: int, announcement_pk: int):
     }
     return render(request, 'studies/announcement_update.html', context)
     
-    
+
+@login_required
 def announcement_delete(request, study_pk: int, announcement_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
@@ -513,6 +518,7 @@ def announcement_delete(request, study_pk: int, announcement_pk: int):
     return redirect('studies:announcement', study_pk)
 
 
+@login_required
 def appoint(request, study_pk: int, username: str, permission: int):
     study = get_object_or_404(Study, pk=study_pk)
     person = get_user_model().objects.get(username=username)
@@ -541,6 +547,7 @@ def appoint(request, study_pk: int, username: str, permission: int):
 
 
 # 부스터디장 해임
+@login_required
 def dismiss(request, study_pk: int, username: str):
     study = get_object_or_404(Study, pk=study_pk)
     person = get_user_model().objects.get(username=username)
