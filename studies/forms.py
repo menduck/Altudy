@@ -67,10 +67,15 @@ class AnnouncementForm(forms.ModelForm):
         model = Announcement
         fields = ('title', 'content',)
         labels = {
-            # 'title': '',
-            # 'content': '',
+            'title': '',
+            'content': '',
         }
         widgets = {
-            'title': forms.TextInput(attrs={}),
-            'content': forms.Textarea(attrs={}),
+            'title': forms.TextInput(attrs={
+                'class':'title',
+                'placeholder': '제목을 입력해주세요',
+            }),
+            'content': forms.Textarea(attrs={
+                'class':'content'
+            }),
         }
