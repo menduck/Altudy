@@ -24,8 +24,7 @@ def detail(request, pk):
             'tags',
             'review_set__comment_set__tags',
             'review_set__tags',
-            'study__studying_users',
-        ),
+        ).select_related('study'),
         pk=pk
     )
 
