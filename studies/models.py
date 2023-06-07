@@ -5,6 +5,9 @@ from taggit.managers import TaggableManager
 from multiselectfield import MultiSelectField
 from django.core.exceptions import ValidationError
 
+from django.utils import timezone
+from datetime import timedelta
+
 # Create your models here.
 LANGUAGE_CHOICES = [
     ('py', 'Python'),
@@ -126,3 +129,17 @@ class StudyComment(models.Model):
     
     content = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    @property
+    def created_at_string(self):
+        time = timezone.now() - self.created_at
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(time.seconds // 60) + '분 전'
+        elif time < timedelta(days=1):
+            return str(time.seconds // 3600) + '시간 전'
+        elif time < timedelta(month=1):
+            return str(time.seconds // 60) + '일 전'
+        else:
+            return self.created_at.strftime('%Y-%m-%d')

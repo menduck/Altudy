@@ -84,5 +84,8 @@ class StudyCommentForm(forms.ModelForm):
             # 'content': '',
         }
         widgets = {
-            'content': forms.Textarea(attrs={}),
+            'content': forms.Textarea(attrs={
+                'rows': '1',
+                'placeholder': '댓글을 입력하세요',
+                }),
         }
