@@ -4,56 +4,31 @@ from functools import reduce
 
 from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
-# from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
-# from rest_framework.decorators import api_view
-from taggit.models import Tag, TaggedItem
+from taggit.models import Tag
 
-# from .apps import ReviewsConfig
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
 from studies.models import Study
 
-'''다른 스터디 선택하기 기능이 추가되어야 한다'''
 # Create your views here.
 @login_required
 def detail(request, pk):
     '''
-    구현할 기능:
     - ✅ Problem, Review, Comment에 달린 모든 태그를 모아보는 기능
-    - [ ] 클릭시 해당 태그가 사용된 Problem, Review, Comment로 이동하는 링크
     '''
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
             'review_set__comment_set__tags',
             'review_set__tags',
-            'study__studying_users',
-        ),
+        ).select_related('study'),
         pk=pk
     )
 
     if not problem.study.studying_users.filter(username=request.user).exists():
         return redirect('studies:detail', problem.study.pk)
-
-    # querydict_for_content_type_id = {
-    #     'current_app_label_query' : Q(app_label=ReviewsConfig.name),
-    #     'model_name_query' : Q(model__in=['problem', 'review', 'comment'])
-    # }
-
-    # # used in content_type_query
-    # query_for_content_type_id = reduce(operator.__and__, querydict_for_content_type_id.values())
-
-    # # Query relevant content_type from TaggedItem model.    
-    # content_type_query = Q(content_type_id__in=ContentType.objects.filter(query_for_content_type_id))
-
-    # # Query relevant object_id from TaggedItem model.
-    # object_query = Q(object_id=pk) | Q(object_id__in=problem.review_set.all())
-    # for review in problem.review_set.all():
-    #     object_query |= Q(object_id__in=review.comment_set.all())
-
-    # tagged_items = TaggedItem.objects.filter(content_type_query&object_query)
     
     querydict = {
         'problem': Q(problem_set=pk),
@@ -132,7 +107,7 @@ def update(request, pk):
 @login_required
 def delete(request, pk):
     problem = get_object_or_404(
-        Problem.objects.select_related('study').prefetch_related('studying_users'), pk=pk,
+        Problem.objects.select_related('study'), pk=pk,
     )
     if not problem.study.studying_users.filter(username=request.user).exists():
         return redirect('studies:detail', problem.study.pk)
@@ -146,7 +121,7 @@ def delete(request, pk):
 @login_required
 def review_create(request, pk):
     problem = get_object_or_404(
-        Problem.objects.select_related('study').prefetch_related('studying_users'),
+        Problem.objects.select_related('study'),
         pk=pk,
     )
     
@@ -172,8 +147,8 @@ def review_create(request, pk):
 
 @login_required
 def review_update(request, review_pk):
-    review = get_object_or_404(Review.objects.select_related(
-        'problem__study').prefetch_related('problem__study__studying_users'),
+    review = get_object_or_404(
+        Review.objects.select_related('problem__study'),
         pk=review_pk,
     )
     
@@ -201,7 +176,7 @@ def review_update(request, review_pk):
 @login_required
 def review_delete(request, review_pk):
     review = get_object_or_404(
-        Review.objects.select_related('problem__study').prefetch_related('problem__study__studying_users'),
+        Review.objects.select_related('problem__study'),
         pk=review_pk
     )
     if not review.problem.study.studying_users.filter(username=request.user).exists():
@@ -216,7 +191,7 @@ def review_delete(request, review_pk):
 @login_required
 def comment_create(request, review_pk):
     review = get_object_or_404(
-        Review.objects.select_related('problem__study').prefetch_related('problem__study__studying_users'),
+        Review.objects.select_related('problem__study'),
         pk=review_pk
     )
     if not review.problem.study.studying_users.filter(username=request.user).exists():
@@ -241,7 +216,7 @@ def comment_create(request, review_pk):
 @login_required
 def comment_update(request, comment_pk):
     comment = get_object_or_404(
-        Comment.objects.select_related('review__problem__study').prefetch_related('review__problem__study__studying_users'),
+        Comment.objects.select_related('review__problem__study'),
         pk=comment_pk
     )
     if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
@@ -268,7 +243,7 @@ def comment_update(request, comment_pk):
 @login_required
 def comment_delete(request, comment_pk):
     comment = get_object_or_404(
-        Comment.objects.select_related('review__problem__study').prefetch_related('review__problem__study__studying_users'),
+        Comment.objects.select_related('review__problem__study'),
         pk=comment_pk
     )
     if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
