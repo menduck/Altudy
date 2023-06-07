@@ -177,7 +177,7 @@ def review_update(request, review_pk):
 @login_required
 def review_delete(request, review_pk):
     review = get_object_or_404(
-        Review.objects.select_related('problem__study').prefetch_related('problem__study__studying_users'),
+        Review.objects.select_related('problem__study'),
         pk=review_pk
     )
     if not review.problem.study.studying_users.filter(username=request.user).exists():
@@ -192,7 +192,7 @@ def review_delete(request, review_pk):
 @login_required
 def comment_create(request, review_pk):
     review = get_object_or_404(
-        Review.objects.select_related('problem__study').prefetch_related('problem__study__studying_users'),
+        Review.objects.select_related('problem__study'),
         pk=review_pk
     )
     if not review.problem.study.studying_users.filter(username=request.user).exists():
@@ -217,7 +217,7 @@ def comment_create(request, review_pk):
 @login_required
 def comment_update(request, comment_pk):
     comment = get_object_or_404(
-        Comment.objects.select_related('review__problem__study').prefetch_related('review__problem__study__studying_users'),
+        Comment.objects.select_related('review__problem__study'),
         pk=comment_pk
     )
     if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
@@ -244,7 +244,7 @@ def comment_update(request, comment_pk):
 @login_required
 def comment_delete(request, comment_pk):
     comment = get_object_or_404(
-        Comment.objects.select_related('review__problem__study').prefetch_related('review__problem__study__studying_users'),
+        Comment.objects.select_related('review__problem__study'),
         pk=comment_pk
     )
     if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
