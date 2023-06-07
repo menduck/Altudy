@@ -122,7 +122,7 @@ def delete(request, pk):
 @login_required
 def review_create(request, pk):
     problem = get_object_or_404(
-        Problem.objects.select_related('study').prefetch_related('studying_users'),
+        Problem.objects.select_related('study'),
         pk=pk,
     )
     
