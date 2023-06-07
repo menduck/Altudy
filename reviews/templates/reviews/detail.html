@@ -20,11 +20,19 @@
       <p class="problem-description">{{ problem.description|markdown }}</p>
     </div>
     <div class="problem-button-box">
+      {% if user == problem.user %}
+      <div style="display: flex;">
+        <form action="{% url 'reviews:update' problem.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="gray-button button-small joinbutton reset-style">문제 수정</button>
+        </form>
+        <form action="{% url 'reviews:delete' problem.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="gray-button button-small joinbutton reset-style">문제 삭제</button>
+        </form>        
+      </div>
+      {% endif %}
       {% include 'reviews/components/like.html' with obj=problem %}
-      <form action="{% url 'reviews:delete' problem.pk %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="button-small joinbutton reset-style">문제 삭제</button>
-      </form>
     </div>
     <div class="submit-button">
       <a href="{% url 'reviews:review_create' problem.pk %}" class="button-small joinbutton reset-style">리뷰 작성하기</a>

@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% block style %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/reviews/create.css' %}"
+/>
+{% endblock style %}
 {% block content %}
-<h1>리뷰 작성하기</h1>
+<div class="main__container">
 <form id="form" action="{% url 'reviews:review_create' problem_pk %}" method="post">
   {% csrf_token %}
   
@@ -24,7 +30,8 @@
   </div>
   {% endwith %}
   
-  <button type="submit">리뷰 작성하기</button>
+  <button class="submit-button button-small" type="submit">리뷰 작성하기</button>
 </form>
+</div>
 <script src="{% static 'reviews/toastui.js' %}"></script>
 {% endblock content %}
