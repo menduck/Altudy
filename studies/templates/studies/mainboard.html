@@ -34,9 +34,9 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
       <hr>
       {% for user in users %}
         {% if user == study.user %}
-          <div class="memberInfo-username leader"> {{user}}</div>
+          <div class="memberInfo-username leader"> {{user.emoji_username}}</div>
         {% else %}
-          <div class="memberInfo-username"> {{user}}</div>
+          <div class="memberInfo-username"> {{user.emoji_username}}</div>
         {% endif %}
       {% endfor %}
     </section>
