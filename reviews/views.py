@@ -12,7 +12,6 @@ from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
 from studies.models import Study
 
-'''다른 스터디 선택하기 기능이 추가되어야 한다'''
 # Create your views here.
 @login_required
 def detail(request, pk):
