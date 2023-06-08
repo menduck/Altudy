@@ -105,6 +105,20 @@ class Announcement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     announcement_reads = models.ManyToManyField(to=settings.AUTH_USER_MODEL, related_name='user_reads', through='AnnouncementRead')
+    
+    @property
+    def updated_at_string(self):
+        time = timezone.now() - self.updated_at
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(time.seconds // 60) + '분 전'
+        elif time < timedelta(days=1):
+            return str(time.seconds // 3600) + '시간 전'
+        elif time < timedelta(month=1):
+            return str(time.seconds // 60) + '일 전'
+        else:
+            return self.updated_at.strftime('%Y-%m-%d')
 
 
 class AnnouncementRead(models.Model):

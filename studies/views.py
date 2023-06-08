@@ -8,6 +8,7 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.http import JsonResponse
+import json
 
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement, AnnouncementRead, StudyComment
@@ -630,11 +631,19 @@ def comment_delete(request, study_pk: int, comment_pk: int):
 def comment_update(request, study_pk: int, comment_pk: int):
     comment = get_object_or_404(StudyComment, pk=comment_pk)
     if request.user == comment.user:
-        form = StudyCommentForm(data=request.POST, instance=comment)
+        # body_unicode = request.body.decode('utf-8')
+        # data = json.loads(body_unicode)
+        # comment.content = data.get('commentContent')
+        form = StudyCommentForm(instance=comment, data=request.POST)
         if form.is_valid():
-            form.save()
+            comment = form.save()
+            context = {
+                'content' : comment.content,
+            }
+            return JsonResponse(context)
         else:
             print('Error : [comment_update] 유효성 검사 인증 실패!')
+            print(form.errors, '...')
     else:
         print('Error : [comment_update] 허용되지 않은 사용자로부터의 접근!')
         

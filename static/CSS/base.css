@@ -158,7 +158,7 @@ input:focus {
 }
 
 .dropdown-menu__no-message {
-  color:grey; 
+  color: var(--color-gray-5); 
   margin-top: 1rem;
 }
 
