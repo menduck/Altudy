@@ -97,10 +97,13 @@
   addCommentBtns.forEach((btn, idx) => {
     btn.addEventListener('click', (event) => {
       btn.setAttribute('style', 'display: none;')
-      document.getElementById(`add-comment-form-#${idx+1}`).removeAttribute('style')
+      const form = document.getElementById(`add-comment-form-#${idx+1}`)
+      form.removeAttribute('style')
+      
+      // 대체된 댓글 작성 버튼 클릭시 비동기로 댓글을 생성 후 DB에 기록하고, 해당 댓글 내용을 아래에 추가합니다.
+      
     })
   })
 
-  // 대체된 댓글 작성 버튼 클릭시 비동기로 댓글을 생성 후 DB에 기록하고, 해당 댓글 내용을 아래에 추가합니다.
 </script>
 {% endblock content %}
