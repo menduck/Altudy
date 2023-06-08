@@ -80,6 +80,20 @@ class Study(models.Model):
     def __str__(self):
         return self.title
     
+    @property
+    def created_at_string(self):
+        time = timezone.now() - self.created_at
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(time.seconds // 60) + '분 전'
+        elif time < timedelta(days=1):
+            return str(time.seconds // 3600) + '시간 전'
+        elif time < timedelta(days=30):
+            return str(time.days) + '일 전'
+        else:
+            return self.created_at.strftime('%Y-%m-%d')
+    
 
 # study - user M:N 중개 테이블
 class Studying(models.Model):
@@ -115,8 +129,8 @@ class Announcement(models.Model):
             return str(time.seconds // 60) + '분 전'
         elif time < timedelta(days=1):
             return str(time.seconds // 3600) + '시간 전'
-        elif time < timedelta(month=1):
-            return str(time.seconds // 60) + '일 전'
+        elif time < timedelta(days=30):
+            return str(time.days) + '일 전'
         else:
             return self.updated_at.strftime('%Y-%m-%d')
 
@@ -153,7 +167,7 @@ class StudyComment(models.Model):
             return str(time.seconds // 60) + '분 전'
         elif time < timedelta(days=1):
             return str(time.seconds // 3600) + '시간 전'
-        elif time < timedelta(month=1):
-            return str(time.seconds // 60) + '일 전'
+        elif time < timedelta(days=30):
+            return str(time.days) + '일 전'
         else:
             return self.created_at.strftime('%Y-%m-%d')

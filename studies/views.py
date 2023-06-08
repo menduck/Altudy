@@ -83,6 +83,9 @@ def create(request):
         if form.is_valid():
             study = form.save(commit=False)
             study.user = request.user
+            if study.join_condition == 3:
+                study.is_recruiting = 2
+                
             study.save()
             
             # Tag 저장
