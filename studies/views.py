@@ -1,28 +1,34 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from taggit.models import Tag
-from django.db.models import Count
-from django.contrib import messages
-from django.db.models import Q
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.http import JsonResponse
 from django.core.paginator import Paginator, Page
 
+from taggit.models import Tag
+from django.db.models import Count, Q
 from reviews.models import Problem, Review
-from .models import Study, Studying, Announcement, AnnouncementRead
-from .forms import StudyForm, AnnouncementForm
+from .models import Study, Studying, Announcement, AnnouncementRead, StudyComment
+from .forms import StudyForm, AnnouncementForm, StudyCommentForm
 from .models import LANGUAGE_CHOICES
-from django.db.models import Q
 import re
 
 
 # Create your views here.
 def index(request):
-    studies = Study.objects.annotate(
-        member_num=Count('studying_users')
-        ).order_by('-created_at')
+    query = request.GET.get('query')
+    if query:
+        studies = Study.objects.filter(
+            Q(title__icontains=query)|Q(user__username__iexact=query)|
+            Q(category__name__iexact=query)|Q(language__icontains=query)
+            ).annotate(
+            member_num=Count('studying_users')
+            ).order_by('-created_at')
+    else:
+        studies = Study.objects.annotate(
+            member_num=Count('studying_users')
+            ).order_by('-created_at')
     
     selected_langs = request.GET.get('lang')
     is_recruit = request.GET.get('recruits')
@@ -56,11 +62,16 @@ def detail(request, study_pk: int):
     else:
         # 스터디 미가입
         is_studying = 'not_joined'
+        
+    comment_form = StudyCommentForm()
+    comments = study.studycomment_set.all()
     
     context = {
         'study': study,
         'is_studying': is_studying,
         'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
+        'comments': comments,
+        'comment_form': comment_form,
     }
     return render(request, 'studies/detail.html', context)
 
@@ -78,7 +89,6 @@ def create(request):
             form.save_m2m()
             
             # 스터디장 권한(permission) 3으로 Studying 테이블에 추가
-            # 임시 스터디장 혹은 부스터디장 권한(permission) 2 예정
             Studying.objects.create(study=study, user=request.user, permission=3)
             
             return redirect('studies:detail', study.pk)
@@ -223,7 +233,7 @@ def accept(request, study_pk: int, username: int):
         study.is_recruiting = 2
         study.save()
 
-    return redirect('studies:detail', study_pk)
+    return redirect('studies:mainboard', study_pk)
 
 # 스터디 가입 요청 시 거절
 @login_required
@@ -236,7 +246,7 @@ def reject(request, study_pk: int, username: int):
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         study.join_request.remove(person)
     
-    return redirect('studies:detail', study_pk)
+    return redirect('studies:mainboard', study_pk)
 
 
 # 스터디에서 해당 유저 방출
@@ -283,10 +293,7 @@ def mainboard(request, study_pk: int):
     if not Studying.objects.filter(study=study, user=request.user).exists():
         return redirect('studies:detail', study_pk)
 
-    # 메인보드에서는 이번주에 추가된 문제만 보여주도록? 일단 임의로 추가
-    # start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
-    ## Warning : warnings.warn("DateTimeField %s received a naive datetime (%s)"
-    ## 계산될 시간에 datetime.now() 대신 timezone.now() 사용해봤음
+    # 메인보드에서는 이번주에 추가된 문제만 보여주도록
     start_of_week = timezone.now() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
@@ -445,7 +452,7 @@ def check_study_leader(request, leader: str, target_url: str, *url_args):
 @login_required
 def announcement_create(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # check_study_leader(request, study.user, 'studies:announcement', study_pk)
+    
     # 스터디장만 announcement 생성 가능
     if study.user != request.user:
         print('Error : 스터디장 아님!')
@@ -494,7 +501,7 @@ def announcement_detail(request, study_pk: int, announcement_pk: int):
 @login_required
 def announcement_update(request, study_pk: int, announcement_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
+    
     # 스터디장만 announcement 수정, 삭제 가능
     if study.user != request.user:
         return redirect('studies:announcement_detail', study_pk, announcement_pk)
@@ -526,7 +533,7 @@ def announcement_update(request, study_pk: int, announcement_pk: int):
 @login_required
 def announcement_delete(request, study_pk: int, announcement_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
+    
     # 스터디장만 announcement 삭제 가능
     if study.user != request.user:
         return redirect('studies:announcement_detail', study_pk, announcement_pk)
@@ -609,3 +616,50 @@ def condition(request, study_pk: int, condition_num: int):
     else:
         print('잘못된 요청입니다.')
         return redirect('studies:mainboard', study_pk)
+
+
+@login_required
+def comment_create(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    
+    form = StudyCommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.study = study
+        comment.user = request.user
+        comment.save()
+    else:
+        print('Error: StudyComment 생성 유효성 검사 실패!')
+    
+    return redirect('studies:detail', study_pk)
+
+
+@login_required
+def comment_delete(request, study_pk: int, comment_pk: int):
+    comment = get_object_or_404(StudyComment, pk=comment_pk)
+    if request.user == comment.user:
+        comment.delete()
+    else:
+        print('Error : [comment_delete] 허용되지 않은 사용자로부터의 접근!')
+        
+    return redirect('studies:detail', study_pk)
+
+
+@login_required
+def comment_update(request, study_pk: int, comment_pk: int):
+    comment = get_object_or_404(StudyComment, pk=comment_pk)
+    if request.user == comment.user:
+        form = StudyCommentForm(instance=comment, data=request.POST)
+        if form.is_valid():
+            comment = form.save()
+            context = {
+                'content' : comment.content,
+            }
+            return JsonResponse(context)
+        else:
+            print('Error : [comment_update] 유효성 검사 인증 실패!')
+            print(form.errors, '...')
+    else:
+        print('Error : [comment_update] 허용되지 않은 사용자로부터의 접근!')
+        
+    return redirect('studies:detail', study_pk)

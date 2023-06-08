@@ -72,11 +72,21 @@
   text-align: center;
 }
 
+.memberInfo-username{
+  color: var(--color-gray-6);
+  margin: 5px 0;
+}
+
+.leader {
+  margin-bottom: 10px;
+}
+
 .memberInfo__container .leader{
   color: var(--color-lightgreen);
   font-weight: var(--weight-semi-bold);
   font-size: var(--font-small);
 }
+
 
 /* 내용 */
 .right-content__container {

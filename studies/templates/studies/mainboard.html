@@ -16,15 +16,17 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
 {% endblock style %} 
 
 {% block content %}
-<div class="main__title">
-  {{ study.title}}
-</div>
+<a href="{% url 'studies:detail' study.pk %}">
+  <div class="main__title">
+    {{ study.title}}
+  </div>
+</a>
 <div class="main__wrapper">
   <aside class="aside__container">
     <div class="aside__item" data-content="mainboard">대시보드</div>
     <div class="aside__item" data-content="problem">학습관리</div>
     {% if request.user == study.user %}
-    <div class="aside__item" data-content="member">멤버관리</div>
+    <div class="aside__item" data-content="member">스터디 관리</div>
     {% endif %}
     
     <section class="memberInfo__container">
@@ -125,10 +127,8 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
   </section>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script type='module' src="{% static 'JS/aside.js' %}"></script>
-<script src="{% static 'JS/ranking.js' %}"></script>
-<script src="{% static 'JS/ranking.js' %}"></script>
-<script src="{% static 'JS/condition_change.js' %}"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="module" src="{% static 'JS/aside.js' %}"></script>
+<script src="{% static 'JS/ranking.js' %}"></script>
 {% endblock content %}

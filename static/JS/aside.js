@@ -1,4 +1,6 @@
 import { probSearch } from "./search.js";
+import { conditionChange } from "./conditionChange.js";
+
 
 const asideItems = document.querySelectorAll('.aside__item');
 const rightContentContainer = document.querySelector(
@@ -26,6 +28,8 @@ asideItems.forEach((item) => {
 
           if (contentPath === 'problem') {
             probSearch()
+          } else if (contentPath === "member"){
+            conditionChange()
           }
         });
     }
