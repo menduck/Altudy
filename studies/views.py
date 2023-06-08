@@ -8,6 +8,7 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.http import JsonResponse
+from django.core.paginator import Paginator, Page
 
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement, AnnouncementRead
@@ -371,7 +372,7 @@ def problem_search(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     query = request.GET.get('query')
     isSolved = request.GET.get('isSolved')
-    problems = Problem.objects.filter(study=study)
+    problems = Problem.objects.filter(study=study).order_by('-pk')
 
     # 제출하지 않은 과제 버튼 on일때 문제 필터링
     if isSolved == 'true':
@@ -388,16 +389,32 @@ def problem_search(request, study_pk: int):
             Q(tags__name__icontains=query)
         ).distinct()
 
+    # 페이지네이션
+    paginator = Paginator(problems, 5)  # 페이지당 n개의 항목
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    problems = page_obj.object_list
+
     problems_list = []
     for problem in problems:
         problem_dict = {
             'title': problem.title,
             'id': problem.pk,
+            'createdAt': problem.created_at.strftime('%m/%d %H:%M'),
             # 원하는 정보 추가
         }
         problems_list.append(problem_dict)
 
-    return JsonResponse({'problems': problems_list})
+
+    return JsonResponse({
+        'problems': problems_list,
+        'paginator': {
+            'totalPages': paginator.num_pages,
+            'currentPage': page_obj.number,
+            'hasNextPage': page_obj.has_next(),
+            'hasPreviousPage': page_obj.has_previous()
+        }
+    })
 
 
 @login_required

@@ -8,12 +8,6 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-
-# 테스트용 index입니다
-def index(request):
-    return render(request, 'accounts/index.html')
-
-
 def signup(request):
     if request.user.is_authenticated:
         return redirect('studies:index')
