@@ -8,19 +8,51 @@
   />
 {% endblock style %}
 {% block content %}
-<div class="main__container">
-  <div class="main__logobox">
-    <img src="{% static 'IMAGE/altudy.png' %}" alt="알터디 로고" class="main__altudylogo">
-  </div>
-  <h1 class="main__title"><span>{{ request.user.emoji_username }} </span>님의 프로필</h1>
-  <div class="main__content"><span>아이디 </span>{{ person.username }}</div>
-  <div class="main__content"><span>이메일 </span>{{ person.email }}</div>
-  <div class="button-box">
-    <a href="{% url 'accounts:update' %}"><div class="update-button">회원정보수정</div></a>
-    <form action="{% url 'accounts:delete' %}" method="POST" class="delete-button">
-      {% csrf_token %}
-      <input type="submit" value="회원탈퇴">
-    </form>
-  </div>
+
+<div class="main__title">
+  <h1><span>{{ request.user.emoji_username }} </span>님의 프로필</h1>
 </div>
+<div class="main__wrapper">
+  <aside class="aside__container">
+    <div class="aside__item" data-section="profile">내 프로필</div>
+    <div class="aside__item" data-section="study">내 스터디</div>
+    <div class="aside__item" data-section="code">내 코드</div>
+  </aside>
+
+  <section class="right-content__container">
+    {% block right_content %}
+    {% endblock right_content %}
+    {#내 프로필#}
+    <section class="right_content-item__wrapper">
+      <div>
+        <h1 class="profile-title">🔗 회원정보</h1>
+        <div class="profile-id"><span>아이디 </span>{{ person.username }}</div>
+        <div class="profile-email"><span>이메일 </span>{{ person.email }}</div>
+        <div class="button-box">
+          <a href="{% url 'accounts:update' %}"><div class="create-btn button-small">회원정보수정</div></a>
+          <form action="{% url 'accounts:delete' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="회원탈퇴" class="create-btn button-small">
+          </form>
+        </div>
+      </div>      
+    </section>
+    {#내 스터디#}
+    <section class="right_content-item__wrapper">
+      <div>
+        <h1 class="profile-title">📤 내가 주최한 스터디</h1>
+      </div>
+      <div>
+        <h1 class="profile-title">📥 내가 가입한 스터디</h1>
+      </div> 
+    </section>
+    {#내 코드 모음#}
+    <section class="right_content-item__wrapper">
+      <div>
+        <h1 class="profile-title">📝 에 제출한 내 코드</h1>
+      </div>
+    </section>
+  </section>
+</div>
+<script src="{% static 'JS/profile.js' %}"></script>
 {% endblock content %}
