@@ -1,0 +1,17 @@
+{% load custom_filters %}
+
+<div id="comments" hx-confirm="댓글을 삭제하시겠습니까?" hx-target="this" hx-swap="outerHTML">
+  {% for comment in review.comment_set.all %}
+  <p>{{ comment.content|markdown }}</p>
+  
+  {% if user == comment.user %}
+  <a hx-delete="{% url 'reviews:comment_delete' comment.pk %}">댓글 삭제</a>
+  <a hx-get="{% url 'reviews:comment_update' comment.pk %}" class="btn btn-primary">댓글 수정</a>
+  {% endif %}
+  
+  {% if user != comment.user %}
+    {% include 'reviews/components/like.html' with obj=comment %}
+  {% endif %}
+  
+  {% endfor %}
+</div>
