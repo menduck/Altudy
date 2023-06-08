@@ -16,9 +16,18 @@ import re
 
 # Create your views here.
 def index(request):
-    studies = Study.objects.annotate(
-        member_num=Count('studying_users')
-        ).order_by('-created_at')
+    query = request.GET.get('query')
+    if query:
+        studies = Study.objects.filter(
+            Q(title__icontains=query)|Q(user__username__iexact=query)|
+            Q(category__name__iexact=query)|Q(language__icontains=query)
+            ).annotate(
+            member_num=Count('studying_users')
+            ).order_by('-created_at')
+    else:
+        studies = Study.objects.annotate(
+            member_num=Count('studying_users')
+            ).order_by('-created_at')
     
     selected_langs = request.GET.get('lang')
     is_recruit = request.GET.get('recruits')

@@ -13,7 +13,11 @@
 {% block content %}
 <main id="studies_list__wrapper">
   <section>
+    {% if request.GET.query %}
+    <div class="title">"{{ request.GET.query }}" 검색</div>
+    {% else %}
     <div class="title">모든 스터디</div>
+    {% endif %}
     <div class="language__container">
       {% for lang_name, lang_label in LANGUAGE_CHOICES  %}
         <button class='language-btn' data-lang ='{{ lang_name }}'>{{ lang_label }}</button>
