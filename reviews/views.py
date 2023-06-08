@@ -1,16 +1,31 @@
 import json
 import operator
+import logging
 from functools import reduce
 
 from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
+from .serializers import CommentSerializer
+
 from studies.models import Study
+
+
+# 로깅 설정
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 @login_required
@@ -189,29 +204,34 @@ def review_delete(request, review_pk):
     return redirect('reviews:detail', review.problem.pk)
 
 
-@login_required
+@csrf_exempt
+@api_view(['POST'])
+# @login_required
+# @permission_classes([IsAuthenticated])
 def comment_create(request, review_pk):
-    review = get_object_or_404(
-        Review.objects.select_related('problem__study'),
-        pk=review_pk
-    )
-    if not review.problem.study.studying_users.filter(username=request.user).exists():
-        return
-    
-    if request.method == 'POST':
-        form = CommentForm(data=request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.user, comment.review = request.user, review
-            comment.save()
-            form.save_m2m()
-            return redirect('reviews:detail', review.problem.pk)
-    else:
-        form = CommentForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'reviews/comment_create.html', context)
+    try:
+        review = get_object_or_404(
+            Review.objects.select_related('problem__study'),
+            pk=review_pk
+        )
+
+        if review is None:
+            logger.error(f"No Review found with pk: {review_pk}")
+            return Response({"error": "No Review found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = CommentSerializer(data=request.data, context={'review': review, 'user': request.user})
+
+        if not serializer.is_valid():
+            logger.error(f"Serializer validation failed with errors: {serializer.errors}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        logger.error(f"Unexpected error occurred: {e}")
+        return Response({"error": "Unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @login_required
