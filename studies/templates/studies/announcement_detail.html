@@ -19,7 +19,7 @@
     {% comment %} <p>수정날짜 - {{ announcement.updated_at }}</p> {% endcomment %}
   </div>
 
-  <p class="content">{{ announcement.content }}</p>
+  <p class="content">{{ announcement.content|linebreaksbr }}</p>
 </div>
 {% if request.user == leader %}
 <div class="button-box">

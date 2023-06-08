@@ -60,6 +60,12 @@
 .study__info-margin-top .cancel-margintop{
   transform: translate(0,+12px);
 }
+
+.cancel-margintop + .study-time__container {
+  transform: translate(0,+12px);
+  margin-top: 0;
+}
+
 .separator {
   width: 3px;
   height: 20px;
@@ -98,6 +104,7 @@
 }
 
 .study-time__container {
+  margin-top: -10px;
   margin-left : 10px;
 }
 
@@ -181,11 +188,15 @@
   transform: scale(1.05);
 }
 
-.button-large:disabled {
+.button-large:disabled, .expel-btn {
   border: 1px solid var(--color-gray-6);
   background-color: var(--color-white);
   color: var(--color-gray-6);
   margin-right: 15px;
+  transform: scale(1);
+}
+
+.expel-btn:hover{
   transform: scale(1);
 }
 

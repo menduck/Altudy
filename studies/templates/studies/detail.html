@@ -114,7 +114,7 @@
             {% endfor %}
             {% else %}
             <div class="cancel-margintop">
-              미정
+              요일 미정
             </div>
             {% endif %}
             
@@ -191,24 +191,40 @@
         {{ study.description|linebreaksbr }}
         <div class="study__content-joinContainer">
           {% if is_studying == 'joined' %}
-          <form action="{% url 'studies:withdraw' study.pk %}" method="post">
-            {% csrf_token %}
-            <button type"submit" class="button-large">스터디 탈퇴</button>
-            {# TODO: 스터디장은 스터디 탈퇴가 불가해야함, 어떤 식으로 보일지 의논 필요 #}
-          </form>
+            {% if study.user == request.user %}
+              {% if  study.is_recruiting == 2 %}
+                <button class="button-large" disabled>모집 마감</button>
+                <a href="{% url 'studies:mainboard' study.pk %}" ><button class="button-large">메인보드</button></a>
+                {% else %}
+                <form id="condition-form" method="post" action="{% url 'studies:condition' study.pk 3 %}">
+                    {% csrf_token %}
+                    <button type="button" class="button-large" onClick="javascript:isComfirmJoin()">모집마감</button>
+                </form>
+              {% endif %}
+              {% else %}
+              <form action="{% url 'studies:withdraw' study.pk %}" method="post">
+                {% csrf_token %}
+                <button type"submit" class="button-large expel-btn">스터디 탈퇴</button>
+              </form>
+              <a href="{% url 'studies:mainboard' study.pk %}" ><button class="button-large">메인보드</button></a>
+            {% endif %}
           {% elif is_studying == 'join_request' %}
-          <form action="{% url 'studies:cancel' study.pk %}" method="post">
-            {% csrf_token %}
-            <button class="button-large" disabled>참여 요청 중</button>
-            <button type="submit" class="button-large">참여 취소</button>
-          </form>
+            <form action="{% url 'studies:cancel' study.pk %}" method="post">
+              {% csrf_token %}
+              <button class="button-large" disabled>참여 요청 중</button>
+              <button type="submit" class="button-large">참여 취소</button>
+            </form>
           {% else %}
-          <form action="{% url 'studies:join' study.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="button-large">스터디 참여</button>
-          </form>
-          {# 스터디 참여 요청 기능 완성 후 변환 필요 #}
-          {% endif %}
+            {% if  study.is_recruiting == 2  %}
+              <button class="button-large" disabled>모집 마감</button>
+            {% else %}
+              <form action="{% url 'studies:join' study.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="button-large">스터디 참여</button>
+              </form>
+            {% endif %}
+            {% endif %}
+
         </div>
       </div>
     </div>
@@ -260,6 +276,20 @@
   {% endfor %}
   </article>
 </main>
+
+<script>
+  function isComfirmJoin(){
+      message = "모집을 마감하시겠습니까?";
+      const confirmation = window.confirm(message);
+
+      if (confirmation) {
+        const form = document.getElementById('condition-form');
+        form.submit();
+      } else {
+        return false
+      }
+  }
+  </script>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'JS/comment.js' %}"></script>
