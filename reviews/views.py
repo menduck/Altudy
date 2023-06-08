@@ -245,18 +245,18 @@ def comment_update(request, comment_pk):
         return redirect('reviews:detail', comment.review.problem.pk)
     
     if request.method == 'POST':
-        form = CommentForm(data=request.POST)
+        form = CommentForm(data=request.POST, instance=comment)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.save()
             form.save_m2m()
             return redirect('reviews:detail', comment.review.problem.pk)
     else:
-        form = CommentForm()
+        form = CommentForm(instance=comment)
     context = {
         'form': form,
     }
-    return render(request, 'reviews/comment_create.html', context)
+    return render(request, 'reviews/components/edit_comment.html', context)
 
 
 @login_required
