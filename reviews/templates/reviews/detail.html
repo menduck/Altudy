@@ -58,7 +58,7 @@
       </div>
       
       {# 댓글 작성 form입니다. #}
-      <form id="add-comment-form-#{{ forloop.counter }}" action="{% url 'reviews:comment_create' review.pk %}" method="post" style="display: none;">
+      <form id="add-comment-form-{{ forloop.counter }}" action="{% url 'reviews:comment_create' review.pk %}" method="post" style="display: none;">
         {% csrf_token %}
         {% with comment_form.content as content %}
         <div class="form-group">
@@ -92,16 +92,34 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'reviews/like.js' %}"></script>
 <script>
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+  
   // 댓글 작성 버튼 클릭시 아래에 숨겨져 있던 form이 기존 댓글 작성 버튼을 대체합니다.
   const addCommentBtns = document.querySelectorAll('#add-comment-btns')
   addCommentBtns.forEach((btn, idx) => {
     btn.addEventListener('click', (event) => {
       btn.setAttribute('style', 'display: none;')
-      const form = document.getElementById(`add-comment-form-#${idx+1}`)
+      const form = document.getElementById(`add-comment-form-${idx+1}`)
       form.removeAttribute('style')
       
       // 대체된 댓글 작성 버튼 클릭시 비동기로 댓글을 생성 후 DB에 기록하고, 해당 댓글 내용을 아래에 추가합니다.
-      
+      form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const endpoint = e.target.attributes.action.value
+        const headers = {
+          'X-CSRFToken': csrftoken,
+          'Content-Type': 'application/json',
+        }
+        const data = {'content': form.querySelector('textarea').value}
+        axios.post(endpoint, data, {headers}).then((r) => {
+          const content = r.data.content
+          const deleteUrl = r.data.delete_url
+          const updateUrl = r.data.update_url
+          console.log(r)
+        }).catch((error) => {
+          console.log(error.response)
+        })
+      })
     })
   })
 
