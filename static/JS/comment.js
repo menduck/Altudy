@@ -9,16 +9,15 @@ commentUpdateForms.forEach((commentUpdateForm) => {
     const commentId = e.target.dataset.commentId
     const commentField = document.getElementById(`comment-content-${ commentId }`)
     const commentText = commentField.textContent
+    commentUpdateForm.hidden = true
     const htmlStr = `
     <form class="comment-update-field-form">
       <input type="hidden" id="commentOriginalContent-${commentId}" name="originalContent" value="${commentText}">
       <textarea name="commentContent" id="commentContent-${commentId}" cols="" rows="5">${commentText}</textarea>
-      <button type="submit" id="commentUpdateConfirm-${commentId}" value="${commentId}">수정</button>
-      <button type="submit" class="commentCancel" id="commentCancel-${commentId}" value="${commentId}">취소</button>
+      <button type="submit" id="commentUpdateConfirm-${commentId}" value="${commentId}" class="button button-small">수정</button>
+      <button type="submit" class="commentCancel button button-small" id="commentCancel-${commentId}" value="${commentId}">취소</button>
     </form>
     `
-    //<input type="text" name="commentContent" id="commentContent-${commentId}" value="${commentText}" rows="5">
-    //
     commentField.innerHTML = htmlStr
     const btnCancel = document.getElementById(`commentCancel-${commentId}`)
     btnCancel.addEventListener('click', (e) => {
@@ -26,13 +25,14 @@ commentUpdateForms.forEach((commentUpdateForm) => {
       const originalContent = document.getElementById(`commentOriginalContent-${ commentId }`)
       
       commentField.innerHTML = originalContent.value
+      commentUpdateForm.hidden = false
     })
 
     const btnUpdate = document.getElementById(`commentUpdateConfirm-${commentId}`)
     btnUpdate.addEventListener('click', (e) => {
       e.preventDefault()
       const newContent = document.getElementById(`commentContent-${commentId}`).value
-      
+
       const params = new URLSearchParams()
       params.append('content', newContent)
       params.append('csrfmiddlewaretoken', csrftoken)
@@ -44,6 +44,8 @@ commentUpdateForms.forEach((commentUpdateForm) => {
       .catch((error) => {
         console.log(error)
       })
+
+      commentUpdateForm.hidden = false
     })
   })
 })

@@ -11,7 +11,7 @@
 <div class="main__container">
   <h1 class="main__container-title">알터디에서 새로운 스터디를 만들어보세요!</h1>
   <div class="main__wrapper">
-    <form action="{% url 'studies:update' %}" method="post" class="">
+    <form action="{% url 'studies:update' study_pk %}" method="post" class="">
       {% csrf_token %}
       <div class="content-box">
         {{ form.title }}
@@ -63,7 +63,7 @@
       {% comment %} 버튼 {% endcomment %}
       <div class="button-box">
         <a href="{% url 'studies:index' %}" class="button-small">스터디 목록</a>
-        <button type="submit" class="button-small">스터디 생성</button>
+        <button type="submit" class="button-small">스터디 정보 수정</button>
       </div>
     </form>
   </div>
