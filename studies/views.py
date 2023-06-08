@@ -1,20 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from taggit.models import Tag
-from django.db.models import Count
-from django.contrib import messages
-from django.db.models import Q
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.http import JsonResponse
-import json
 
+from taggit.models import Tag
+from django.db.models import Count, Q
 from reviews.models import Problem, Review
 from .models import Study, Studying, Announcement, AnnouncementRead, StudyComment
 from .forms import StudyForm, AnnouncementForm, StudyCommentForm
 from .models import LANGUAGE_CHOICES
-from django.db.models import Q
 import re
 
 
@@ -83,7 +79,6 @@ def create(request):
             form.save_m2m()
             
             # 스터디장 권한(permission) 3으로 Studying 테이블에 추가
-            # 임시 스터디장 혹은 부스터디장 권한(permission) 2 예정
             Studying.objects.create(study=study, user=request.user, permission=3)
             
             return redirect('studies:detail', study.pk)
@@ -288,10 +283,7 @@ def mainboard(request, study_pk: int):
     if not Studying.objects.filter(study=study, user=request.user).exists():
         return redirect('studies:detail', study_pk)
 
-    # 메인보드에서는 이번주에 추가된 문제만 보여주도록? 일단 임의로 추가
-    # start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
-    ## Warning : warnings.warn("DateTimeField %s received a naive datetime (%s)"
-    ## 계산될 시간에 datetime.now() 대신 timezone.now() 사용해봤음
+    # 메인보드에서는 이번주에 추가된 문제만 보여주도록
     start_of_week = timezone.now() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
     problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week))
@@ -434,7 +426,7 @@ def check_study_leader(request, leader: str, target_url: str, *url_args):
 @login_required
 def announcement_create(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # check_study_leader(request, study.user, 'studies:announcement', study_pk)
+    
     # 스터디장만 announcement 생성 가능
     if study.user != request.user:
         print('Error : 스터디장 아님!')
@@ -483,7 +475,7 @@ def announcement_detail(request, study_pk: int, announcement_pk: int):
 @login_required
 def announcement_update(request, study_pk: int, announcement_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
+    
     # 스터디장만 announcement 수정, 삭제 가능
     if study.user != request.user:
         return redirect('studies:announcement_detail', study_pk, announcement_pk)
@@ -515,7 +507,7 @@ def announcement_update(request, study_pk: int, announcement_pk: int):
 @login_required
 def announcement_delete(request, study_pk: int, announcement_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    # check_study_leader(request, study.user, 'studies:announcement_detail', study_pk, announcement_pk)
+    
     # 스터디장만 announcement 삭제 가능
     if study.user != request.user:
         return redirect('studies:announcement_detail', study_pk, announcement_pk)
@@ -631,9 +623,6 @@ def comment_delete(request, study_pk: int, comment_pk: int):
 def comment_update(request, study_pk: int, comment_pk: int):
     comment = get_object_or_404(StudyComment, pk=comment_pk)
     if request.user == comment.user:
-        # body_unicode = request.body.decode('utf-8')
-        # data = json.loads(body_unicode)
-        # comment.content = data.get('commentContent')
         form = StudyCommentForm(instance=comment, data=request.POST)
         if form.is_valid():
             comment = form.save()
