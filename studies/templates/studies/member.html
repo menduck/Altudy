@@ -1,9 +1,5 @@
-{% extends 'base.html' %}
-
-{% block title %}{% endblock title %}
-
-
-{% block content %}
+{% load static %}
+{% block right_content %}
 <h1>멤버 관리 페이지</h1>
 <hr>
 
@@ -38,7 +34,7 @@
   <p>멤버 관리</p>
   {% for member in study_members %}
   <div>
-    <span>{{ member.user }}</span>
+    <span>{{ member.user.emoji_username }}</span>
     {% if member.permission == 3 %}
       <span> - 조장</span>
     {% else %}
@@ -54,4 +50,4 @@
 </div>
 <hr>
 
-{% endblock content %}
+{% endblock right_content %}
