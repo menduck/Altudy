@@ -222,7 +222,7 @@ def accept(request, study_pk: int, username: int):
         study.is_recruiting = 2
         study.save()
 
-    return redirect('studies:detail', study_pk)
+    return redirect('studies:mainboard', study_pk)
 
 # 스터디 가입 요청 시 거절
 @login_required
@@ -235,7 +235,7 @@ def reject(request, study_pk: int, username: int):
     if Studying.objects.filter(study=study, user=me, permission__gte=2).exists():
         study.join_request.remove(person)
     
-    return redirect('studies:detail', study_pk)
+    return redirect('studies:mainboard', study_pk)
 
 
 # 스터디에서 해당 유저 방출
