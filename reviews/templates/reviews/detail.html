@@ -51,26 +51,56 @@
         </form>          
         {% endif %}
         {% include 'reviews/components/like.html' with obj=review %}
-        <a href="{% url 'reviews:comment_create' review.pk %}" class="button-small joinbutton">댓글 작성</a>
-        <ul>
-          {% for comment in review.comment_set.all %}
-          <li>{{ comment.content|markdown }}</li>
-          <form action="{% url 'reviews:comment_update' comment.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit">댓글 수정</button>
-          </form>
-          <form action="{% url 'reviews:comment_delete' comment.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit">댓글 삭제</button>
-          </form>
-          {% include 'reviews/components/like.html' with obj=comment %}
-          {% endfor %}
-        </ul>
+        
+        {# 버튼 클릭시 아래에 댓글 작성창이 생성됩니다. #}
+        <button id="add-comment-btns" class="button-small joinbutton">댓글 작성</button>
+        
       </div>
+      
+      {# 댓글 작성 form입니다. #}
+      <form id="add-comment-form-#{{ forloop.counter }}" action="{% url 'reviews:comment_create' review.pk %}" method="post" style="display: none;">
+        {% csrf_token %}
+        {% with comment_form.content as content %}
+        <div class="form-group">
+          {% comment %} <label for="{{ content.id_for_label }}">{{ content.label }}</label> {% endcomment %}
+          <textarea id="{{ content.id_for_label }}" class="form-control my-3" placeholder="{{ content.label }}" name="{{ content.name }}"></textarea>
+        </div>
+        {% endwith %}
+        <div class="d-flex flex-row-reverse">
+          <button type="submit" class="button-small joinbutton">댓글 작성</button>
+        </div>
+      </form>
+
+      <ul>
+        {% for comment in review.comment_set.all %}
+        <li>{{ comment.content|markdown }}</li>
+        <form action="{% url 'reviews:comment_update' comment.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit">댓글 수정</button>
+        </form>
+        <form action="{% url 'reviews:comment_delete' comment.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit">댓글 삭제</button>
+        </form>
+        {% include 'reviews/components/like.html' with obj=comment %}
+        {% endfor %}
+      </ul>
     </div>
     {% endfor %}
   </ul>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'reviews/like.js' %}"></script>
+<script>
+  // 댓글 작성 버튼 클릭시 아래에 숨겨져 있던 form이 기존 댓글 작성 버튼을 대체합니다.
+  const addCommentBtns = document.querySelectorAll('#add-comment-btns')
+  addCommentBtns.forEach((btn, idx) => {
+    btn.addEventListener('click', (event) => {
+      btn.setAttribute('style', 'display: none;')
+      document.getElementById(`add-comment-form-#${idx+1}`).removeAttribute('style')
+    })
+  })
+
+  // 대체된 댓글 작성 버튼 클릭시 비동기로 댓글을 생성 후 DB에 기록하고, 해당 댓글 내용을 아래에 추가합니다.
+</script>
 {% endblock content %}
