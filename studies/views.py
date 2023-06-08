@@ -646,3 +646,4 @@ def comment_update(request, study_pk: int, comment_pk: int):
         print('Error : [comment_update] 허용되지 않은 사용자로부터의 접근!')
         
     return redirect('studies:detail', study_pk)
+
