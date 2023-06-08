@@ -1,3 +1,5 @@
+import { conditionChange } from "./conditionChange.js";
+
 const asideItems = document.querySelectorAll('.aside__item');
 const rightContentContainer = document.querySelector(
   '.right-content__container'
@@ -21,6 +23,10 @@ asideItems.forEach((item) => {
         .then((response) => response.text())
         .then((content) => {
           rightContentContainer.innerHTML = content;
+
+          if (contentPath === "member"){
+            conditionChange()
+          }
         });
     }
   });
