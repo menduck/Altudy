@@ -206,8 +206,7 @@ def review_delete(request, review_pk):
 
 @csrf_exempt
 @api_view(['POST'])
-# @login_required
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def comment_create(request, review_pk):
     try:
         review = get_object_or_404(
@@ -226,7 +225,6 @@ def comment_create(request, review_pk):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
-        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
