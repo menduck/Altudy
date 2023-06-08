@@ -204,7 +204,6 @@ def review_delete(request, review_pk):
     return redirect('reviews:detail', review.problem.pk)
 
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def comment_create(request, review_pk):
