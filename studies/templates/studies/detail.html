@@ -4,13 +4,13 @@
   type="text/css"
   href="{% static 'CSS/studies/detail.css' %}"
 />
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'CSS/comment.css' %}"
+/>
 {% endblock style %}
 {% block content %}
-{# studies 앱에서 reviews 앱으로 넘어갈때 "localhost:8000/reviews/?study=n"로 넘기기 #} 
-{# 예비 코드 #} 
-{% comment %} 
-<a href="{% url 'reviews:index' %}?study={{ study.pk }}">test</a> 
-{% endcomment %}
 
 {% if request.user in study.studying_users.all %}
 <a href="{% url 'studies:mainboard' study.pk %}">
@@ -219,8 +219,49 @@
     </div>
   </article>
   <hr />
+  
   {# 댓글 #}
-  <article></article>
+  <article>
+    {# 댓글 작성 #}
+    <form action="{% url 'studies:comment_create' study.pk %}" method="post" class="comment-create-form">
+      {% csrf_token %}
+      {{ comment_form.content }}
+      <button type="submit" class="button-small">댓글 작성</button>
+    </form>
+    <hr>
+
+  {% for comment in comments reversed %}
+  <div class="comment">
+    <div class="comment-container">
+      <div class="comment-header">
+        <div class="comment-header-top">
+          <p class="comment-user">{{ comment.user }}</p>         
+          {% if comment.user == request.user %}
+            <form action="" class="comment-update-form" data-study-id="{{ study.pk }}" data-comment-id="{{ comment.pk }}">
+              <button class="comment-update-btn" >
+                <i class="bi bi-pencil-square"></i>
+              </button>
+            </form>
+            <form action="{% url 'studies:comment_delete' study.pk comment.pk %}" method="post" class="comment-delete-form">
+              {% csrf_token %}
+              <button type="submit" class="comment-delete-btn">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          {% endif %}
+        </div>
+        <p class="comment-time">{{ comment.created_at_string }}</p>
+      </div> 
+      <p id="comment-content-{{ comment.pk }}">{{ comment.content }}</p>
+    </div>
+  </div>
+  {% empty %}
+  <p class="comment-empty">댓글이 없습니다.</p>
+  {% endfor %}
+  </article>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static 'studies/comment.js' %}"></script>
 
 {% endblock content %}

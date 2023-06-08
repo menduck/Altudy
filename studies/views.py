@@ -8,10 +8,11 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.http import JsonResponse
+import json
 
 from reviews.models import Problem, Review
-from .models import Study, Studying, Announcement, AnnouncementRead
-from .forms import StudyForm, AnnouncementForm
+from .models import Study, Studying, Announcement, AnnouncementRead, StudyComment
+from .forms import StudyForm, AnnouncementForm, StudyCommentForm
 from .models import LANGUAGE_CHOICES
 from django.db.models import Q
 import re
@@ -55,11 +56,16 @@ def detail(request, study_pk: int):
     else:
         # 스터디 미가입
         is_studying = 'not_joined'
+        
+    comment_form = StudyCommentForm()
+    comments = study.studycomment_set.all()
     
     context = {
         'study': study,
         'is_studying': is_studying,
         'LANGUAGE_CHOICES': LANGUAGE_CHOICES,
+        'comments': comments,
+        'comment_form': comment_form,
     }
     return render(request, 'studies/detail.html', context)
 
@@ -592,3 +598,53 @@ def condition(request, study_pk: int, condition_num: int):
     else:
         print('잘못된 요청입니다.')
         return redirect('studies:mainboard', study_pk)
+
+
+@login_required
+def comment_create(request, study_pk: int):
+    study = get_object_or_404(Study, pk=study_pk)
+    
+    form = StudyCommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.study = study
+        comment.user = request.user
+        comment.save()
+    else:
+        print('Error: StudyComment 생성 유효성 검사 실패!')
+    
+    return redirect('studies:detail', study_pk)
+
+
+@login_required
+def comment_delete(request, study_pk: int, comment_pk: int):
+    comment = get_object_or_404(StudyComment, pk=comment_pk)
+    if request.user == comment.user:
+        comment.delete()
+    else:
+        print('Error : [comment_delete] 허용되지 않은 사용자로부터의 접근!')
+        
+    return redirect('studies:detail', study_pk)
+
+
+@login_required
+def comment_update(request, study_pk: int, comment_pk: int):
+    comment = get_object_or_404(StudyComment, pk=comment_pk)
+    if request.user == comment.user:
+        # body_unicode = request.body.decode('utf-8')
+        # data = json.loads(body_unicode)
+        # comment.content = data.get('commentContent')
+        form = StudyCommentForm(instance=comment, data=request.POST)
+        if form.is_valid():
+            comment = form.save()
+            context = {
+                'content' : comment.content,
+            }
+            return JsonResponse(context)
+        else:
+            print('Error : [comment_update] 유효성 검사 인증 실패!')
+            print(form.errors, '...')
+    else:
+        print('Error : [comment_update] 허용되지 않은 사용자로부터의 접근!')
+        
+    return redirect('studies:detail', study_pk)
