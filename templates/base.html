@@ -86,45 +86,54 @@
                 {% if requests_exist %}
                 <li><hr class="dropdown-divider"></li>
                 <h2>💓 스터디 가입 요청</h2>
-                {% for study_requests in all_requests %}
-                {% with study_requests|first as study %}
-                  {% for request in study_requests|last %}
-                    <div class="content-box">
-                      <div>{{ study.title }} - {{ request }}</div>
-                      <div class="button-box">
-                        <form action="{% url 'studies:accept' study.pk request %}" method="post">
-                          {% csrf_token %}
-                          <button class="button button-small" type="submit">승인</button>
-                        </form>
-                        <form action="{% url 'studies:reject' study.pk request %}" method="post">
-                          {% csrf_token %}
-                          <button class="button button-small" type="submit">거절</button>
-                        </form>
+                <div class="dropdown-menu__container">
+                  {% for study_requests in all_requests %}
+                  {% with study_requests|first as study %}
+                    {% for request in study_requests|last %}
+                      <div class="content-box">
+                        <a href="{% url 'studies:mainboard' study.pk %}">
+                          <div> <span class="dropdown-menu__study">{{ study.title }}</span> - {{ request }}</div>
+                          <div class="button-box">
+                        </a>
+                          <form action="{% url 'studies:accept' study.pk request %}" method="post">
+                            {% csrf_token %}
+                            <button class="create-btn button-small" type="submit">승인</button>
+                          </form>
+                          <form action="{% url 'studies:reject' study.pk request %}" method="post">
+                            {% csrf_token %}
+                            <button class="create-btn button-small" type="submit">거절</button>
+                          </form>
+                        </div>
                       </div>
-                    </div>
+                    {% endfor %}
+                  {% endwith %}
                   {% endfor %}
-                {% endwith %}
-                {% endfor %}
+                </div>
                 {% endif %}
 
                 {% if announcements_exist %}
                 <hr>
                 <h2>📌 공지사항</h2>
+                
+                <div class="dropdown-menu__container">
 
-                {% for study_announcements in all_announcements %}
+                  {% for study_announcements in all_announcements %}
                   {% with study_announcements|first as study %}
                   {% if study_announcements|last %}
-                  <hr>
+                  <div class="announcement-item">
                     <p class="dropdown-menu__study">{{ study.title }}</p>
-                  {% endif %}
                     {% for announcement in study_announcements|last %}
-                      <a href="{% url 'studies:announcement_detail' announcement.study.pk announcement.pk %}">
-                        <div>👉 {{ announcement.title }}</div>
-                      </a>
+                    <a href="{% url 'studies:announcement_detail' announcement.study.pk announcement.pk %}">
+                      <div class="announcement-title">👉 {{ announcement.title }}</div>
+                    </a>
                     {% endfor %}
-                  {% endwith %}
-                {% endfor %}
+                  </div>
+                    {% endif %}
+                    {% endwith %}
+                  {% endfor %}
+                </div>
                 {% endif %}
+                <hr>
               </ul>
             </div>
             <a href="{% url 'accounts:profile' request.user %}">
