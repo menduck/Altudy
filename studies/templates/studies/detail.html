@@ -13,6 +13,12 @@
 {% block content %}
 
 <main class="study__wrapper">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <a href="{% url 'main' %}" class="homebutton button-small">< HOME</a>
+    {% if request.user in study.studying_users.all %}
+    <a href="{% url 'studies:mainboard' study.pk %}"><p class="mainboardbutton button-small">MAINBOARD ></p></a>
+    {% endif %}
+  </div>
   {# 스터디 디테일 내용 #}
   <article>
     <div class="study__container">
@@ -238,7 +244,7 @@
     <form action="{% url 'studies:comment_create' study.pk %}" method="post" class="comment-create-form">
       {% csrf_token %}
       {{ comment_form.content }}
-      <button type="submit" class="button-small">댓글 작성</button>
+      <button type="submit" class="comment-btn button-small">댓글 작성</button>
     </form>
     <hr>
 

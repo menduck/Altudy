@@ -47,7 +47,7 @@ class StudyForm(forms.ModelForm):
             }),
             'category': TagWidget(attrs={
                 'class':'category',
-                'placeholder':'ex) 완전탐색, 스택, 큐, 그리디 등',
+                'placeholder':'ex) 비대면, 소규모, 코테준비 등',
             }),
             'capacity': forms.NumberInput(attrs={
                 'class':'capacity',
@@ -121,5 +121,6 @@ class StudyCommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={
                 'rows': '1',
                 'placeholder': '댓글을 입력하세요',
+                'class': 'comment-form',
                 }),
         }
