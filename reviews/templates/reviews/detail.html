@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
+{% load django_htmx %}
 {% block style %}
 <link
   rel="stylesheet"
@@ -65,21 +66,18 @@
         </form>          
         {% endif %}
         {% include 'reviews/components/like.html' with obj=review %}
-        <a href="{% url 'reviews:comment_create' review.pk %}" class="button-small joinbutton">댓글 작성</a>
-        <ul>
-          {% for comment in review.comment_set.all %}
-          <li>{{ comment.content|markdown }}</li>
-          <form action="{% url 'reviews:comment_update' comment.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit">댓글 수정</button>
-          </form>
-          <form action="{% url 'reviews:comment_delete' comment.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit">댓글 삭제</button>
-          </form>
-          {% include 'reviews/components/like.html' with obj=comment %}
-          {% endfor %}
-        </ul>
+        
+      </div>
+
+      <ul id="comment-list-{{ review.pk }}" hx-swap="outerHTML">
+        {% include 'reviews/comments/list.html' %}
+      </ul>
+
+      <hr>
+      
+      {# 버튼 클릭시 아래에 댓글 작성창이 생성됩니다. #}
+      <div id="create-comment-on-{{ review.pk }}" hx-target="this" hx-swap="outerHTML" class="d-flex flex-row-reverse">
+        <button id="add-comment-btn-{{ review.pk }}" hx-get="{% url 'reviews:comment_create' review.pk %}" class="button-small joinbutton">댓글 작성</button>
       </div>
     </div>
     {% endfor %}

@@ -1,16 +1,31 @@
 import json
 import operator
+import logging
 from functools import reduce
 
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, QueryDict, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_http_methods
+
+# from rest_framework import status
+# from rest_framework.decorators import api_view, permission_classes
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework.response import Response
+
 from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
+# from .serializers import CommentSerializer
+
 from studies.models import Study
+
+
+# 로깅 설정
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 @login_required
@@ -21,7 +36,7 @@ def detail(request, pk):
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
-            'review_set__comment_set__tags',
+            'review_set__comment_set',
             'review_set__tags',
         ).select_related('study'),
         pk=pk
@@ -33,7 +48,7 @@ def detail(request, pk):
     querydict = {
         'problem': Q(problem_set=pk),
         'review': Q(review_set__in=problem.review_set.values('id')),
-        'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
+        # 'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
     }
 
     tags = Tag.objects.filter(reduce(operator.__or__, querydict.values()))
@@ -43,7 +58,7 @@ def detail(request, pk):
     context = {
         'problem': problem,
         'tags': ordered_tags.values(),
-        'comment_form': CommentForm(),
+        # 'comment_form': CommentForm(),
     }
     return render(request, 'reviews/detail.html', context)
 
@@ -136,7 +151,10 @@ def review_create(request, pk):
             review.user, review.problem = request.user, problem
             review.save()
             form.save_m2m()
-            return redirect('reviews:detail', problem.pk)
+            context = {
+                'problem': Problem.objects.get(pk=pk)
+            }
+            return render(request, 'reviews/reviews.html', context)
     else:
         form = ReviewForm()
     context = {
@@ -189,70 +207,95 @@ def review_delete(request, review_pk):
     return redirect('reviews:detail', review.problem.pk)
 
 
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def comment_create(request, review_pk):
+#     try:
+#         review = get_object_or_404(
+#             Review.objects.select_related('problem__study'),
+#             pk=review_pk
+#         )
+
+#         if review is None:
+#             logger.error(f"No Review found with pk: {review_pk}")
+#             return Response({"error": "No Review found."}, status=status.HTTP_404_NOT_FOUND)
+        
+#         serializer = CommentSerializer(data=request.data, context={'review': review, 'user': request.user})
+
+#         if not serializer.is_valid():
+#             logger.error(f"Serializer validation failed with errors: {serializer.errors}")
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#     except Exception as e:
+#         logger.error(f"Unexpected error occurred: {e}")
+#         return Response({"error": "Unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @login_required
 def comment_create(request, review_pk):
-    review = get_object_or_404(
-        Review.objects.select_related('problem__study'),
-        pk=review_pk
-    )
-    if not review.problem.study.studying_users.filter(username=request.user).exists():
-        return
-    
+    review = get_object_or_404(Review, pk=review_pk)
     if request.method == 'POST':
         form = CommentForm(data=request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user, comment.review = request.user, review
             comment.save()
-            form.save_m2m()
-            return redirect('reviews:detail', review.problem.pk)
+            context = {
+                'review': review,
+            }
+            return render(request, 'reviews/comments/list.html', context)
+        return render(request, 'reviews/components/comment_create_not_valid.html')   # 작성 필요
     else:
         form = CommentForm()
     context = {
-        'form': form,
+        'comment_form': form,
+        'review': review,
     }
-    return render(request, 'reviews/comment_create.html', context)
+    return render(request, 'reviews/comments/create.html', context)
 
 
+@require_http_methods(['GET', 'PUT'])
 @login_required
 def comment_update(request, comment_pk):
     comment = get_object_or_404(
-        Comment.objects.select_related('review__problem__study'),
+        Comment.objects.select_related('review'),
         pk=comment_pk
     )
-    if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
-        return
-    
-    if request.user != comment.user:
-        return redirect('reviews:detail', comment.review.problem.pk)
-    
-    if request.method == 'POST':
-        form = CommentForm(data=request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.save()
-            form.save_m2m()
-            return redirect('reviews:detail', comment.review.problem.pk)
-    else:
-        form = CommentForm()
     context = {
-        'form': form,
-    }
-    return render(request, 'reviews/comment_create.html', context)
+        'comment': comment,
+    }    
+    if request.user != comment.user:
+        return render(request, 'reviews/comments/item.html', context)
+    
+    if request.method == 'PUT':
+        data = QueryDict(request.body).dict()
+        form = CommentForm(data=data, instance=comment)
+        if form.is_valid():
+            form.save()
+            return render(request, 'reviews/comments/item.html', context)
+        context['comment_form'] = form
+    else:
+        context['comment_form'] = CommentForm(instance=comment)
+    return render(request, 'reviews/comments/update.html', context)
 
 
+@require_http_methods(['DELETE'])
 @login_required
 def comment_delete(request, comment_pk):
     comment = get_object_or_404(
-        Comment.objects.select_related('review__problem__study'),
+        Comment.objects.select_related('review'),
         pk=comment_pk
     )
-    if not comment.review.problem.study.studying_users.filter(username=request.user).exists():
-        return
-    
+    context = {
+        'review': comment.review
+    }
     if request.user == comment.user:
         comment.delete()
-    return redirect('reviews:detail', comment.review.problem.pk)
+        return HttpResponse()
+    return render(request, 'reviews/comments/item.html', context)
 
     
 @login_required
@@ -281,5 +324,3 @@ def like(request):
             'swap_text': '좋아요 취소',
         }
     return JsonResponse(response)
-        
-    
