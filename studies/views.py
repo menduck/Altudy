@@ -42,6 +42,10 @@ def index(request):
             filter_query |= Q(language__regex=r'\b{}\b'.format(re.escape(lang.strip())))
         studies = studies.filter(filter_query).distinct()
         print(studies)
+    
+    category = request.GET.get('category')
+    if category :
+        studies = studies.filter(category__name__iexact=category)
 
     context = {
         'studies': studies,

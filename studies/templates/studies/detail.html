@@ -230,7 +230,9 @@
     </div>
     <div class="category__container">
       {% for category in study.category.all|dictsort:'name' %}
-      <span class="category-item">#{{ category }}</span>
+      <a href="{% url 'studies:index' %}?category={{category}}">
+        <span class="category-item">#{{ category }}</span>
+      </a>
       {% endfor %}
     </div>
   </article>
@@ -279,19 +281,21 @@
 
 <script>
   function isComfirmJoin(){
-      message = "모집을 마감하시겠습니까?";
-      const confirmation = window.confirm(message);
-
-      if (confirmation) {
-        const form = document.getElementById('condition-form');
-        form.submit();
-      } else {
-        return false
-      }
+    message = "모집을 마감하시겠습니까?";
+    const confirmation = window.confirm(message);
+  
+    if (confirmation) {
+      const form = document.getElementById('condition-form');
+      form.submit();
+    } else {
+      return false
+    }
   }
-  </script>
+
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'JS/comment.js' %}"></script>
+
 
 {% endblock content %}
