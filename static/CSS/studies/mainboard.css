@@ -74,11 +74,17 @@
 
 .memberInfo-username{
   color: var(--color-gray-6);
-  margin: 5px 0;
+  margin: 10px 0;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-height: 20px;
+
 }
 
 .leader {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .memberInfo__container .leader{
@@ -152,7 +158,7 @@
   text-align: end;
   color: var(--color-gray-3);
   font-size: 0.5rem;
-  margin-top: 0;
+  margin-top: 8px;
   margin-bottom: 5px;
 }
 
@@ -165,7 +171,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  min-height: 15px;
+  min-height: 17px;
   max-height: 45px;
 }
 .announcement__container, .problem__container {
