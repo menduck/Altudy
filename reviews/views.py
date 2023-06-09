@@ -36,7 +36,7 @@ def detail(request, pk):
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
-            'review_set__comment_set__tags',
+            'review_set__comment_set',
             'review_set__tags',
         ).select_related('study'),
         pk=pk
@@ -48,7 +48,7 @@ def detail(request, pk):
     querydict = {
         'problem': Q(problem_set=pk),
         'review': Q(review_set__in=problem.review_set.values('id')),
-        'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
+        # 'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
     }
 
     tags = Tag.objects.filter(reduce(operator.__or__, querydict.values()))
@@ -58,7 +58,7 @@ def detail(request, pk):
     context = {
         'problem': problem,
         'tags': ordered_tags.values(),
-        'comment_form': CommentForm(),
+        # 'comment_form': CommentForm(),
     }
     return render(request, 'reviews/detail.html', context)
 
