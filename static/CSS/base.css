@@ -125,13 +125,31 @@ input:focus {
   text-align: center;
 }
 
+.dropdown-menu__study {
+  font-weight: var(--weight-semi-bold);
+  color: var(--color-green);
+  margin-bottom: 10px;
+}
+
+.join-message{
+  max-width: 140px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-height: 34px;
+
+  font-size: var(--font-micro);
+  line-height: 34px;
+}
+
+
 .button-box {
   display: flex;
   align-items: center;
 }
 
 .create-btn {
-  /* margin-top: 10px; */
   padding: 10px;
   margin-left: 10px;
 }
@@ -153,11 +171,6 @@ input:focus {
   margin-top: 1rem;
 }
 
-.dropdown-menu__study {
-  font-weight: var(--weight-semi-bold);
-  color: var(--color-green);
-  margin-bottom: 10px;
-}
 
 .dropdown-menu__container{
   margin-top: 15px;
@@ -173,7 +186,7 @@ input:focus {
 
 .content-box{
   display: flex;
-  align-items: center;
+  align-content: center;
   justify-content: space-between;
   margin-bottom: 5px;
 }

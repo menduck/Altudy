@@ -92,7 +92,7 @@
                     {% for request in study_requests|last %}
                       <div class="content-box">
                         <a href="{% url 'studies:mainboard' study.pk %}">
-                          <div> <span class="dropdown-menu__study">{{ study.title }}</span> - {{ request }}</div>
+                          <div class="join-message"> <span class="dropdown-menu__study">{{ study.title }}</span> - <span class="username">{{ request }}</span></div>
                           <div class="button-box">
                         </a>
                           <form action="{% url 'studies:accept' study.pk request %}" method="post">
