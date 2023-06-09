@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
+{% block head %}
+  
+{% endblock head %}
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" />
 {% block style %}
+
 <link
   rel="stylesheet"
   type="text/css"
   href="{% static 'CSS/reviews/detail.css' %}"
 />
-{% endblock style %}
+
+
+{% endblock style %} 
 {% block content %}
 <div class="main__container">
   <div class="probelm-box">
@@ -17,7 +25,8 @@
     </hgroup>
     <div class="probelm-content-box">
       <a href="{{ problem.url }}" class="problem-url">{{ problem.url }}</a>
-      <p class="problem-description">{{ problem.description|markdown }}</p>
+      <div id="viewer"></div>
+      {% comment %} <p class="problem-description">{{ problem.description|markdown }}</p> {% endcomment %}
     </div>
     <div class="problem-tag__container">
       {% for tag in problem.tags.all|dictsort:'name' %}
@@ -85,6 +94,25 @@
     {% endfor %}
   </ul>
 </div>
+
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+
+<script>
+  const Viewer = toastui.Editor;
+  const { codeSyntaxHighlight } = Viewer.plugin;
+
+  const viewer = new Viewer.factory({
+      el: document.querySelector('#viewer'),
+      viewer: true,
+      height: '600px',
+      initialValue: `{{ problem.description|markdown }}`,
+      plugins: [codeSyntaxHighlight]
+  });
+
+
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'reviews/like.js' %}"></script>
 {% endblock content %}
