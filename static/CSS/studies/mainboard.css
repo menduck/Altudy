@@ -52,13 +52,25 @@
   color: var(--color-green);
 }
 
+.study-expel{
+  color: var(--color-gray-3);
+  font-size: var(--font-micro);
+  text-decoration: underline; 
+  position: absolute;
+  right: 18px;
+  bottom: 20px;
+
+  background-color: transparent;
+  border: none;
+}
+
 /* 멤버 정보 */
 .memberInfo__container {
   border: 0.5px solid var(--color-gray-3);
   width: 80%;
   border-radius: 10px;
   padding: 20px 15px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);

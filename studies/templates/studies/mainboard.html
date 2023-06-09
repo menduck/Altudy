@@ -42,6 +42,12 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
         {% endif %}
       {% endfor %}
     </section>
+    {% if request.user != study.user %}
+      <form action="{% url 'studies:withdraw' study.pk %}" method="post">
+        {% csrf_token %}
+        <button type"submit" class="study-expel">스터디 탈퇴</button>
+      </form>
+    {% endif %}
   </aside>
 
   <section class="right-content__container">
