@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
+{% block head %}
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
+  />
+{% endblock head %}
+
 {% block style %}
 <link
   rel="stylesheet"
@@ -45,8 +56,9 @@
     </div>
     <p class="help-text">{{ tags.help_text }}</p>
     {% endwith %}
-    <button class="submit-button button-small" type="submit">문제 작성하기</button>
+    <button class="submit-button button-small" type="submit">문제 등록하기</button>
   </form>
 </div>
+
 <script src="{% static 'reviews/toastui.js' %}"></script>
 {% endblock content %}
