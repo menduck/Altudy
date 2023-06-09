@@ -42,6 +42,10 @@ def index(request):
             filter_query |= Q(language__regex=r'\b{}\b'.format(re.escape(lang.strip())))
         studies = studies.filter(filter_query).distinct()
         print(studies)
+    
+    category = request.GET.get('category')
+    if category :
+        studies = studies.filter(category__name__iexact=category)
 
     context = {
         'studies': studies,
@@ -430,7 +434,7 @@ def problem_search(request, study_pk: int):
 @login_required
 def announcement(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
-    announcements = Announcement.objects.filter(study=study)
+    announcements = Announcement.objects.filter(study=study).order_by('-pk')
     
     # 스터디에 가입되어있지 않으면 접근 불가
     if not Studying.objects.filter(study=study, user=request.user).exists():

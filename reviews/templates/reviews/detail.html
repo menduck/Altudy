@@ -19,6 +19,13 @@
       <a href="{{ problem.url }}" class="problem-url">{{ problem.url }}</a>
       <p class="problem-description">{{ problem.description|markdown }}</p>
     </div>
+    <div class="problem-tag__container">
+      {% for tag in problem.tags.all|dictsort:'name' %}
+      <a href="">
+        <span class="tag-item">#{{ tag }}</span>
+      </a>
+      {% endfor %}
+    </div>
     <div class="problem-button-box">
       {% if user == problem.user %}
       <div style="display: flex;">
@@ -43,6 +50,13 @@
     {% for review in problem.review_set.all %}
     <div class="review-content">
       <li>{{ review.content|markdown }}</li>
+      <div class="review-tag__container">
+        {% for tag in review.tags.all|dictsort:'name' %}
+        <a href="">
+          <span class="tag-item">#{{ tag }}</span>
+        </a>
+        {% endfor %}
+      </div>
       <div class="review-button-box">
         {% if user == review.user %}
         <form action="{% url 'reviews:review_update' review.pk %}" method="post">
