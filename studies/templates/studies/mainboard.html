@@ -35,11 +35,15 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
       </div>
       <hr>
       {% for user in users %}
-        {% if user == study.user %}
+      {% if user == study.user and user == request.user %}
+          <div class="memberInfo-username leader"> {{user.emoji_username}} - 리더</div>
+      {% elif user == study.user and user != request.user  %}
+          <div class="memberInfo-username"> {{user.emoji_username}} - 리더</div>
+      {% elif user != study.user and user == request.user  %}
           <div class="memberInfo-username leader"> {{user.emoji_username}}</div>
-        {% else %}
+      {% else %}
           <div class="memberInfo-username"> {{user.emoji_username}}</div>
-        {% endif %}
+      {% endif %}
       {% endfor %}
     </section>
     {% if request.user != study.user %}

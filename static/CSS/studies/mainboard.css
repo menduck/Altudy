@@ -86,17 +86,13 @@
 
 .memberInfo-username{
   color: var(--color-gray-6);
-  margin: 10px 0;
+  margin: 15px 0;
 
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   min-height: 20px;
 
-}
-
-.leader {
-  margin-bottom: 15px;
 }
 
 .memberInfo__container .leader{
