@@ -154,7 +154,6 @@ def review_create(request, pk):
             context = {
                 'problem': Problem.objects.get(pk=pk)
             }
-            # return render(request, 'reviews/detail.html', context)
             return redirect('reviews:detail', review.problem.pk)
     else:
         form = ReviewForm()
