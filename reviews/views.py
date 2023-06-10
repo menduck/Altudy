@@ -198,13 +198,11 @@ def review_delete(request, review_pk):
         Review.objects.select_related('problem__study'),
         pk=review_pk
     )
-    if not review.problem.study.studying_users.filter(username=request.user).exists():
-        return redirect('studies:detail', review.problem.study.pk)
-    
+    problem_pk = review.problem.pk
     if request.user == review.user:
         review.delete()
-        return redirect('studies:index')
-    return redirect('reviews:detail', review.problem.pk)
+        return redirect('reviews:detail', problem_pk)
+    return redirect('reviews:detail', problem_pk)
 
 
 # @api_view(['POST'])
