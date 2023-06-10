@@ -14,7 +14,9 @@
     <form action="{% url 'studies:create' %}" method="post" class="">
       {% csrf_token %}
       <div class="content-box">
+        <div class="label label-small">{{ form.title.label }}</div>
         {{ form.title }}
+        <div class="label label-small">{{ form.description.label }}</div>
         {{ form.description }}
         {% comment %} 참여신청 {% endcomment %}
         <div class="join-box">
@@ -62,7 +64,7 @@
       </div>
       {% comment %} 버튼 {% endcomment %}
       <div class="button-box">
-        <a href="{% url 'studies:index' %}" class="button-small">스터디 목록</a>
+        <a href="{% url 'studies:index' %}" class="button-small list">스터디 목록</a>
         <button type="submit" class="button-small">스터디 생성</button>
       </div>
     </form>

@@ -21,8 +21,8 @@ class StudyForm(forms.ModelForm):
             'join_condition',
             )
         labels = {
-            'title': '', 
-            'description': '',
+            'title': '스터디 이름', 
+            'description': '스터디 설명',
             'language': '언어',
             'category': '카테고리',
             'capacity': '모집 인원',
@@ -40,7 +40,7 @@ class StudyForm(forms.ModelForm):
             }),
             'description': forms.Textarea(attrs={
                 'class':'description',
-                'placeholder':'스터디 설명을 입력하세요',
+                'placeholder':'스터디 설명을 입력하세요\r\n \r\n- 스터디 목적/주제: [스터디 목적/주제]\r\n- 참여 조건 및 요구사항: [참여 조건/요구사항]\r\n- 스터디 활동 내용: [스터디 활동 내용]\r\n\r\n자세한 설명을 추가하시면, 더 멋진 스터디원을 구하는데 도움이 됩니다.',
             }),
             'language': forms.SelectMultiple(attrs={
                 'class':'language',
