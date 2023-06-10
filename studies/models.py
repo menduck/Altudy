@@ -103,12 +103,6 @@ class Studying(models.Model):
     permission = models.PositiveSmallIntegerField(default=1)
     joined_at = models.DateTimeField(auto_now_add=True)
     
-    # def clean(self):
-    #     super().clean()
-    #     study = self.study
-    #     if Studying.objects.filter(study=study).count() < study.capacity_min:
-    #         raise ValidationError({'study': '스터디 최소 인원 수를 충족하지 않습니다.'})
-    
     
 class Announcement(models.Model):
     study = models.ForeignKey(to=Study, on_delete=models.CASCADE, related_name='announcements')
