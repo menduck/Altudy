@@ -150,7 +150,7 @@ def review_create(request, pk):
             review = form.save(commit=False)
             review.user, review.problem = request.user, problem
             review.save()
-            form.save_m2m()
+            form.save_m2m() 
             context = {
                 'problem': Problem.objects.get(pk=pk)
             }
