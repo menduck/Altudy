@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
-
 {% block head %}
-  
 {% endblock head %}
-  <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" />
 
 {% block style %}
-
+<link
+rel="stylesheet"
+type="text/css"
+href="{% static 'CSS/reviews/detail.css' %}"
+/>
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
+/>
 <link
   rel="stylesheet"
-  type="text/css"
-  href="{% static 'CSS/reviews/detail.css' %}"
+  href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
 />
-
 
 {% endblock style %} 
 {% block content %}
@@ -27,8 +29,7 @@
     </hgroup>
     <div class="probelm-content-box">
       <a href="{{ problem.url }}" class="problem-url">{{ problem.url }}</a>
-      <div id="viewer"></div>
-      {% comment %} <p class="problem-description">{{ problem.description|markdown }}</p> {% endcomment %}
+      <div id="viewer">{{ problem.description|json_script:'problem_description' }}</div>
     </div>
     <div class="problem-tag__container">
       {% for tag in problem.tags.all|dictsort:'name' %}
@@ -76,42 +77,28 @@
         </form>          
         {% endif %}
         {% include 'reviews/components/like.html' with obj=review %}
-        
-      </div>
-
-      <ul id="comment-list-{{ review.pk }}" hx-swap="outerHTML">
-        {% include 'reviews/comments/list.html' %}
-      </ul>
-
-      <hr>
-      
-      {# 버튼 클릭시 아래에 댓글 작성창이 생성됩니다. #}
-      <div id="create-comment-on-{{ review.pk }}" hx-target="this" hx-swap="outerHTML" class="d-flex flex-row-reverse">
-        <button id="add-comment-btn-{{ review.pk }}" hx-get="{% url 'reviews:comment_create' review.pk %}" class="button-small joinbutton">댓글 작성</button>
+        <a href="{% url 'reviews:comment_create' review.pk %}" class="button-small joinbutton">댓글 작성</a>
+        <ul>
+          {% for comment in review.comment_set.all %}
+          <li>{{ comment.content|markdown }}</li>
+          <form action="{% url 'reviews:comment_update' comment.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit">댓글 수정</button>
+          </form>
+          <form action="{% url 'reviews:comment_delete' comment.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit">댓글 삭제</button>
+          </form>
+          {% include 'reviews/components/like.html' with obj=comment %}
+          {% endfor %}
+        </ul>
       </div>
     </div>
     {% endfor %}
   </ul>
 </div>
 
-<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-<script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
-
-<script>
-  const Viewer = toastui.Editor;
-  const { codeSyntaxHighlight } = Viewer.plugin;
-
-  const viewer = new Viewer.factory({
-      el: document.querySelector('#viewer'),
-      viewer: true,
-      height: '600px',
-      initialValue: `{{ problem.description|markdown }}`,
-      plugins: [codeSyntaxHighlight]
-  });
-
-
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'reviews/like.js' %}"></script>
+<script src="{% static 'reviews/toastViewer.js' %}"></>
 {% endblock content %}
