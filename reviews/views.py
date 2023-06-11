@@ -136,13 +136,11 @@ def delete(request, pk):
     problem = get_object_or_404(
         Problem.objects.select_related('study'), pk=pk,
     )
-    if not problem.study.studying_users.filter(username=request.user).exists():
-        # 스터디 탈퇴시 삭제되거나 '존재하지 않는 게시글입니다' 와 같은 페이지를 보여주기로 대체?
-        return redirect('studies:detail', problem.study.pk)
+    study_pk = problem.study.pk
 
     if request.user == problem.user:
         problem.delete()
-        return redirect('studies:mainboard', problem.study.pk)
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('studies:mainboard', kwargs={'study_pk':study_pk}))
     return redirect('reviews:detail', pk)
     
 

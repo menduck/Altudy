@@ -45,10 +45,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
           {% csrf_token %}
           <button type="submit" class="gray-button button-small joinbutton reset-style">문제 수정</button>
         </form>
-        <form action="{% url 'reviews:delete' problem.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="gray-button button-small joinbutton reset-style">문제 삭제</button>
-        </form>        
+        <button hx-delete="{% url 'reviews:delete' problem.pk %}"
+                hx-confirm="문제를 삭제하시겠습니까?"
+                class="gray-button button-small joinbutton reset-style">문제 삭제</button>
       </div>
       {% endif %}
       {% include 'reviews/components/like.html' with obj=problem %}
