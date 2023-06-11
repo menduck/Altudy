@@ -173,26 +173,30 @@ def review_create(request, pk):
     return render(request, 'reviews/review_create.html', context)
 
 
+@require_http_methods(['GET', 'PUT'])
 @login_required
 def review_update(request, review_pk):
     review = get_object_or_404(
         Review.objects.select_related('problem__study'),
         pk=review_pk,
     )
-    
+    study_pk = review.problem.study.pk
     if not review.problem.study.studying_users.filter(username=request.user).exists():
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('studies:detail', kwargs={'study_pk': study_pk}))
         return redirect('studies:detail', review.problem.study.pk)
     
     if request.user != review.user:
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': review.problem.pk}))
         return redirect('reviews:detail', review.problem.pk)
     
-    if request.method == 'POST':
-        form = ReviewForm(data=request.POST, instance=review)
+    if request.method == 'PUT':
+        data = QueryDict(request.body).dict()
+        form = ReviewForm(data, instance=review)
         if form.is_valid():
             review = form.save(commit=False)
             review.save()
             form.save_m2m()
-            return redirect('reviews:detail', review.problem.pk)
+            return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': review.problem.pk}))
     else:
         form = ReviewForm(instance=review)
     context = {
@@ -201,6 +205,7 @@ def review_update(request, review_pk):
     return render(request, 'reviews/review_update.html', context)
 
 
+@require_http_methods(['DELETE'])
 @login_required
 def review_delete(request, review_pk):
     review = get_object_or_404(
@@ -211,7 +216,6 @@ def review_delete(request, review_pk):
     if request.user == review.user:
         review.delete()
         messages.add_message(request, messages.SUCCESS, "리뷰가 성공적으로 삭제되었습니다.")
-    # return redirect('reviews:detail', problem_pk)
     return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': problem_pk}))
 
 
