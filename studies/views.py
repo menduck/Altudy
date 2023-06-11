@@ -289,7 +289,6 @@ def cancel(request, study_pk: int):
     
     return redirect('studies:detail', study_pk)
 
-
 @login_required
 def mainboard(request, study_pk: int):
     request.session['study_id'] = study_pk
@@ -308,23 +307,42 @@ def mainboard(request, study_pk: int):
     # 유저별 리뷰 수, 백분율 (그래프에 사용)
     user_reviews = {}
     user_percentages = {}
-    total_reviews = 0
+    # 유저별 리뷰 좋아요 수 {유저: 리뷰 좋아요 총합}
+    user_review_likes_dict = {}
+    user_review_likes_percentage = {}
+    [total_reviews, total_reviews_likes ]= 0,0
 
     for user in users:
         reviews_count = Review.objects.filter(problem__study=study, user=user).count()
-        user_percentages[user.emoji_username()] = reviews_count
+        user_reviews[user.emoji_username()] = reviews_count
         total_reviews += reviews_count
 
+        review_likes_per_user = Review.objects.filter(problem__study=study, user=user).annotate(num_likes=Count('like_users')).values('user', 'num_likes')
+        if review_likes_per_user:
+            user_review_likes_dict[user.emoji_username()] =  review_likes_per_user[0]['num_likes']
+            total_reviews_likes += review_likes_per_user[0]['num_likes']
+        else:
+            user_review_likes_dict[user.emoji_username()] =  0
+
     for user, reviews_count in user_reviews.items():
-        if total_reviews:
+        if total_reviews_likes:
             percentage = (reviews_count / total_reviews) * 100
         else:
             percentage = 0
-        user_percentages[user.emoji_username()] = int(percentage)
+        user_percentages[user] = int(percentage)
+
+    for user, reviews_likes_count in user_review_likes_dict.items():
+        if total_reviews_likes:
+            percentage = (reviews_likes_count / total_reviews_likes) * 100
+        else:
+            percentage = 0
+        user_review_likes_percentage[user] = int(percentage)
 
     # 상위 3명의 유저
-    user_reviews = sorted(user_reviews.items(), key=lambda x: x[1], reverse=True)[:3]
     user_percentages = sorted(user_percentages.items(), key=lambda x: x[1], reverse=True)[:3]
+    user_review_likes_percentage = sorted(user_review_likes_percentage.items(), key=lambda x: x[1], reverse=True)[:3]
+    print(user_percentages)
+    print(user_review_likes_percentage)
 
     # 메인보드에서 보여줄 공지
     announcements = Announcement.objects.filter(study=study).order_by('-created_at')[:2]
@@ -336,9 +354,9 @@ def mainboard(request, study_pk: int):
         'users': users,
         'user_reviews': user_reviews,
         'user_percentages': user_percentages,
+        'user_review_likes_percentage':user_review_likes_percentage,
     }
     return render(request, 'studies/mainboard.html', context)
-
 
 @login_required
 def member(request, study_pk: int):

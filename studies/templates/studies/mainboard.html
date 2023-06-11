@@ -89,20 +89,19 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
     <section class="right_content-item__wrapper">
       <div class="right_content-title">🏆 우리 함께 성장하는 리더보드</div>
       <div class="ranking__wrapper">
-        {# 출석률 #}
-        <section class="ranking-item__container">
-          <canvas id="attendanceRate-chart"></canvas>
-          {{ user_percentages | json_script:'user_percentages' }}
-          <div class="ranking-item-title">출석왕</div>
-        </section>
-      
         {# 리뷰 작성률 #}
         <section class="ranking-item__container">
           <canvas id="reviewsRate-chart"></canvas>
-          {{ user_reviews | json_script:'user_reviews' }}
+          {{ user_percentages | json_script:'user_percentages' }}
           <div class="ranking-item-title">리뷰왕</div>
         </section>
-        <section class="ranking-item__container"></section>
+        {# 리뷰 좋아요 #}
+        <section class="ranking-item__container">
+          <canvas id="reviewsLikesRate-chart"></canvas>
+          {{ user_review_likes_percentage | json_script:'user_review_likes_percentage' }}
+          <div class="ranking-item-title">코드왕</div>
+        </section>
+      
       </div>
       </section>
     {#제출해야할 과제#}

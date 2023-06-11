@@ -35,9 +35,10 @@
 .title {
   width: 100%;
   margin-bottom: 10px;
-  background-color: transparent;
+  background-color: var(--color-white);
   border: none;
-  border-bottom: 1px solid var(--color-gray-2);
+  border-radius: var(--border-radius-soft);
+  border: 1px solid var(--color-gray-2);
   font-size: var(--font-regular);
   padding: 5px;
 }
@@ -48,8 +49,22 @@
   resize: none;
   margin-bottom: 10px;
   border: 1px solid var(--color-gray-2);
-  font-size: var(--font-regular);
+  border-radius: var(--border-radius-soft);
+  font-size: var(--font-small);
   padding: 5px;
+}
+
+.description:focus,
+.title:focus,
+.language:focus,
+.category:focus,
+.capacity:focus,
+.start_date:focus,
+.end_date:focus,
+.start_time:focus,
+.end_time:focus,
+.join_condition:focus {
+  outline: 3px solid var(--color-lightgreen);
 }
 
 .language,
@@ -61,8 +76,8 @@
 .end_time,
 .join_condition {
   width: 100%;
-  margin-bottom: 10px;
-  background-color: #f0f2f5;
+  margin-bottom: 30px;
+  background-color: var(--color-white);
   border: none;
   border-radius: var(--border-radius-soft);
   padding: 5px;
@@ -77,7 +92,8 @@
 
 .label {
   display: inline-block;
-  background-color: var(--color-gray-6);
+  /* background-color: rgba(108, 142, 45, 0.2); */
+  background-color: var(--color-gray-5);
   color: var(--color-white);
   margin-top: 15px;
   padding: 5px 10px;
@@ -87,27 +103,39 @@
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.label-small{
+  width: 20%;
+  text-align: center;
+}
+
 /* 버튼 */
 .button-box {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  margin: 50px 0;
 }
 
 .button-small {
   padding: 10px 20px;
-  background-color: var(--color-gray-2);
+  background-color: var(--color-green);
   color: var(--color-white);
+  font-weight: var(--weight-bold);
   font-size: var(--font-regular);
   border: none;
   border-radius: var(--border-radius-soft);
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
 }
 
 .button-small:hover {
-  background-color: var(--color-green);
+  background-color: var(--color-white);
+  color: var(--color-green);
 }
+.list, .list:hover {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-green);
+  color: var(--color-green);
+}
+
 
 /* 스타일 기본 설정 */
 .flex {
