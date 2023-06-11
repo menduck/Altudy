@@ -74,6 +74,7 @@ def detail(request, pk):
     return render(request, 'reviews/detail.html', context)
 
 
+@require_http_methods(['GET', 'POST'])
 @login_required
 def create(request):
     study_id = request.GET.get('study', request.session.get('study_id'))
@@ -141,6 +142,7 @@ def delete(request, pk):
     return redirect('reviews:detail', pk)
     
 
+@require_http_methods(['GET', 'POST'])
 @login_required
 def review_create(request, pk):
     problem = get_object_or_404(
@@ -240,6 +242,7 @@ def review_delete(request, review_pk):
 #         return Response({"error": "Unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+@require_http_methods(['GET', 'POST'])
 @login_required
 def comment_create(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
