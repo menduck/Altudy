@@ -104,25 +104,22 @@ def create(request):
     return render(request, 'reviews/create.html', context)
 
 
+@require_http_methods(['GET', 'PUT'])
 @login_required
 def update(request, pk):
     problem = get_object_or_404(Problem.objects.select_related('study'), pk=pk)
     
-    # reviews:detail에서 studies:detail로 가는 코드가 있지만,
-    # 네트워크 비용 감소를 위해 바로 studies:detail로 가도록 작성
-    if not problem.study.studying_users.filter(username=request.user).exists():
-        return redirect('studies:detail', problem.study.pk)
-    
     if request.user != problem.user:
-        return redirect('reviews:detail', problem.pk)
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': pk}))
     
-    if request.method == 'POST':
-        form = ProblemForm(data=request.POST, instance=problem)
+    if request.method == 'PUT':
+        data = QueryDict(request.body).dict()
+        form = ProblemForm(data, instance=problem)
         if form.is_valid():
             updated_form = form.save(commit=False)
             updated_form.save()
             form.save_m2m()
-            return redirect('reviews:detail', problem.pk)
+            return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': pk}))
     else:
         form = ProblemForm(instance=problem)
     context = {
