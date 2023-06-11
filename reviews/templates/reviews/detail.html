@@ -41,14 +41,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
     <div class="problem-button-box">
       {% if user == problem.user %}
       <div style="display: flex;">
-        <form action="{% url 'reviews:update' problem.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="gray-button button-small joinbutton reset-style">문제 수정</button>
-        </form>
-        <form action="{% url 'reviews:delete' problem.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="gray-button button-small joinbutton reset-style">문제 삭제</button>
-        </form>        
+        <a href="{% url 'reviews:update' problem.pk %}" type="submit" class="gray-button button-small joinbutton reset-style">문제 수정</a>
+        <button hx-delete="{% url 'reviews:delete' problem.pk %}"
+                hx-confirm="문제를 삭제하시겠습니까?"
+                class="gray-button button-small joinbutton reset-style">문제 삭제</button>
       </div>
       {% endif %}
       {% include 'reviews/components/like.html' with obj=problem %}
@@ -71,12 +67,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
       </div>
       {% if user == review.user %}
       <div class="d-flex justify-content-end">
-        <a href="{% url 'reviews:review_update' review.pk %}">리뷰 수정</a>
-        <form action="{% url 'reviews:review_delete' review.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit">리뷰 삭제</button>
-        </form>
-        {% comment %} <div hx-delete="{% url 'reviews:review_delete' review.pk %}" hx-confirm="리뷰를 삭제하시겠습니까?">리뷰 삭제</div> {% endcomment %}
+        <a href="{% url 'reviews:review_update' review.pk %}" class="btn btn-primary mx-3">리뷰 수정</a>
+        <div hx-delete="{% url 'reviews:review_delete' review.pk %}"
+             hx-confirm="리뷰를 삭제하시겠습니까?"
+             class="btn btn-primary">리뷰 삭제</div>
       </div>
       {% elif user.is_authenticated %}
       {% include 'reviews/components/like.html' %}

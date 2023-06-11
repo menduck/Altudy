@@ -2,13 +2,15 @@ import json
 import operator
 import logging
 from functools import reduce
+from typing import Any
 
-from django.http import JsonResponse, Http404, QueryDict, HttpResponse
+from django.http import JsonResponse, Http404, QueryDict, HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
-
 # from rest_framework import status
 # from rest_framework.decorators import api_view, permission_classes
 # from rest_framework.permissions import IsAuthenticated
@@ -25,6 +27,15 @@ from studies.models import Study
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
+
+
+class HTTPResponseHXRedirect(HttpResponseRedirect):
+    '''HTMX를 사용해 페이지를 redirect 하기 위한 클래스'''
+    def __init__(self, redirect_to: str, *args: Any, **kwargs: Any) -> None:
+        super().__init__(redirect_to, *args, **kwargs)
+        self["HX-Redirect"] = self["Location"]
+    
+    status_code = 200
 
 
 # Create your views here.
@@ -63,6 +74,7 @@ def detail(request, pk):
     return render(request, 'reviews/detail.html', context)
 
 
+@require_http_methods(['GET', 'POST'])
 @login_required
 def create(request):
     study_id = request.GET.get('study', request.session.get('study_id'))
@@ -93,25 +105,22 @@ def create(request):
     return render(request, 'reviews/create.html', context)
 
 
+@require_http_methods(['GET', 'PUT'])
 @login_required
 def update(request, pk):
     problem = get_object_or_404(Problem.objects.select_related('study'), pk=pk)
     
-    # reviews:detail에서 studies:detail로 가는 코드가 있지만,
-    # 네트워크 비용 감소를 위해 바로 studies:detail로 가도록 작성
-    if not problem.study.studying_users.filter(username=request.user).exists():
-        return redirect('studies:detail', problem.study.pk)
-    
     if request.user != problem.user:
-        return redirect('reviews:detail', problem.pk)
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': pk}))
     
-    if request.method == 'POST':
-        form = ProblemForm(data=request.POST, instance=problem)
+    if request.method == 'PUT':
+        data = QueryDict(request.body).dict()
+        form = ProblemForm(data, instance=problem)
         if form.is_valid():
             updated_form = form.save(commit=False)
             updated_form.save()
             form.save_m2m()
-            return redirect('reviews:detail', problem.pk)
+            return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': pk}))
     else:
         form = ProblemForm(instance=problem)
     context = {
@@ -120,20 +129,21 @@ def update(request, pk):
     return render(request, 'reviews/update.html', context)
 
 
+@require_http_methods(['DELETE'])
 @login_required
 def delete(request, pk):
     problem = get_object_or_404(
         Problem.objects.select_related('study'), pk=pk,
     )
-    if not problem.study.studying_users.filter(username=request.user).exists():
-        return redirect('studies:detail', problem.study.pk)
+    study_pk = problem.study.pk
 
     if request.user == problem.user:
         problem.delete()
-        return redirect('studies:mainboard', problem.study.pk)
-    return redirect('reviews:detail', pk)
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('studies:mainboard', kwargs={'study_pk':study_pk}))
+    return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': pk}))
     
 
+@require_http_methods(['GET', 'POST'])
 @login_required
 def review_create(request, pk):
     problem = get_object_or_404(
@@ -164,26 +174,30 @@ def review_create(request, pk):
     return render(request, 'reviews/review_create.html', context)
 
 
+@require_http_methods(['GET', 'PUT'])
 @login_required
 def review_update(request, review_pk):
     review = get_object_or_404(
         Review.objects.select_related('problem__study'),
         pk=review_pk,
     )
-    
+    study_pk = review.problem.study.pk
     if not review.problem.study.studying_users.filter(username=request.user).exists():
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('studies:detail', kwargs={'study_pk': study_pk}))
         return redirect('studies:detail', review.problem.study.pk)
     
     if request.user != review.user:
+        return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': review.problem.pk}))
         return redirect('reviews:detail', review.problem.pk)
     
-    if request.method == 'POST':
-        form = ReviewForm(data=request.POST, instance=review)
+    if request.method == 'PUT':
+        data = QueryDict(request.body).dict()
+        form = ReviewForm(data, instance=review)
         if form.is_valid():
             review = form.save(commit=False)
             review.save()
             form.save_m2m()
-            return redirect('reviews:detail', review.problem.pk)
+            return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': review.problem.pk}))
     else:
         form = ReviewForm(instance=review)
     context = {
@@ -192,6 +206,7 @@ def review_update(request, review_pk):
     return render(request, 'reviews/review_update.html', context)
 
 
+@require_http_methods(['DELETE'])
 @login_required
 def review_delete(request, review_pk):
     review = get_object_or_404(
@@ -201,8 +216,8 @@ def review_delete(request, review_pk):
     problem_pk = review.problem.pk
     if request.user == review.user:
         review.delete()
-        return redirect('reviews:detail', problem_pk)
-    return redirect('reviews:detail', problem_pk)
+        messages.add_message(request, messages.SUCCESS, "리뷰가 성공적으로 삭제되었습니다.")
+    return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': problem_pk}))
 
 
 # @api_view(['POST'])
@@ -232,6 +247,7 @@ def review_delete(request, review_pk):
 #         return Response({"error": "Unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+@require_http_methods(['GET', 'POST'])
 @login_required
 def comment_create(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
