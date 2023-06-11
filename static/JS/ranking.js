@@ -1,20 +1,19 @@
 const attendanceChart = document.getElementById('attendanceRate-chart');
-const userPercentages = JSON.parse(
-  document.getElementById('user_percentages').textContent
+const userReviewsLikeCount = JSON.parse(
+  document.getElementById('review_likes_dict').textContent
 );
 let delayed;
-console.log(userPercentages)
 
 new Chart(attendanceChart, {
   type: 'bar',
 
   data: {
-    labels: userPercentages.map((item) => item[0]),
+    labels: userReviewsLikeCount.map((item) => item[0]),
     datasets: [
       {
-        label: '출석률',
-        data: userPercentages.map((item) => item[1]),
-        backgroundColor: userPercentages.map((item,idx) => {
+        label: '코드왕',
+        data: userReviewsLikeCount.map((item) => item[1]),
+        backgroundColor: userReviewsLikeCount.map((item,idx) => {
           if (idx === 0) return '#6C8E2D'
           if (idx === 1) return '#94B359'
           if (idx === 2) return '#BBD885'
@@ -72,12 +71,12 @@ new Chart(reviewChart, {
   type: 'bar',
 
   data: {
-    labels: userPercentages.map((item) => item[0]),
+    labels: userReviewsLikeCount.map((item) => item[0]),
     datasets: [
       {
         label: '리뷰',
-        data: userPercentages.map((item) => item[1]),
-        backgroundColor: userPercentages.map((item,idx) => {
+        data: userReviewsLikeCount.map((item) => item[1]),
+        backgroundColor: userReviewsLikeCount.map((item,idx) => {
           if (idx === 0) return '#6C8E2D'
           if (idx === 1) return '#94B359'
           if (idx === 2) return '#BBD885'
