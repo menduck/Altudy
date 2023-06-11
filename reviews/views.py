@@ -129,6 +129,7 @@ def update(request, pk):
     return render(request, 'reviews/update.html', context)
 
 
+@require_http_methods(['DELETE'])
 @login_required
 def delete(request, pk):
     problem = get_object_or_404(
@@ -139,7 +140,7 @@ def delete(request, pk):
     if request.user == problem.user:
         problem.delete()
         return HTTPResponseHXRedirect(redirect_to=reverse_lazy('studies:mainboard', kwargs={'study_pk':study_pk}))
-    return redirect('reviews:detail', pk)
+    return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': pk}))
     
 
 @require_http_methods(['GET', 'POST'])

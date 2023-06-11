@@ -67,7 +67,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
       </div>
       {% if user == review.user %}
       <div class="d-flex justify-content-end">
-        <a href="{% url 'reviews:review_update' review.pk %}">리뷰 수정</a>
+        <a href="{% url 'reviews:review_update' review.pk %}" class="btn btn-primary mx-3">리뷰 수정</a>
         <div hx-delete="{% url 'reviews:review_delete' review.pk %}"
              hx-confirm="리뷰를 삭제하시겠습니까?"
              class="btn btn-primary">리뷰 삭제</div>
