@@ -2,13 +2,15 @@ import json
 import operator
 import logging
 from functools import reduce
+from typing import Any
 
-from django.http import JsonResponse, Http404, QueryDict, HttpResponse
+from django.http import JsonResponse, Http404, QueryDict, HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
-
 # from rest_framework import status
 # from rest_framework.decorators import api_view, permission_classes
 # from rest_framework.permissions import IsAuthenticated
@@ -25,6 +27,15 @@ from studies.models import Study
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
+
+
+class HTTPResponseHXRedirect(HttpResponseRedirect):
+    '''HTMX를 사용해 페이지를 redirect 하기 위한 클래스'''
+    def __init__(self, redirect_to: str, *args: Any, **kwargs: Any) -> None:
+        super().__init__(redirect_to, *args, **kwargs)
+        self["HX-Redirect"] = self["Location"]
+    
+    status_code = 200
 
 
 # Create your views here.
@@ -126,6 +137,7 @@ def delete(request, pk):
         Problem.objects.select_related('study'), pk=pk,
     )
     if not problem.study.studying_users.filter(username=request.user).exists():
+        # 스터디 탈퇴시 삭제되거나 '존재하지 않는 게시글입니다' 와 같은 페이지를 보여주기로 대체?
         return redirect('studies:detail', problem.study.pk)
 
     if request.user == problem.user:
@@ -201,8 +213,9 @@ def review_delete(request, review_pk):
     problem_pk = review.problem.pk
     if request.user == review.user:
         review.delete()
-        return redirect('reviews:detail', problem_pk)
-    return redirect('reviews:detail', problem_pk)
+        messages.add_message(request, messages.SUCCESS, "리뷰가 성공적으로 삭제되었습니다.")
+    # return redirect('reviews:detail', problem_pk)
+    return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': problem_pk}))
 
 
 # @api_view(['POST'])

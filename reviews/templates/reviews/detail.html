@@ -72,11 +72,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
       {% if user == review.user %}
       <div class="d-flex justify-content-end">
         <a href="{% url 'reviews:review_update' review.pk %}">리뷰 수정</a>
-        <form action="{% url 'reviews:review_delete' review.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit">리뷰 삭제</button>
-        </form>
-        {% comment %} <div hx-delete="{% url 'reviews:review_delete' review.pk %}" hx-confirm="리뷰를 삭제하시겠습니까?">리뷰 삭제</div> {% endcomment %}
+        <div hx-delete="{% url 'reviews:review_delete' review.pk %}"
+             hx-confirm="리뷰를 삭제하시겠습니까?"
+             class="btn btn-primary">리뷰 삭제</div>
       </div>
       {% elif user.is_authenticated %}
       {% include 'reviews/components/like.html' %}
