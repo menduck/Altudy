@@ -244,9 +244,18 @@ hgroup {
 }
 
 .comment__wrapper:hover .comment-ud__info{
+  height: 5px;
   display: block;
 }
 
+.ud-button{
+  background-color: var(--color-gray-1);
+  color: var(--color-gray-7);
+  font-size: var(--font-micro);
+  box-shadow: 2px 2px 4px var(--color-gray-2);
+  margin-right: 10px;
+  padding: 5px 10px;
+}
 
 .comment__container .study__userInfo-username, .comment-user-info__container .study__userInfo-username{
   background-color: var(--color-gray-5);

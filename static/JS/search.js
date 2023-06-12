@@ -39,7 +39,7 @@ const displayResults = (results) => {
 
     problemLink.href = `http://127.0.0.1:8000/reviews/${result.id}/`
     problemLink.textContent = result.title;
-    problemTime.textContent = result.createdAt;
+    problemTime.textContent = result.createdAt.split(' ')[0];
     liElement.appendChild(problemLink)
     liElement.appendChild(problemTime)
     ulElement.appendChild(liElement)
