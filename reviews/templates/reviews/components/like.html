@@ -1,6 +1,14 @@
 {% load custom_filters %}
 
 
-<form id="like-forms" hx-post="{% url 'reviews:like' %}" data-object-identifier="{{ obj|id }}" hx-target="this" hx-swap="innerHTML">
-  {% include 'reviews/components/thumbs-up.html' with obj=obj %}
+<form id="like-forms" action="{% url 'reviews:like' %}" data-object-identifier="{{ obj|id }}" hx-target="this">
+  {% csrf_token %}
+  <input type="hidden" name="object-identifier" value="{{ obj|id }}">
+  <button type="submit">
+    {% if user in obj.like_users.all %}
+    <i class="bi bi-hand-thumbs-up-fill"></i>
+    {% else %}
+    <i class="bi bi-hand-thumbs-up"></i>
+    {% endif %}
+  </button>
 </form>

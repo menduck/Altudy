@@ -314,8 +314,11 @@ def comment_delete(request, comment_pk):
 
 @login_required
 def like(request):
+    try:
+        object_identifier = json.loads(request.body).get('objectIdentifier')
+    except:
+        raise Http404("Request not valid")
     
-    object_identifier = request.POST.get('object-identifier')
     if object_identifier is not None:
         model, pk = object_identifier.split('-')
         if model not in {'Problem', 'Review', 'Comment'}:
@@ -327,6 +330,13 @@ def like(request):
 
     if request.user in obj.like_users.all():
         obj.like_users.remove(request.user)
+        context = {
+            'liked': False
+        }
     else:
         obj.like_users.add(request.user)
-    return render(request, 'reviews/components/thumbs-up.html', {'obj': obj})
+        context = {
+            'liked': True
+        }
+    context['count'] = obj.like_users.count()
+    return JsonResponse(context)
