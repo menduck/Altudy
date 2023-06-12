@@ -12,8 +12,8 @@
 <div class="d-flex justify-content-between">
   {% if user == comment.user %}
   <div class="d-flex justify-content-around">
-    <button id="edit-btn-{{ comment.pk }}" hx-get="{% url 'reviews:comment_update' comment.pk %}" class="button-small joinbutton" hx-target="#comment-item-{{ comment.pk }}-on-{{ comment.review.pk }}" hx-swap="innerHTML">댓글 수정</button>
-    <button class="button-small joinbutton" hx-delete="{% url 'reviews:comment_delete' comment.pk %}" hx-target="#comment-item-{{ comment.pk }}-on-{{ comment.review.pk }}" hx-swap="outerHTML">댓글 삭제</button>
+    <button id="edit-btn-{{ comment.pk }}" hx-get="{% url 'reviews:comment_update' comment.pk %}" class="button-small joinbutton" hx-target="#comment-item-{{ comment.pk }}-on-{{ review.pk }}" hx-swap="innerHTML">댓글 수정</button>
+    <button class="button-small joinbutton" hx-delete="{% url 'reviews:comment_delete' comment.pk %}" hx-target="#comment-item-{{ comment.pk }}-on-{{ review.pk }}" hx-swap="outerHTML">댓글 삭제</button>
   </div>
   {% elif user.is_authenticated %}
   <div>
