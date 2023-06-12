@@ -12,28 +12,27 @@
 
 {% block content %}
 <div class="main__container">
-  <p class="title">{{ announcement.title }}</p>
+  <p class="title">{{ announcement.title }}
+    <div class="date">
+      <p>{{ announcement.created_at }}</p>
+    </div>
+  </p>
   <div class="content-box">
-  <div class="date">
-    <p>{{ announcement.created_at }}</p>
-    {% comment %} <p>수정날짜 - {{ announcement.updated_at }}</p> {% endcomment %}
+    <p class="content">{{ announcement.content|linebreaksbr }}</p>
   </div>
-
-  <p class="content">{{ announcement.content|linebreaksbr }}</p>
-</div>
-{% if request.user == leader %}
-<div class="button-box">
-  <a href="{% url 'studies:announcement_update' study_pk announcement.pk %}">
-    <div class="button button-small">공지 수정</div>
-  </a>
-  <form action="{% url 'studies:announcement_delete' study_pk announcement.pk %}" method="post">
-    {% csrf_token %}
-    <button class="button button-small" type="submit">공지 삭제</button>
-  </form>
-</div>
-{% endif %}
-<a href="{% url 'studies:announcement' study_pk %}">
-  <div class="button button-small">목록으로</div>
-</a>
+  {% if request.user == leader %}
+  <div class="button-box">
+    <a href="{% url 'studies:announcement_update' study_pk announcement.pk %}">
+      <div class="button button-small">공지 수정</div>
+    </a>
+    <form action="{% url 'studies:announcement_delete' study_pk announcement.pk %}" method="post">
+      {% csrf_token %}
+      <button class="button button-small" type="submit">공지 삭제</button>
+    </form>
+  {% endif %}
+    <a href="{% url 'studies:announcement' study_pk %}">
+      <div class="button button-small">목록으로</div>
+    </a>
+  </div>
 </div>
 {% endblock content %}
