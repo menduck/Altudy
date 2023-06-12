@@ -311,30 +311,32 @@ def comment_delete(request, comment_pk):
         return HttpResponse()
     return render(request, 'reviews/comments/item.html', context)
 
-    
+
 @login_required
 def like(request):
     try:
-        data = json.loads(request.body)
+        object_identifier = json.loads(request.body).get('objectIdentifier')
     except:
         raise Http404("Request not valid")
     
-    object_identifier = data.get('objectIdentifier')
     if object_identifier is not None:
         model, pk = object_identifier.split('-')
         if model not in {'Problem', 'Review', 'Comment'}:
             raise Http404("Request not valid")
         obj = get_object_or_404(eval(model), pk=pk)
+    else:
+        raise Http404("Request not valid")
 
-    # 조건문 추가해 Problem, Review, Comment 별로 swap_text 수정 가능
+
     if request.user in obj.like_users.all():
         obj.like_users.remove(request.user)
-        response = {
-            'swap_text': '좋아요',
+        context = {
+            'liked': False
         }
     else:
         obj.like_users.add(request.user)
-        response = {
-            'swap_text': '좋아요 취소',
+        context = {
+            'liked': True
         }
-    return JsonResponse(response)
+    context['count'] = obj.like_users.count()
+    return JsonResponse(context)
