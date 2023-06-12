@@ -321,6 +321,8 @@ def like(request):
         if model not in {'Problem', 'Review', 'Comment'}:
             raise Http404("Request not valid")
         obj = get_object_or_404(eval(model), pk=pk)
+    else:
+        raise Http404("Request not valid")
 
 
     if request.user in obj.like_users.all():
