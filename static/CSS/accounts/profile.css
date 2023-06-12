@@ -69,15 +69,22 @@
 .profile-title {
   font-size: var(--font-medium);
   font-weight: var(--weight-bold);
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 
 .profile-id, .profile-email, .profile-exp {
   font-size: var(--font-regular);
+  margin: 10px;
+}
+
+.profile-id1, .profile-email1, .profile-exp1 {
+  font-weight: var(--weight-semi-bold);
 }
 
 .button-box {
   display: flex;
+  justify-content: center;
+  margin-top: 100px;
 }
 
 /* 리뷰 css */
@@ -113,6 +120,7 @@
 
 .progress {
   height: 20px;
+  margin: 10px 0;
 }
 
 /* 공통 CSS */
