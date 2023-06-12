@@ -20,7 +20,7 @@
 {% endblock style %}
 {% block content %}
 <div class="main__container">
-  <form id="form" action="{% url 'reviews:update' form.instance.pk %}" method="post">
+  <form id="form" hx-put="{% url 'reviews:update' form.instance.pk %}">
     {% csrf_token %}
     
     {% with form.title as title %}

@@ -9,8 +9,7 @@
 {% endblock style %}
 {% block content %}
 <div class="main__container">
-  <form id="form" action="{% url 'reviews:review_update' form.instance.pk %}" method="post">
-    {% csrf_token %}
+  <form id="form" hx-put="{% url 'reviews:review_update' form.instance.pk %}">
     
     {% with form.content as content %}
     <div class="form-group" style="display: none;">
