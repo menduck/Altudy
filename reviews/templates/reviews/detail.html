@@ -75,7 +75,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
   {# 코드 #}
   <ul class="review__container">
     {% if problem.review_set.all %}
-    {% for review in problem.review_set.all %}
+    {% for review in problem.review_set.all|sort_by_likes %}
     <div class="review-content">
       <div class="study__userInfo">
         <div class="study__userInfo-badge">
