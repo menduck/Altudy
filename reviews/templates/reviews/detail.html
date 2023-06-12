@@ -73,11 +73,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
              class="btn btn-primary">리뷰 삭제</div>
       </div>
       {% elif user.is_authenticated %}
-      {% include 'reviews/components/like.html' %}
+      {% include 'reviews/components/like.html' with obj=review %}
       {% endif %}
       <div>
         <ul id="comment-list-{{ review.pk }}" hx-swap="outerHTML">
-          {% include 'reviews/comments/list.html' %}
+          {% include 'reviews/comments/list.html' with obj=comment %}
         </ul>
         <hr>
         {# 버튼 클릭시 아래에 댓글 작성창이 생성됩니다. #}
