@@ -199,6 +199,8 @@ hgroup {
 
 .form-control{
   margin-bottom: 10px;
+  height: 80px;
+  resize: none;
 }
 .form-control:focus{
   border-color:var(--color-lightgreen);
