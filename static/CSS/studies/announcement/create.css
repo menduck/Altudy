@@ -47,8 +47,10 @@
   width: 150px;
   height: 30px;
   margin: 50px 20px;
+  background-color: var(--color-white);
 }
 
 .button:hover {
   background-color: var(--color-green);
+  color: var(--color-white);
 }

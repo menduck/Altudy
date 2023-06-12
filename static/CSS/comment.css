@@ -16,6 +16,7 @@
   width: 80%;
   min-width: 300px;
   border-radius: var(--border-radius-hard);
+  border: none;
 }
 
 .comment-create-form textarea:focus {
