@@ -1,23 +1,6 @@
 {% load custom_filters %}
 
 
-<form id="like-forms" action="{% url 'reviews:like' %}" method="post" data-object-identifier="{{ obj|id }}">
-  {% csrf_token %}
-  {% if user in obj.like_users.all %}
-    {% if obj|class == 'Problem' %}
-    <input type="submit" value="좋아요 취소" id="{{ obj|id }}">
-    {% elif obj|class == 'Review' %}
-    <input type="submit" value="좋아요 취소" id="{{ obj|id }}">
-    {% elif obj|class == 'Comment' %}
-    <input type="submit" value="좋아요 취소" id="{{ obj|id }}">
-    {% endif %}
-  {% else %}
-    {% if obj|class == 'Problem' %}
-    <input type="submit" value="좋아요" id="{{ obj|id }}">
-    {% elif obj|class == 'Review' %}
-    <input type="submit" value="좋아요" id="{{ obj|id }}">
-    {% elif obj|class == 'Comment' %}
-    <input type="submit" value="좋아요" id="{{ obj|id }}">
-    {% endif %}
-  {% endif %}
+<form id="like-forms" hx-post="{% url 'reviews:like' %}" data-object-identifier="{{ obj|id }}" hx-target="this" hx-swap="innerHTML">
+  {% include 'reviews/components/thumbs-up.html' with obj=obj %}
 </form>
