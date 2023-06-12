@@ -27,6 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'chat',
     'accounts',
     'reviews',
     'studies',
@@ -248,3 +250,15 @@ CELERY_BEAT_SCHEDULE = {
     #     'schedule': 20,
     # },
 }
+
+# For daphne
+ASGI_APPLICATION = "config.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+# 비동기 함수에서의 ORM 작성
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
