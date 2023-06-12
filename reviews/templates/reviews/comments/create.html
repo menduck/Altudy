@@ -5,10 +5,7 @@
     {% with comment_form.content as content %}
     <div class="comment-user-info__container">
       <div class="study__userInfo">
-        <div class="study__userInfo-badge">
-          <p>{{ request.user.emoji }}</p>
-        </div>
-        <div class="study__userInfo-username">{{ request.user }}</div>
+        <div class="study__userInfo-username">{{ request.user.emoji_username }}</div>
       </div>
     </div>
     <div class="form-group">

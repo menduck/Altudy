@@ -84,7 +84,7 @@ hgroup {
 }
 
 .problem__info i {
-  margin-right: 10px;
+  margin-right: 5px;
   color: var(--color-gray-6);
 }
 
@@ -194,6 +194,7 @@ hgroup {
 .comment-create__container {
   padding: 20px 15px;
   margin: 30px 20px;
+  margin-bottom: 10px;
 }
 
 .form-control{
@@ -224,6 +225,39 @@ hgroup {
   margin: 20px 20px;
 }
 
+.comment__wrapper{
+  margin-bottom: 50px;
+}
+
+.comment-delete-btn{
+  color: red;
+}
+
+.comment-update-btn{
+  color: var(--color-gray-7)
+}
+
+.comment-ud__info {
+  display: none;
+}
+
+.comment__wrapper:hover .comment-ud__info{
+  display: block;
+}
+
+
+.comment__container .study__userInfo-username, .comment-user-info__container .study__userInfo-username{
+  background-color: var(--color-gray-5);
+  border-radius: 10px;
+  padding: 10px 15px;
+  color: var(--color-white);
+  font-size: var(--font-regular);
+  font-weight: var(--weight-semi-bold);
+}
+
+.comment-ud__info{
+  text-align: right;
+}
 .commentBtn__container{
   display: flex;
   justify-content: end;
@@ -231,7 +265,7 @@ hgroup {
 
 .review-content__container{
   background-color: var(--color-white);
-  padding: 10px 5px;
+  padding: 10px 10px;
   border-radius: 10px;
   margin-bottom: 5px;
 }
