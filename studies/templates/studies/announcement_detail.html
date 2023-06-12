@@ -20,8 +20,8 @@
   <div class="content-box">
     <p class="content">{{ announcement.content|linebreaksbr }}</p>
   </div>
-  {% if request.user == leader %}
   <div class="button-box">
+    {% if request.user == leader %}
     <a href="{% url 'studies:announcement_update' study_pk announcement.pk %}">
       <div class="button button-small">공지 수정</div>
     </a>
@@ -29,9 +29,9 @@
       {% csrf_token %}
       <button class="button button-small" type="submit">공지 삭제</button>
     </form>
-  {% endif %}
+    {% endif %}
     <a href="{% url 'studies:announcement' study_pk %}">
-      <div class="button button-small">목록으로</div>
+      <div class="button button-small">공지 목록으로</div>
     </a>
   </div>
 </div>
