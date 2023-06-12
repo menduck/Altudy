@@ -12,9 +12,10 @@
 
 {% block content %}
 <div class="main__container">
+  <h1 class="main__container-title">스터디 공지를 등록하세요.</h1>
   {% for announcement in announcements %}
   <a href="{% url 'studies:announcement_detail' study.pk announcement.pk %}">
-    <p class="content-box">[{{ announcement.pk }}] - {{ announcement.title }}</p>
+    <p class="content-box"><span>📌&nbsp&nbsp&nbsp</span>{{ announcement.title }}</p>
   </a>
   {% endfor %}
 
