@@ -109,9 +109,38 @@
 }
 
 .review-ele {
-  display: flex;
-  justify-content: space-between;
 }
+
+.review-problem-title{
+  font-size: var(--font-regular);
+  font-weight: var(--weight-bold);
+  color: var(--color-gray-7);
+  margin-bottom: 10px;
+}
+
+.review-tags__container{
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.tag-item {
+  background-color: var(--color-white);
+  font-size: var(--font-micro);
+  color: var(--color-gray-6);
+  font-weight: var(--weight-regular);
+
+  padding: 5px 8px;
+  margin: 1px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px var(--color-gray-4);
+}
+
+.review-ele-footer{
+  text-align: right;
+  font-size: var(--font-micro);
+  color: var(--color-gray-5);
+}
+
 
 /* 경험치 */
 .profile-exp {
