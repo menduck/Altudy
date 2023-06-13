@@ -1,0 +1,316 @@
+.canvas-container {
+  margin-right: 370px;
+  display: flex;
+  flex-direction: row;
+  /*
+  flex-flow: column wrap;
+  justify-content: center; */
+}
+
+#drawing-canvas {
+  margin: auto;
+  display: block;
+  background: #eee;
+}
+
+.color-btn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+}
+
+.color-btn[data-color='black'] {
+  background: black;
+}
+.color-btn[data-color='red'] {
+  background: red;
+}
+.color-btn[data-color='green'] {
+  background: green;
+}
+.color-btn[data-color='blue'] {
+  background: blue;
+}
+
+.size-btn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+}
+
+.size-btn[data-size='5']::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: black;
+  border-radius: 50%;
+}
+.size-btn[data-size='15']::before {
+  content: '';
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: black;
+  border-radius: 50%;
+}
+.size-btn[data-size='30']::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: black;
+  border-radius: 50%;
+}
+.position-ex {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background-color: #9bf50b;
+  display: none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  pointer-events: none;
+}
+
+
+/* chat */
+#chat-container {
+  z-index: 1;
+  background-color: white;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  border: grey;
+  width: 370px;
+  height: 100%;
+}
+
+#chat-log {
+  width: 100%;
+  height: 85%;
+  padding: 10px 15px;
+  border: 0;
+  line-height: 40px;
+}
+
+#chat-close-btn {
+  border: 0;
+  background-color: transparent;
+  font-weight: bold;
+}
+
+.chat-message-container {
+  height: 11%;
+  margin: 0;
+  border-top: 2px double rgb(158, 158, 158);
+}
+
+#chat-message-input {
+  display: inline;
+  margin: 0;
+  padding: 10px;
+  width: 80%;
+  height: 100%;
+  border: 0;
+  border-right: 1px solid rgb(158, 158, 158);
+}
+#chat-message-input:focus {
+  border: 0;
+}
+
+#chat-message-submit {
+  display: inline;
+  margin: 0px;
+  margin-left: -6px;
+  width: 20%;
+  height: 100%;
+  text-overflow: nowrap;
+  font-size: 15px;
+  background-color: transparent;
+  border: 0;
+}
+
+#chat-message-submit:hover {
+  background-color: rgb(226, 226, 226);
+}
+
+
+/* video */
+video {
+  display: grid;
+  background-color: black;
+  border-radius: 8px;
+  width: 210px;
+  height: 115px;
+}
+
+#video-container {
+  margin-right: 370px;
+  height: 120px;
+  overflow: hidden;
+
+  display: flex; /* 임시 */
+}
+
+#local-video {
+  float: left;
+}
+
+#video-container div {
+  color: white;
+}
+
+#video-container label {
+  position: absolute;
+  background-color: rgba(78, 78, 78, 0.445);
+  padding: 0 15px;
+  bottom: 10px;
+  left: 0px;
+}
+
+/* attendence */
+.user-list {
+  width: 200px; /* 적당한 너비 설정 */
+  height: 300px; /* 적당한 높이 설정 */
+  overflow: scroll; /* 세로 스크롤 가능하도록 설정 */
+}
+
+/* join */
+#join-btn {
+  display: block;
+  margin: auto;
+  margin-top: 20%;
+  padding: 10px 20px;
+
+  color: white;
+  background-color: rgb(0, 89, 255);
+  border: 0;
+  border-radius: 10px;
+}
+
+#join-btn:hover {
+  background-color: rgb(2, 66, 185);
+}
+
+body {
+  background-color: rgb(48, 48, 48);
+  color: white;
+  min-width: 730px;
+}
+
+main {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+/* footer */
+.room-controller {
+  position: fixed;
+  bottom: 0px;
+  background-color: black;
+  width: 100%;
+}
+
+.room-controller-container {
+  min-width: 340px;
+  margin-right: 370px;
+}
+
+.video-controller {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+#btn-toggle-audio, #btn-toggle-video {
+  margin-top: 5px;
+  margin-right: 15px;
+  padding: 10px 0;
+  width: 86px;
+  color: rgb(197, 197, 197);
+  background-color: transparent;
+  border: 0;
+  border-radius: 8px;
+}
+
+#btn-toggle-audio:hover, #btn-toggle-video:hover {
+  color: white;
+  background-color: rgb(104, 104, 104);
+}
+
+.exit-btn {
+  float: right;
+  margin: 10px 10px;
+  padding: 5px 17px;
+  border: 0;
+  color: white;
+  background-color: rgb(226, 49, 49);
+  border-radius: 8px;
+}
+
+
+/* 그림판 도구 */
+.draw-tool-container {
+  background-color: white;
+  border: grey;
+  height: 800px;
+  max-width: 200px;
+  padding: 10px;
+}
+
+.draw-tool-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid var(--color-gray-5);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.draw-tool-btn:hover {
+  background-color: #eee;
+}
+
+.draw-tool-btn-active {
+  background-color: #eee;
+}
+
+.control {
+  padding-left: 15px;
+  padding-right: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+  justify-items: center;
+}
+
+.color-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.current-color {
+  margin-left: 15px;
+  background-color: black;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  padding: 10px;
+  justify-items: center;
+}
+/* 도구 end */
