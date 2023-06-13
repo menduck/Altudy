@@ -85,7 +85,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
       </div>
       <div class="problem__info review__info">
         <i class="bi bi-hand-thumbs-up"><span id="like-count-{{ review|id }}">{{review.like_users.count}}</span></i>
-        <i class="bi bi-chat-dots"><span hx-get="{% url 'reviews:get_comment_count' review.pk %}" hx-target="this" id="comment-count-{{ review|id }}" hx-swap="innerHTML" hx-trigger="htmx:abort">{{review.comment_set.count}}</span></i>
+        <i class="bi bi-chat-dots"><span id="comment-count-{{ review|id }}">{{review.comment_set.count}}</span></i>
       </div>
       <div class="study__crudInfo">
         {{ review.created_at }}

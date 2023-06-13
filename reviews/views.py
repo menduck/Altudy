@@ -270,7 +270,6 @@ def comment_create(request, review_pk):
                     'count': review.comment_set.count(),
                 }
             })
-            print(json.loads(trigger).get('recount').get('counter_id'))
             return render_HXResponse(request, 'reviews/comments/list.html', context, trigger=trigger)
         return render(request, 'reviews/components/comment_create_not_valid.html')   # 작성 필요
     else:
