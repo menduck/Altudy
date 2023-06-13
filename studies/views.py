@@ -392,6 +392,10 @@ def problem(request, study_pk: int):
     if query:
         problems = problems.filter(title__icontains=query)
 
+    tags = request.GET.get('tags')
+    if tags:
+        problems = problems.filter(tags__name__iexact=tags)
+
     context = {
         'study': study,
         'problems': problems,
@@ -420,6 +424,10 @@ def problem_search(request, study_pk: int):
             Q(title__icontains=query) |
             Q(tags__name__icontains=query)
         ).distinct()
+    
+    tags = request.GET.get('tags')
+    if tags:
+        problems = problems.filter(tags__name__iexact=tags)
 
     # 페이지네이션
     paginator = Paginator(problems, 5)  # 페이지당 n개의 항목
@@ -433,7 +441,7 @@ def problem_search(request, study_pk: int):
             'title': problem.title,
             'id': problem.pk,
             'createdAt': problem.created_at.strftime('%m/%d %H:%M'),
-            'likesCount' : problem.review_set.count()
+            'reviewCount' : problem.review_set.count()
             # 원하는 정보 추가
         }
         problems_list.append(problem_dict)

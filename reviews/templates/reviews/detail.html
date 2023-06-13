@@ -60,10 +60,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
     </div>
     <div class="problem-tag__container">
       {% for tag in problem.tags.all|dictsort:'name' %}
-      <a href="">
-        <span class="tag-item">#{{ tag }}</span>
-      </a>
+        <form id="form-{{ tag }}" class="tag-form" action="{% url 'studies:problem_search' problem.study.pk %}">
+          <input type="hidden" name="tags" value="{{ tag.name }}">
+          <button type="submit" class="tag-item">#{{ tag }}</button>
+        </form>
       {% endfor %}
+
     </div>
     <hr>
 
@@ -133,4 +135,31 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'reviews/like.js' %}"></script>
 <script src="{% static 'reviews/toastViewer.js' %}"></script>
+<script>
+  const tagForms = document.querySelectorAll('.tag-form');
+  tagForms.forEach((form) => {
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const tag = form.querySelector('input[name="tags"]').value;
+    searchProblemsByTag(tag);
+    });
+  });
+
+  function searchProblemsByTag(tag) {
+    fetch(`http://127.0.0.1:8000/studies/{{ problem.study.pk }}/mainboard/problem/search?tags=${encodeURIComponent(tag)}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.problems)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  
+  
+
+
+</script>
 {% endblock content %}
