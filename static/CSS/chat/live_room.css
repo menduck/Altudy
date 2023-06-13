@@ -1,5 +1,7 @@
 .canvas-container {
-  margin-right: 370px;
+  z-index: 3;
+  margin-top: 10px;
+  margin-right: 30%;
   display: flex;
   flex-direction: row;
   /*
@@ -10,7 +12,10 @@
 #drawing-canvas {
   margin: auto;
   display: block;
-  background: #eee;
+  /* background: #eee; */
+  /* background: url('https://images.ctfassets.net/hrltx12pl8hq/5KiKmVEsCQPMNrbOE6w0Ot/341c573752bf35cb969e21fcd279d3f9/hero-img_copy.jpg?fit=fill&w=600&h=400'); */
+  background: url('http://127.0.0.1:8000/chat/2/problems/1/reviews/2');
+  /* background-color: transparent; */
 }
 
 .color-btn {
@@ -83,13 +88,14 @@
 
 /* chat */
 #chat-container {
-  z-index: 1;
+  z-index: 10;
   background-color: white;
   position: fixed;
   top: 0px;
   right: 0px;
   border: grey;
-  width: 370px;
+  width: 30%;
+  min-width: 250px;
   height: 100%;
 }
 
@@ -104,7 +110,25 @@
 #chat-close-btn {
   border: 0;
   background-color: transparent;
+  margin-top: 7px;
+  margin-left: 7px;
   font-weight: bold;
+  font-size: 18px;
+}
+
+#chat-open-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding-left: 7px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  border: 0;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(31, 31, 31);
+  border-radius: 50%; 
+  font-size: 30px;
 }
 
 .chat-message-container {
@@ -152,12 +176,11 @@ video {
   height: 115px;
 }
 
-#video-container {
-  margin-right: 370px;
+.mySwiper {
+  display: flex; /* 임시 */
+  justify-content: center;
   height: 120px;
   overflow: hidden;
-
-  display: flex; /* 임시 */
 }
 
 #local-video {
@@ -175,6 +198,29 @@ video {
   bottom: 10px;
   left: 0px;
 }
+
+/* video-swiper */
+swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
 /* attendence */
 .user-list {
@@ -203,11 +249,11 @@ video {
 body {
   background-color: rgb(48, 48, 48);
   color: white;
-  min-width: 730px;
 }
 
 main {
   position: relative;
+  width: 70%;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -215,6 +261,7 @@ main {
 
 /* footer */
 .room-controller {
+  z-index: 5;
   position: fixed;
   bottom: 0px;
   background-color: black;
@@ -222,8 +269,7 @@ main {
 }
 
 .room-controller-container {
-  min-width: 340px;
-  margin-right: 370px;
+  margin-right: 30%;
 }
 
 .video-controller {
@@ -314,3 +360,89 @@ main {
   justify-items: center;
 }
 /* 도구 end */
+
+
+/* canvas background */
+.canvas-bg-container {
+  position: absolute;
+  top: 130px;
+  left: 180px;
+  width: 1000px;
+  height: 800px;
+  background-color: #eee;
+  padding: 15px;
+  z-index: 1;
+}
+
+.canvas-bg-container span {
+  font-size: 20px;
+  color: black;
+}
+
+
+/* review controll */
+.review-controller-container {
+  z-index: 3;
+  background-color: white;
+  color: black;
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  border: grey;
+  width: 20%;
+  min-width: 250px;
+  border-radius: 10px;
+  border: 1px solid rgb(185, 185, 185);
+  overflow-y: scroll;
+}
+
+.review-controller-container ul {
+  margin-top: 30px;
+}
+
+.review-controller-close-btn {
+  float: right;
+  border: 0;
+  background-color: transparent;
+  margin-top: 7px;
+  margin-right: 7px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.review-controller-open-btn {
+  z-index: 5;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding-left: 5px;
+  padding-right: 7px;
+  padding-bottom: 2px;
+  border: 0;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(31, 31, 31);
+  border-radius: 50%; 
+  font-size: 20px;
+}
+
+
+
+/* 반응형 */
+@media (min-width: 1300px) {
+  main {
+    width: 80%;
+  }
+
+  #chat-container {
+    width: 20%;
+  }
+
+  .room-controller-container {
+    margin-right: 20%;
+  }
+
+  .canvas-container {
+    margin-right: 20%;
+  } 
+}

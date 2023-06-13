@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <a href="{% url 'chat:problems' study_pk %}">Back to Parent</a>
+  {% for review in reviews %}
+  <a href="{% url 'chat:review_detail' study_pk problem_pk review.pk %}">
+    <p>✏️[{{ forloop.counter }}] - {{ review.user }}</p>
+  </a>
+  {% endfor %}
+</body>
+</html>

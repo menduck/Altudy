@@ -39,9 +39,12 @@ let drawMode = 1; //1이 연필, 0이 지우개, 기본값 1
 let lastColor = 'black'; // 지우개에서 연필 선택할 때 색 되돌리기
 let presenterUser = ''; // 현재 발표자 이름 담을 변수
 
+
 // 비동기 in promise를 위한 방 입장 버튼
 btnJoin.addEventListener('click', (e) => {
   btnJoin.parentNode.removeChild(btnJoin)
+  chatContainer.hidden = false
+  document.querySelector('.review-controller-container').hidden = false
 
   document.querySelector('main').hidden = false
 
@@ -129,8 +132,8 @@ function chatSocketOnMessage(e) {
         drawingStates[clientId].lastY = y;
       } else if (data.now === 'draw' || data.now === 'eraser') {
         // 그림을 그림
-        const canvas = document.getElementById('drawing-canvas');
-        const context = canvas.getContext('2d');
+        // const canvas = document.getElementById('drawing-canvas');
+        // const context = canvas.getContext('2d');
         if (data.now === 'draw') {
           context.strokeStyle = color;
           context.lineWidth = size;
@@ -634,9 +637,8 @@ function createVideo(peerUsername) {
   remoteVideo.autoplay = true
   remoteVideo.playsInline = true
 
-  // const videoWrapper = document.createElement('li')
-  const videoWrapper = document.createElement('div')
-  // videoWrapper.classList.add('swiper-slide')
+  const videoWrapper = document.createElement('swiper-slide')
+  // const videoWrapper = document.createElement('div')
   const nameLabel = document.createElement('label')
   nameLabel.for = remoteVideo.id
   nameLabel.textContent = peerUsername
@@ -670,3 +672,29 @@ function setOnTrack(peer, remoteVideo) {
     remoteStream.addTrack(e.track, remoteStream)
   })
 }
+
+
+// sipwer-container
+const swiperEl = document.querySelector('swiper-container')
+Object.assign(swiperEl, {
+    slidesPerView: 1,
+    spaceBetween: 10,
+  pagination: {
+    clickable: true,
+  },
+  breakpoints: {
+    640: {
+      slidesPerView: 2,
+      spaceBetween: 20,
+    },
+    768: {
+      slidesPerView: 4,
+      spaceBetween: 40,
+    },
+    1024: {
+      slidesPerView: 5,
+      spaceBetween: 50,
+    },
+  },
+  });
+swiperEl.initialize();
