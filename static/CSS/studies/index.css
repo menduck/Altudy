@@ -1,11 +1,11 @@
 #studies_list__wrapper {
   width: 1024px;
-  padding: 0 0;
+  padding: 0 10px;
   margin: 50px auto 0;
 }
 
 @media screen and (max-width: 1023px) {
-  #studies_list__wrapper {
+  #studies_list__wrapper{
     width: 100%;
     max-width: 1024px;
   }
