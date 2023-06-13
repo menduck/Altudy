@@ -433,6 +433,7 @@ def problem_search(request, study_pk: int):
             'title': problem.title,
             'id': problem.pk,
             'createdAt': problem.created_at.strftime('%m/%d %H:%M'),
+            'likesCount' : problem.review_set.count()
             # 원하는 정보 추가
         }
         problems_list.append(problem_dict)
