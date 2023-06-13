@@ -108,4 +108,4 @@ AWS_QUERYSTRING_AUTH = False
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/home/ubuntu/Altudy/static'
+STATIC_ROOT = BASE_DIR / 'static'
