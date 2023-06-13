@@ -40,8 +40,8 @@ const displayResults = (results) => {
     liElement.classList.add('problem-ele')
     liElement.setAttribute('id', 'my-id')
 
-    problemLink.href = `http://127.0.0.1:8000/reviews/${result.id}/`
-    // problemLink.href = `reviews/${result.id}/`;
+    // problemLink.href = `http://127.0.0.1:8000/reviews/${result.id}/`
+    problemLink.href = `/reviews/${result.id}/`;
     problemLink.textContent = result.title;
     problemDate.textContent = result.createdAt.split(' ')[0];
     problemReviewCount.textContent = result.reviewCount;
