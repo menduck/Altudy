@@ -370,3 +370,12 @@ hgroup {
   text-align: center;
   color: var(--color-gray-5);
 }
+
+/* tag */
+.problem-tag__container{
+  display: flex;
+}
+
+.problem-tag__container button {
+  border: none;
+}
