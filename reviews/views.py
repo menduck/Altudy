@@ -20,7 +20,7 @@ from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
-from .utils import render_HXResponse
+from .utils import render_HXResponse, HXResponse
 # from .serializers import CommentSerializer
 
 from studies.models import Study
@@ -313,12 +313,20 @@ def comment_delete(request, comment_pk):
         Comment.objects.select_related('review'),
         pk=comment_pk
     )
+    review = comment.review
     context = {
-        'review': comment.review
+        'review': review
     }
     if request.user == comment.user:
         comment.delete()
-        return HttpResponse()
+        trigger = json.dumps({
+            'recount': {
+                'counter_id': f'comment-count-Review-{review.pk}',
+                'count': review.comment_set.count(),
+            }
+        })
+        return HXResponse(trigger=trigger)
+    
     return render(request, 'reviews/comments/item.html', context)
 
 
