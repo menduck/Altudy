@@ -261,7 +261,15 @@ def comment_create(request, review_pk):
             context = {
                 'review': review,
             }
-            trigger = json.dumps({'clear-textarea': 'abc', 'recount': 'efg'})
+            trigger = json.dumps({
+                'clear-textarea': {
+                    'textarea_id': f'comment-textarea-{review.pk}',
+                }, 
+                'recount': {
+                    'counter_id': f'comment-count-{review.pk}',
+                    'count': review.comment_set.count(),
+                }
+            })
             return render_HXResponse(request, 'reviews/comments/list.html', context, trigger=trigger)
         return render(request, 'reviews/components/comment_create_not_valid.html')   # 작성 필요
     else:
