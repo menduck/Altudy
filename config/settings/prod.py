@@ -107,3 +107,7 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_QUERYSTRING_AUTH = False
 
 STATIC_ROOT = BASE_DIR / 'static'
+
+STORAGES = {
+    "staticfiles": {"BACKEND": "config.storage.S3Storage"}
+}
