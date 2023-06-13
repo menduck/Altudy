@@ -267,6 +267,10 @@ def comment_create(request, review_pk):
             comment = form.save(commit=False)
             comment.user, comment.review = request.user, review
             comment.save()
+
+            # 작성한 유저에게 5의 경험치 추가
+            request.user.experience += 5
+            request.user.save()
             context = {
                 'review': review,
             }
