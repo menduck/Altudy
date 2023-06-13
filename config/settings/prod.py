@@ -108,6 +108,6 @@ AWS_QUERYSTRING_AUTH = False
 
 STATIC_ROOT = BASE_DIR / 'static'
 
-STORAGES = {
-    "staticfiles": {"BACKEND": "config.storage.S3Storage"}
-}
+# STORAGES = {
+#     "staticfiles": {"BACKEND": "config.storage.S3Storage"}
+# }
