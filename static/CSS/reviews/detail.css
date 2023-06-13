@@ -283,9 +283,7 @@ hgroup {
 
 
 /* 리뷰 태그 */
-.problem-tag__container{
-  height: 100%;
-}
+
 .tag-item {
   background-color: var(--color-white);
   font-size: var(--font-micro);
@@ -374,8 +372,10 @@ hgroup {
 /* tag */
 .problem-tag__container{
   display: flex;
+  flex-wrap: wrap;
 }
 
 .problem-tag__container button {
   border: none;
+  margin-right: 3px;
 }

@@ -2,31 +2,32 @@
   border: 1px solid black;
 }
 
-.main__wrapper, .main__title {
+.main__wrapper,
+.main__title {
   width: 1024px;
   padding: 0 32px;
   margin: 50px auto 0;
   display: flex;
 }
 
-.main__wrapper{
+.main__wrapper {
   margin-top: 20px;
 }
 
 @media screen and (max-width: 1023px) {
-  .main__wrapper, .main__title {
+  .main__wrapper,
+  .main__title {
     width: 100%;
     max-width: 1024px;
   }
 }
 
 /* 유저 이름 */
-.main__title{
+.main__title {
   font-size: var(--font-large);
   font-weight: var(--weight-bold);
   margin-bottom: 10px;
 }
-
 
 /* 사이드 */
 .aside__container {
@@ -72,12 +73,16 @@
   margin-bottom: 30px;
 }
 
-.profile-id, .profile-email, .profile-exp {
+.profile-id,
+.profile-email,
+.profile-exp {
   font-size: var(--font-regular);
   margin: 10px;
 }
 
-.profile-id1, .profile-email1, .profile-exp1 {
+.profile-id1,
+.profile-email1,
+.profile-exp1 {
   font-weight: var(--weight-semi-bold);
 }
 
@@ -108,20 +113,18 @@
   text-decoration: underline;
 }
 
-.review-ele {
-}
-
-.review-problem-title{
+.review-problem-title {
   font-size: var(--font-regular);
   font-weight: var(--weight-bold);
   color: var(--color-gray-7);
   margin-bottom: 10px;
 }
-
-.review-tags__container{
+.problem-tag__container{
   display: flex;
-  margin-bottom: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
+
 
 .tag-item {
   background-color: var(--color-white);
@@ -129,13 +132,16 @@
   color: var(--color-gray-6);
   font-weight: var(--weight-regular);
 
+  border: none;
+  margin-right: 3px;
   padding: 5px 8px;
   margin: 1px;
   border-radius: 5px;
   box-shadow: 2px 2px 4px var(--color-gray-4);
 }
 
-.review-ele-footer{
+
+.review-ele-footer {
   text-align: right;
   font-size: var(--font-micro);
   color: var(--color-gray-5);
