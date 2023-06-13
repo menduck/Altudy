@@ -33,7 +33,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
       </div>
     </hgroup>
     <div class="problem__info">
-      <i id="like-count-{{ problem|id }}" class="bi bi-hand-thumbs-up"><span>{{problem.like_users.count}}</span></i>
+      <i class="bi bi-hand-thumbs-up"><span id="like-count-{{ problem|id }}">{{problem.like_users.count}}</span></i>
       <i id="review-count-{{ problem|id }}" class="bi bi-code-square"><span>{{problem.review_set.all.count}}</span></i>
     </div>
     <div class="study__crudInfo">
@@ -86,8 +86,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
         <div class="study__userInfo-username">{{ review.user }}</div>
       </div>
       <div class="problem__info review__info">
-        <i id="like-count-{{ review|id }}" class="bi bi-hand-thumbs-up"><span>{{review.like_users.count}}</span></i>
-        <i id="comment-count-{{ review|id }}" class="bi bi-chat-dots"><span>{{review.comment_set.all.count}}</span></i>
+        <i class="bi bi-hand-thumbs-up"><span id="like-count-{{ review|id }}">{{review.like_users.count}}</span></i>
+        <i class="bi bi-chat-dots"><span id="comment-count-{{ review|id }}">{{review.comment_set.count}}</span></i>
       </div>
       <div class="study__crudInfo">
         {{ review.created_at }}
@@ -135,6 +135,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'reviews/like.js' %}"></script>
 <script src="{% static 'reviews/toastViewer.js' %}"></script>
+
 <script>
   const tagForms = document.querySelectorAll('.tag-form');
   tagForms.forEach((form) => {
@@ -157,9 +158,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
       });
   }
 
-  
-  
-
-
 </script>
+
+<script src="{% static 'reviews/countComment.js' %}"></script>
+
 {% endblock content %}
