@@ -245,3 +245,7 @@ CELERY_BEAT_SCHEDULE = {
     #     'schedule': 20,
     # },
 }
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
