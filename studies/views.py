@@ -181,6 +181,11 @@ def join(request, study_pk: int):
             # AnnouncementRead 공지 읽음 여부 테이블에 추가
             for announcement in study.announcements.all():
                 announcement.announcement_reads.add(me)
+
+            # 스터디장 경험치 10 추가
+            study.user.experience += 10
+            study.user.save()
+
         elif study.join_condition == 1:
             study.join_request.add(me)
         # join_condition == 3 - 가입불가
@@ -234,6 +239,10 @@ def accept(request, study_pk: int, username: int):
         for announcement in study.announcements.all():
             announcement.announcement_reads.add(person)
         study.join_request.remove(person)
+        
+        # 스터디장 경험치 10 추가
+        study.user.experience += 10
+        study.user.save()
     
     # 가입 후 스터디 인원 만원 시 모집 마감
     if Studying.objects.filter(study=study).aggregate(cnt=Count('*'))['cnt'] >= study.capacity:
@@ -295,8 +304,24 @@ def mainboard(request, study_pk: int):
     study = get_object_or_404(Study, pk=study_pk)
     users = study.studying_users.all()
 
+
     # 스터디에 가입되어있지 않으면 접근 불가
     if not Studying.objects.filter(study=study, user=request.user).exists():
+        return redirect('studies:detail', study_pk)
+
+    # 하루에 한 번 스터디에 들어오면 출석경험치 부여
+    try:
+        studying = Studying.objects.get(user=request.user, study_id=study_pk)
+
+        # 오늘 날짜와 마지막 접근 날짜가 같은지 확인
+        if studying.last_access_date != timezone.now().date():
+            studying.last_access_date = timezone.now().date()
+            studying.save()
+
+            # 경험치 추가
+            request.user.experience += 10
+            request.user.save()
+    except Studying.DoesNotExist:
         return redirect('studies:detail', study_pk)
 
     # 메인보드에서는 이번주에 추가된 문제만 보여주도록

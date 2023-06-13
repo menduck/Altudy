@@ -40,10 +40,21 @@
         <div class="profile-email"><span class="profile-email1">이메일 </span>{{ person.email }}</div>
         <div class=" profile-exp">
           <p class="profile-exp1">내 레벨</p>
-          <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ person.get_progress_percentage }}%"><p>EXP {{ person.get_progress_percentage }}% ({{ person.get_experience_from_level }} / {{ next_level_exp }})</p></div>
+          <div class="progress-container">
+            {% if person.get_previous_emoji %}
+              <span class="emoji">{{ person.get_previous_emoji }}</span>
+            {% endif %}
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ person.get_progress_percentage }}%"></div>
+              <div class="progress-text">
+                <p>EXP {{ person.get_progress_percentage }}% ({{ person.get_experience_from_level }} / {{ next_level_exp }})</p>
+              </div>
+            </div>
+            {% if person.get_next_emoji %}
+              <span class="emoji">{{ person.get_next_emoji }}</span>
+            {% endif %}
           </div>
-          <p>LV. {{ person.get_level }}</p>
+          <p>LV. {{ person.get_level }} {{person.emoji}}</p>
         </div>
         <div class="button-box">
           <a href="{% url 'accounts:update' %}"><div class="create-btn button-small">회원정보수정</div></a>

@@ -191,3 +191,24 @@ input {
   line-height: inherit;
   background-color: inherit;
 }
+
+.progress-container {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center; /* 수직 정렬 */
+  justify-content: center; /* 수평 정렬 */
+}
+
+.progress {
+  flex-grow: 1;
+  margin: 0 10px;
+  position: relative;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
