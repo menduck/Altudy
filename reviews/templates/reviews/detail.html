@@ -78,7 +78,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
   <ul class="review__container">
     {% if problem.review_set.all %}
     {% for review in problem.review_set.all|sort_by_likes %}
-    <div class="review-content">
+    <div class="review-content" id="myCode-{{ review.user.id }}">
       <div class="study__userInfo">
         <div class="study__userInfo-badge">
           <p>{{ review.user.emoji }}</p>
