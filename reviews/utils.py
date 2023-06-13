@@ -7,10 +7,10 @@ class HXResponse(HttpResponse):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         trigger = kwargs.pop('trigger')
         super().__init__(*args, **kwargs)
-        self.headers["HX-Redirect"] = trigger
+        self.headers["HX-Trigger"] = trigger
 
 
 def render_HXResponse(request, template_name, context=None, content_type=None, status=None, using=None, trigger=None):
     content = loader.render_to_string(template_name, context, request, using=using)
-    response = HttpResponse(content, content_type, status, trigger=trigger)
+    response = HXResponse(content, content_type, status, trigger=trigger)
     return response

@@ -20,6 +20,7 @@ from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
+from .utils import render_HXResponse
 # from .serializers import CommentSerializer
 
 from studies.models import Study
@@ -260,7 +261,8 @@ def comment_create(request, review_pk):
             context = {
                 'review': review,
             }
-            return render(request, 'reviews/comments/list.html', context)
+            trigger = json.dumps({'clear-textarea': 'abc', 'recount': 'efg'})
+            return render_HXResponse(request, 'reviews/comments/list.html', context, trigger=trigger)
         return render(request, 'reviews/components/comment_create_not_valid.html')   # 작성 필요
     else:
         form = CommentForm()
@@ -340,3 +342,8 @@ def like(request):
         }
     context['count'] = obj.like_users.count()
     return JsonResponse(context)
+
+
+def get_comment_count(request, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    return HttpResponse(review.comment_set.count())
