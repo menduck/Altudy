@@ -11,6 +11,7 @@ from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
+from django.db import transaction
 # from rest_framework import status
 # from rest_framework.decorators import api_view, permission_classes
 # from rest_framework.permissions import IsAuthenticated
@@ -162,6 +163,14 @@ def review_create(request, pk):
             review.user, review.problem = request.user, problem
             review.save()
             form.save_m2m() 
+
+            # 유저의 experience를 10 증가시킴
+            with transaction.atomic():
+                user = request.user
+                user.experience += 10
+                user.save()
+
+
             context = {
                 'problem': Problem.objects.get(pk=pk)
             }
