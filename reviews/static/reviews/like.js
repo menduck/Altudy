@@ -16,8 +16,10 @@ document.addEventListener('DOMContentLoaded', (x) => {
         const i = form.querySelector('i')
         if (r.data.liked) {
           i.setAttribute('class', 'bi bi-hand-thumbs-up-fill')
+          i.textContent = "코드 추천 취소"
         } else {
           i.setAttribute('class', 'bi bi-hand-thumbs-up')
+          i.textContent = "코드 추천"
         }
         document.getElementById(`like-count-${objectIdentifier}`).textContent = r.data.count
       }).catch((error) => {

@@ -6,9 +6,9 @@
   <input type="hidden" name="object-identifier" value="{{ obj|id }}">
   <button type="submit">
     {% if user in obj.like_users.all %}
-    <i class="bi bi-hand-thumbs-up-fill"></i>
+    <i class="bi bi-hand-thumbs-up-fill">코드 추천 취소</i>
     {% else %}
-    <i class="bi bi-hand-thumbs-up"></i>
+    <i class="bi bi-hand-thumbs-up">코드 추천</i>
     {% endif %}
   </button>
 </form>
