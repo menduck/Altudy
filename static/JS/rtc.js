@@ -43,6 +43,7 @@ let presenterUser = ''; // 현재 발표자 이름 담을 변수
 // 비동기 in promise를 위한 방 입장 버튼
 btnJoin.addEventListener('click', (e) => {
   btnJoin.parentNode.removeChild(btnJoin)
+  document.querySelector('.room-controller').hidden = false
   document.querySelector('#chat-container').hidden = false
   document.querySelector('.review-controller-open-btn').hidden = false
   document.querySelector('.user-list-open-btn').hidden = false
