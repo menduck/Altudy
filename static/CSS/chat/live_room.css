@@ -12,10 +12,7 @@
 #drawing-canvas {
   margin: auto;
   display: block;
-  /* background: #eee; */
-  /* background: url('https://images.ctfassets.net/hrltx12pl8hq/5KiKmVEsCQPMNrbOE6w0Ot/341c573752bf35cb969e21fcd279d3f9/hero-img_copy.jpg?fit=fill&w=600&h=400'); */
-  background: url('http://127.0.0.1:8000/chat/2/problems/1/reviews/2');
-  /* background-color: transparent; */
+  background-color: transparent;
 }
 
 .color-btn {
@@ -126,7 +123,7 @@
   border: 0;
   font-weight: bold;
   color: white;
-  background-color: rgb(31, 31, 31);
+  background-color: rgba(34, 34, 34, 0.836);
   border-radius: 50%; 
   font-size: 30px;
 }
@@ -261,7 +258,7 @@ main {
 
 /* footer */
 .room-controller {
-  z-index: 5;
+  z-index: 7;
   position: fixed;
   bottom: 0px;
   background-color: black;
@@ -308,7 +305,7 @@ main {
 .draw-tool-container {
   background-color: white;
   border: grey;
-  height: 800px;
+  height: 750px;
   max-width: 200px;
   padding: 10px;
 }
@@ -383,26 +380,25 @@ main {
 
 /* review controll */
 .review-controller-container {
-  z-index: 3;
+  z-index: 5;
   background-color: white;
   color: black;
   position: fixed;
   top: 5px;
   left: 5px;
   border: grey;
-  width: 20%;
-  min-width: 250px;
+  width: 250px;
   height: 60%;
   border-radius: 10px 0 0 10px;
   border: 1px solid rgb(185, 185, 185);
   overflow-y: scroll;
 }
 
-.review-controller-container ul {
+.review-controller-container > ul {
   margin-top: 20px;
 }
 
-.review-controller-close-btn {
+.review-controller-close-btn, .user-list-close-btn {
   float: right;
   border: 0;
   background-color: transparent;
@@ -421,7 +417,7 @@ main {
   border: 0;
   font-weight: bold;
   color: white;
-  background-color: rgb(31, 31, 31);
+  background-color: rgba(134, 123, 24, 0.658);
   border-radius: 50%; 
   font-size: 20px;
 }
@@ -434,13 +430,106 @@ main {
 
 .problem-list {
   margin-top: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
+.problem-list::marker {
+  content: "📖  ";
+}
 
-.review-btn {
+.review-list {
   margin: 0;
 }
 
+.review-btn {
+  margin: 5px;
+  cursor: pointer;
+}
+
+.review-btn::before {
+  content: "✏️";
+  margin-right: 10px;
+}
+
+/* .review-btn::before {
+  content: "✏️";
+  margin-right: 7px;
+} */
+
+.review-btn span:last-child {
+  color: rgb(87, 87, 255);
+  text-decoration: underline;
+}
+
+/* 참가자 리스트 */
+.user-list-container {
+  z-index: 3;
+  background-color: white;
+  color: black;
+  position: fixed;
+  bottom: 60px;
+  left: 5px;
+  border: grey;
+  width: 250px;
+  height: 32%;
+  border-radius: 10px 0 0 10px;
+  border: 1px solid rgb(185, 185, 185);
+}
+
+.user-list {
+  margin-top: 15px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  width: 100%;
+  height: 80%;
+}
+
+.user-list ul {
+  padding-left: 10px;
+}
+.user-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.user-list li::before {
+  content: "🪄";
+  margin-right: 5px;
+}
+
+.user-name {
+  margin-bottom: 0;
+  margin-right: 20px;
+}
+
+.user-list-open-btn {
+  z-index: 5;
+  position: fixed;
+  bottom: 70px;
+  left: 10px;
+  padding: 5px 10px;
+  border: 0;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(12, 73, 4, 0.747);
+  border-radius: 50%; 
+  font-size: 20px;
+}
+
+.authorization-btn {
+  border: 0;
+  background-color: rgb(15, 126, 0);
+  color: white;
+  border-radius: 10px;
+  padding: 3px 5px;
+}
+
+.authorization-btn:hover {
+  border: 0;
+  background-color: rgb(10, 83, 0);
+}
 
 
 /* 반응형 */

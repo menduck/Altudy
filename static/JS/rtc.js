@@ -43,8 +43,9 @@ let presenterUser = ''; // 현재 발표자 이름 담을 변수
 // 비동기 in promise를 위한 방 입장 버튼
 btnJoin.addEventListener('click', (e) => {
   btnJoin.parentNode.removeChild(btnJoin)
-  chatContainer.hidden = false
-  document.querySelector('.review-controller-container').hidden = false
+  document.querySelector('#chat-container').hidden = false
+  document.querySelector('.review-controller-open-btn').hidden = false
+  document.querySelector('.user-list-open-btn').hidden = false
 
   document.querySelector('main').hidden = false
 
@@ -154,7 +155,7 @@ function chatSocketOnMessage(e) {
           positionEx.style.display = 'block'
           positionEx.style.left = x + 'px';
           positionEx.style.top = y + 'px';
-          positionEx.style.zIndex = 10;
+          positionEx.style.zIndex = 3;
         }
       } 
     }
@@ -183,13 +184,13 @@ function chatSocketOnMessage(e) {
     }
     
     if (data.now === 'new-peer') {
-      console.log('new-peer action!')
+      console.log('new-peer action!!!')
       
       createOfferer(peerUsername, receiver_channel_name)
 
       return
     } else if (data.now === 'new-offer') {
-      console.log('new-offer action!')
+      console.log('new-offer action!!!')
       
       const offer = data.message.sdp
       
@@ -197,7 +198,7 @@ function chatSocketOnMessage(e) {
 
       return
     } else if (data.now === 'new-answer') {
-      console.log('new-answer action!')
+      console.log('new-answer action!!!')
       
       const answer = data.message.sdp
       const peer = mapPeers[peerUsername][0]
@@ -217,7 +218,7 @@ function chatSocketOnMessage(e) {
         return
       }
     } else if (data.now === 'review') {
-        console.log('review action - data=', data.reviewId)
+        console.log('review action!!!')
         const reviewId = data.reviewId
         
         axios({
@@ -287,7 +288,7 @@ function updateUserList() {
       const authorizationBtn = document.createElement('button');
       authorizationBtn.className = 'authorization-btn';
       // 버튼에 원하는 내용 설정
-      authorizationBtn.textContent = '발표자 권한 부여';
+      authorizationBtn.textContent = '발표자 지정';
 
       // 버튼 클릭 이벤트 핸들러 추가
       authorizationBtn.addEventListener('click', () => {

@@ -77,23 +77,12 @@
           </div>
         </div>
         <div>
-          <canvas id="drawing-canvas" width="1650" height="800"></canvas>
+          <canvas id="drawing-canvas" width="1650" height="750"></canvas>
         </div>
       </div>     
 
       <div class="canvas-bg-container">
         <div id="reviewViewer"></div>
-      </div>
-      
-      <hr>
-      <p>참가자</p>
-      <div class="user-list">
-        <ul>
-          {% comment %} <li>
-            <p class="user-name"></p>
-            <button class="authorization-btn">발표자 지정</button>
-          </li> {% endcomment %}
-        </ul>
       </div>
       
       <footer class="room-controller">
@@ -134,7 +123,7 @@
           </li>
           <div id="review-list-{{ problem.pk }}" class="review-list" hidden>
             {% for review in problem.review_set.all %}
-              <p id="review-btn-{{ review.pk }}" class="review-btn" value="{{ review.pk }}">&nbsp;ㄴ {{ review.user }}</p>
+              <p id="review-btn-{{ review.pk }}" class="review-btn" value="{{ review.pk }}">{{ review.user }}</p>
             {% endfor %}
           </div>
         {% endfor %}
@@ -145,6 +134,25 @@
       <i class="bi bi-card-list"></i>
     </button>
     
+    
+    <button class="user-list-open-btn" hidden>
+      <i class="bi bi-person-lines-fill"></i>
+    </button>
+    <div class="user-list-container" hidden>
+      <button class="user-list-close-btn">
+        <i class="bi bi-x"></i>
+      </button>
+      <p class="review-controller-title">참가자</p>
+      <div class="user-list">
+        <ul>
+          {% comment %} <li>
+            <p class="user-name"></p>
+            <button class="authorization-btn">발표자 지정</button>
+          </li> {% endcomment %}
+        </ul>
+      </div>
+    </div>
+
 
     {{ room_name|json_script:"room-name" }}
     
