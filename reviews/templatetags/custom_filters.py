@@ -6,6 +6,10 @@ from django.utils.safestring import mark_safe
 register = template.Library()
 
 
+@register.filter('dir')
+def get_dir(obj):
+    return dir(obj)
+
 @register.filter
 def markdown(value):
     extensions = ["nl2br", "fenced_code"]
