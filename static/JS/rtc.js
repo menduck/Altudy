@@ -612,7 +612,7 @@ function createAnswerer(offer, peerUsername, receiver_channel_name) {
         if (iceConnectionState != 'closed') {
           peer.close()
         }
-        
+
         removeVideo(remoteVideo)
       }
     })

@@ -138,14 +138,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         remaining_user_count = UserChatRooms.objects.filter(chatroom=self.room).count()
 
-        # if remaining_user_count == 1:
-        #     remaining_user_chat_room = UserChatRooms.objects.filter(chatroom=self.room).first()
-        #     remaining_user_chat_room.is_presenter = 1
-        #     remaining_user_chat_room.save()
-        # elif remaining_user_count == 0:
-        #     # If no remaining users, no need to assign presenter
-        #     pass
-        # else:
+        if remaining_user_count == 1:
+            remaining_user_chat_room = UserChatRooms.objects.filter(chatroom=self.room).first()
+            remaining_user_chat_room.is_presenter = 1
+            remaining_user_chat_room.save()
+
         presenter_user_chat_room = None
         presenter_user_chat_room = UserChatRooms.objects.filter(chatroom=self.room, is_presenter=1).first()
         if not presenter_user_chat_room:
