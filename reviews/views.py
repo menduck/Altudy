@@ -64,6 +64,7 @@ def detail(request, pk):
     context = {
         'problem': problem,
         'tags': ordered_tags.values(),
+        'study' : problem.study
     }
     return render(request, 'reviews/detail.html', context)
 
