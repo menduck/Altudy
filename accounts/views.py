@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, Page
 from django.http import JsonResponse
+from django.db.models import Q
 
 from .forms import CustomUserCreationForm, CustomAuthenticationFormForm, CustomUserChangeForm, CustomPasswordChangeForm
 from studies.models import Study, Studying
@@ -123,6 +124,8 @@ def change_password(request):
 
 
 def profile(request, username):
+    query = request.GET.get('query')
+
     user = get_user_model()
     person = user.objects.get(username=username)
     host_studies = Study.objects.filter(user=person)
@@ -132,6 +135,13 @@ def profile(request, username):
     next_level_exp = person.get_next_level_exp(level)
 
     reviews = Review.objects.filter(user=person).order_by('-created_at')
+
+    if query:
+        reviews = reviews.filter(
+            Q(problem__title__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
     # paginator = Paginator(reviews, 5) 
     # page_number = request.GET.get('page')
     # page_obj = paginator.get_page(page_number)
