@@ -166,11 +166,11 @@
 
 /* video */
 video {
-  display: grid;
+  /* display: grid; */
   background-color: black;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   width: 210px;
-  height: 115px;
+  /* height: 115px; */
 }
 
 .mySwiper {
@@ -209,7 +209,8 @@ swiper-slide {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 200px;
+  min-width: 220px;
+  border-radius: 8px;
 }
 
 swiper-slide img {
