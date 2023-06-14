@@ -17,7 +17,7 @@ const canvas = document.getElementById('drawing-canvas');
 const context = canvas.getContext('2d');
 const eraseAllBtn = document.getElementById('erase-all');
 const colorControl = document.querySelector('.control');
-const sizeControl = document.querySelector('.sizeControl');
+// const sizeControl = document.querySelector('.sizeControl');
 const pencilMode = document.querySelector('.pencil-mode');
 const pencil = document.querySelector(".pencil")
 const eraser = document.querySelector(".eraser")
@@ -71,7 +71,7 @@ btnJoin.addEventListener('click', (e) => {
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
     colorControl.addEventListener('click', setColor);
-    sizeControl.addEventListener('click', setSize);
+    // sizeControl.addEventListener('click', setSize);
     eraseAllBtn.addEventListener('click', eraseAll);
     pencil.addEventListener('click', setPencilMode);
     eraser.addEventListener('click', setEraserMode);
@@ -90,7 +90,6 @@ function chatSocketOnMessage(e) {
   const data = JSON.parse(e.data);
   if (data['now'] == 'chat') {
     // 채팅을 수신한 경우
-    console.log('채팅 수신');
     const chatLog = document.querySelector('#chat-log')
     chatLog.value += data.user + ' : ' + data.message + '\n';
     chatLog.scrollTop = chatLog.scrollHeight
@@ -112,8 +111,8 @@ function chatSocketOnMessage(e) {
         lastX: x,
         lastY: y,
         positionEx: addPositionExElement(clientId),
-        color: color,
-        size: size,
+        // color: color,
+        // size: size,
       };
 
     } else {
@@ -122,8 +121,8 @@ function chatSocketOnMessage(e) {
         lastX,
         lastY,
         positionEx,
-        color: clientColor,
-        size: clientSize,
+        // color: clientColor,
+        // size: clientSize,
       } = drawingStates[clientId];
 
       if (data.now === 'start') {
@@ -158,6 +157,7 @@ function chatSocketOnMessage(e) {
           positionEx.style.display = 'block'
           positionEx.style.left = x + 'px';
           positionEx.style.top = y + 'px';
+          // positionEx.style.z-index = 10;
         }
       } 
     }
@@ -170,7 +170,6 @@ function chatSocketOnMessage(e) {
     // 유저목록 업데이트
     updateUserList();
   } else if (data.now === 'presenter_authorized') {
-    console.log('권한!')
     presenterUser = data.next_presenter
     updateUserList();
   } else if (
@@ -219,8 +218,36 @@ function chatSocketOnMessage(e) {
         })
 
         return
-    }
-  }
+      }
+    } else if (data.now === 'review') {
+        console.log('review action - data=', data.reviewId)
+        const reviewId = data.reviewId
+        
+        axios({
+          method: 'GET',
+          url: `/chat/review/${reviewId}/`,
+        })
+          .then(response => {
+            const { Editor } = toastui;
+            const { codeSyntaxHighlight } = Editor.plugin;
+    
+            const content = response.data.content
+            const reviewView = document.getElementById('reviewViewer')
+    
+            reviewView.textContent = JSON.stringify(content)
+    
+            const viewer = Editor.factory({
+              el: reviewView,
+              viewer: true,
+              height: '100%',
+              initialValue: JSON.parse(reviewView.textContent),
+              plugins: [codeSyntaxHighlight]
+            });
+          })
+          .catch(error => {
+            console.error(error)
+          })
+  } 
 };
 
 document.querySelector('#chat-message-input').focus();
@@ -291,10 +318,8 @@ function authorizePresenter(user) {
 
 function startDrawing(e) {
   if (curUser === presenterUser) {
-    console.log('startDrawing')
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
-    console.log(lastX, lastY)
     // 클라이언트별 시작 좌표를 갱신해주기 위해 시작점 따로 전송
     chatSocket.send(
       JSON.stringify({
@@ -307,7 +332,6 @@ function startDrawing(e) {
 }
 
 function draw(e) {
-  console.log('draw')
   const mouseX = e.pageX;
   const mouseY = e.pageY;
   chatSocket.send(
@@ -354,21 +378,22 @@ function draw(e) {
 }
 
 function stopDrawing() {
-  console.log('stopDrawing')
   // mouseout 시에 마우스 위치 공유 사라지게
   // positionEx.style.display = 'none'
   isDrawing = false;
 }
 
 function eraseAll() {
-  // 0,0 부터 canvas의 width, height 까지 모두 지움
-  context.clearRect(0, 0, canvas.width, canvas.height);
-
-  chatSocket.send(
-    JSON.stringify({
-      now: 'eraseAll',
-    })
-  );
+  if (curUser === presenterUser) {
+    // 0,0 부터 canvas의 width, height 까지 모두 지움
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  
+    chatSocket.send(
+      JSON.stringify({
+        now: 'eraseAll',
+      })
+    );
+  }
 }
 
 function setColor(e) {
@@ -592,8 +617,7 @@ function createAnswerer(offer, peerUsername, receiver_channel_name) {
     
   peer.addEventListener('icecandidate', e => {
     if (e.candidate) {
-      // console.log('[createAnswerer()] New ice candidate: ', JSON.stringify(peer.localDescription))
-      
+      // console.log('[createAnswerer()] New ice candidate: ', JSON.stringify(peer.localDescription)) 
       return
     }
 
@@ -698,3 +722,21 @@ Object.assign(swiperEl, {
   },
   });
 swiperEl.initialize();
+
+
+// review
+const reviewsBtn = document.querySelectorAll('.review-list')
+reviewsBtn.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const reviewId = e.target.getAttribute('value')
+    if (curUser === presenterUser) {
+      chatSocket.send(
+        JSON.stringify({
+          'now': 'review',
+          'reviewId': reviewId,
+        })
+      )
+    }
+
+  })
+})

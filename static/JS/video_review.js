@@ -75,30 +75,30 @@ btnReviews.forEach(btn => {
   btn.addEventListener('click', (e) => {
     const reviewId = e.target.getAttribute('value')
 
-    axios({
-      method: 'GET',
-      url: `/chat/review/${reviewId}/`,
-    })
-      .then(response => {
-        const { Editor } = toastui;
-        const { codeSyntaxHighlight } = Editor.plugin;
+    // axios({
+    //   method: 'GET',
+    //   url: `/chat/review/${reviewId}/`,
+    // })
+    //   .then(response => {
+    //     const { Editor } = toastui;
+    //     const { codeSyntaxHighlight } = Editor.plugin;
 
-        const content = response.data.content
-        const reviewView = document.getElementById('reviewViewer')
+    //     const content = response.data.content
+    //     const reviewView = document.getElementById('reviewViewer')
 
-        console.log(JSON.stringify(content))
-        reviewView.textContent = JSON.stringify(content)
+    //     console.log(JSON.stringify(content))
+    //     reviewView.textContent = JSON.stringify(content)
 
-        const viewer = Editor.factory({
-          el: reviewView,
-          viewer: true,
-          height: '100%',
-          initialValue: JSON.parse(reviewView.textContent),
-          plugins: [codeSyntaxHighlight]
-        });
-      })
-      .catch(error => {
-        console.error(error)
-      })
+    //     const viewer = Editor.factory({
+    //       el: reviewView,
+    //       viewer: true,
+    //       height: '100%',
+    //       initialValue: JSON.parse(reviewView.textContent),
+    //       plugins: [codeSyntaxHighlight]
+    //     });
+    //   })
+    //   .catch(error => {
+    //     console.error(error)
+    //   })
   })
 })

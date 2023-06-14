@@ -97,7 +97,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def update_user_list(self):
         user_list = await self.get_user_list()
         try:
-            presenter = UserChatRooms.objects.get(is_presenter=1).user.username
+            presenter = UserChatRooms.objects.get(chatroom=self.room, is_presenter=1).user.username
         except UserChatRooms.DoesNotExist:
             presenter = None  # 예외 발생 시 presenter를 None으로 설정하거나 다른 기본값으로 설정할 수 있습니다.
         await self.channel_layer.group_send(
@@ -266,8 +266,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             user = text_data_json['user']
             user = User.objects.get(username=user)
             try:
-                prev_presenter = UserChatRooms.objects.get(is_presenter=1)
-                next_presenter = UserChatRooms.objects.get(user=user)
+                prev_presenter = UserChatRooms.objects.get(chatroom=self.room, is_presenter=1)
+                next_presenter = UserChatRooms.objects.get(chatroom=self.room, user=user)
                 prev_presenter.is_presenter = 0
                 next_presenter.is_presenter = 1
                 next_presenter.save()
@@ -285,6 +285,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 )
             except UserChatRooms.DoesNotExist:
                 print('UserChatRooms not found for user:', user)
+
+        elif now == 'review':
+            reviewId = text_data_json['reviewId']
+            await self.channel_layer.group_send(
+                self.room_group_name, {
+                    "type": "review_message", 
+                    "reviewId": reviewId, 
+                }
+            )
 
 
     # 받은 메시지 db에 저장, 비동기적으로 작업 수행
@@ -396,4 +405,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "next_presenter": next_presenter,
             "now": 'presenter_authorized'
+        }))
+
+    async def review_message(self, event):
+        reviewId = event['reviewId']
+        print(reviewId)
+        await self.send(text_data=json.dumps({
+            "reviewId": reviewId,
+            "now": 'review'
         }))
