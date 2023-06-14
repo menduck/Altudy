@@ -43,6 +43,7 @@ let presenterUser = ''; // 현재 발표자 이름 담을 변수
 // 비동기 in promise를 위한 방 입장 버튼
 btnJoin.addEventListener('click', (e) => {
   btnJoin.parentNode.removeChild(btnJoin)
+  document.querySelector('.room-controller').hidden = false
   document.querySelector('#chat-container').hidden = false
   document.querySelector('.review-controller-open-btn').hidden = false
   document.querySelector('.user-list-open-btn').hidden = false
@@ -165,10 +166,33 @@ function chatSocketOnMessage(e) {
     // 유저 리스트를 수신한 경우
     userList = data.user_list; // 유저 목록 업데이트
     presenterUser = data.presenter
+    if (curUser === presenterUser) {
+      const localVid = document.querySelector('#local-video')
+      localVid.style.border = "3px solid #BBD885"
+      const presentTag = document.querySelector('#presentTag')
+      presentTag.hidden = false
+    }
     // 유저목록 업데이트
     updateUserList();
   } else if (data.now === 'presenter_authorized') {
+    const videos = document.querySelectorAll('video')
+    videos.forEach(video => {
+      video.style.border = "0"
+    })
+    if (curUser === presenterUser) {
+      const presentTag = document.querySelector('#presentTag')
+      presentTag.hidden = true
+    }
     presenterUser = data.next_presenter
+    if (curUser === presenterUser) {
+      const localVid = document.querySelector('#local-video')
+      const presentTag = document.querySelector('#presentTag')
+      localVid.style.border = "3px solid #BBD885"
+      presentTag.hidden = false
+    } else {
+      const userVid = document.querySelector(`#${presenterUser}-video`)
+      userVid.style.border = "3px solid #BBD885"
+    }
     updateUserList();
   } else if (
     data.now === 'new-peer'   ||
@@ -669,6 +693,10 @@ function createVideo(peerUsername) {
   nameLabel.for = remoteVideo.id
   nameLabel.textContent = peerUsername
 
+  if (peerUsername === presenterUser) {
+    remoteVideo.style.border = "3px solid #BBD885"
+  }
+
   videoContainer.appendChild(videoWrapper)
   videoWrapper.appendChild(nameLabel)
   videoWrapper.appendChild(remoteVideo)
@@ -725,6 +753,12 @@ Object.assign(swiperEl, {
   });
 swiperEl.initialize();
 
+// 로고 이미지 hidden
+document.getElementById("join-btn").addEventListener("click", () => {
+  const logoImg = document.querySelector(".logo_img");
+  logoImg.classList.add("hidden");
+});
+
 
 // review
 const reviewsBtn = document.querySelectorAll('.review-list')
@@ -742,3 +776,4 @@ reviewsBtn.forEach(btn => {
 
   })
 })
+
