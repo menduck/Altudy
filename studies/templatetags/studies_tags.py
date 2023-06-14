@@ -14,13 +14,13 @@ def test(value, arg):
 @register.filter(name="alarm_exists")
 def alarm_exists(me):
     # 스터디 가입 요청
-    studies = Study.objects.filter(user=me)
+    studies = Study.objects.filter(user=me).prefetch_related('join_request')
     for study in studies:
         if study.join_request.exists():
             return True
         
     # 기타 알람이 갈 수 있는 사항들(스터디 공지사항 등)
-    studyings = Studying.objects.filter(user=me)
+    studyings = Studying.objects.filter(user=me).select_related('study')
     for studying in studyings:
         announcements = Announcement.objects.filter(
             study=studying.study, 
