@@ -235,7 +235,7 @@ def comment_create(request, review_pk):
             comment.user.experience += 5
             comment.user.save()
             context = {
-                'review': review,
+                'review': Review.objects.prefetch_related('comment_set__user').get(pk=review_pk),
             }
             trigger = json.dumps({
                 'clear-textarea': {
