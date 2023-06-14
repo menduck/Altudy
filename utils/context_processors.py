@@ -4,16 +4,16 @@ from datetime import timedelta
 
 def alarm(request):
     if request.user.is_authenticated:
-        lead_studies = Study.objects.filter(user=request.user)
+        lead_studies = Study.objects.filter(user=request.user).prefetch_related('join_request')
         all_requests = list()
         requests_exist = False
         for study in lead_studies:
             all_requests.append((study, study.join_request.all()))
-            requests_exist = study.join_request.all().exists() or requests_exist
+            requests_exist = study.join_request.exists() or requests_exist
         
         all_announcements = list()
         announcements_exist = False
-        studyings = Studying.objects.filter(user=request.user)
+        studyings = Studying.objects.filter(user=request.user).select_related('study')
         for studying in studyings:
             announcements = Announcement.objects.filter(
                         study=studying.study, 
