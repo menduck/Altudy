@@ -1,0 +1,211 @@
+[
+{
+    "model": "studies.studying",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "study": 1,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:13:16.598Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "study": 2,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:13:59.761Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 3,
+    "fields": {
+        "user": 3,
+        "study": 3,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:14:07.643Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 4,
+    "fields": {
+        "user": 3,
+        "study": 4,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:14:14.225Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 5,
+    "fields": {
+        "user": 4,
+        "study": 5,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:14:28.593Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 6,
+    "fields": {
+        "user": 5,
+        "study": 6,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:14:36.121Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 7,
+    "fields": {
+        "user": 6,
+        "study": 7,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:14:43.384Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 8,
+    "fields": {
+        "user": 7,
+        "study": 8,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:14:51.703Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 9,
+    "fields": {
+        "user": 8,
+        "study": 9,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:15:00.959Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 10,
+    "fields": {
+        "user": 9,
+        "study": 10,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:15:08.776Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 11,
+    "fields": {
+        "user": 10,
+        "study": 11,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:15:16.232Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 12,
+    "fields": {
+        "user": 11,
+        "study": 12,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:15:21.761Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 13,
+    "fields": {
+        "user": 12,
+        "study": 13,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:15:27.225Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 14,
+    "fields": {
+        "user": 13,
+        "study": 14,
+        "permission": 3,
+        "joined_at": "2023-06-14T10:15:33.137Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 15,
+    "fields": {
+        "user": 1,
+        "study": 14,
+        "permission": 1,
+        "joined_at": "2023-06-14T10:16:11.457Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 16,
+    "fields": {
+        "user": 11,
+        "study": 14,
+        "permission": 1,
+        "joined_at": "2023-06-14T10:16:15.024Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 17,
+    "fields": {
+        "user": 3,
+        "study": 14,
+        "permission": 1,
+        "joined_at": "2023-06-14T10:16:19.617Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 18,
+    "fields": {
+        "user": 2,
+        "study": 14,
+        "permission": 1,
+        "joined_at": "2023-06-14T10:16:23.153Z",
+        "last_access_date": null
+    }
+},
+{
+    "model": "studies.studying",
+    "pk": 19,
+    "fields": {
+        "user": 12,
+        "study": 14,
+        "permission": 1,
+        "joined_at": "2023-06-14T10:16:26.622Z",
+        "last_access_date": null
+    }
+}
+]

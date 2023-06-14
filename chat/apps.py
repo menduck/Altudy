@@ -4,7 +4,7 @@ class ChatConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'chat'
     def ready(self):
-        
+        pass
         # from .models import ChatRooms
-        print("runserver")        
+        # print("runserver")        
         # ChatRooms.objects.all().delete()
