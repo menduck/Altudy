@@ -186,11 +186,9 @@ def review_update(request, review_pk):
     study_pk = review.problem.study.pk
     if not review.problem.study.studying_users.filter(username=request.user).exists():
         return HTTPResponseHXRedirect(redirect_to=reverse_lazy('studies:detail', kwargs={'study_pk': study_pk}))
-        return redirect('studies:detail', review.problem.study.pk)
     
     if request.user != review.user:
         return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': review.problem.pk}))
-        return redirect('reviews:detail', review.problem.pk)
     
     if request.method == 'PUT':
         data = QueryDict(request.body).dict()
