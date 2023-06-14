@@ -5,6 +5,6 @@ class ChatConfig(AppConfig):
     name = 'chat'
     def ready(self):
         
-        from .models import ChatRooms
+        # from .models import ChatRooms
         print("runserver")        
-        ChatRooms.objects.all().delete()
+        # ChatRooms.objects.all().delete()
