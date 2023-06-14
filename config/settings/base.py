@@ -27,6 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'chat',
     'accounts',
     'corsheaders',
     'reviews',
@@ -248,7 +250,20 @@ CELERY_BEAT_SCHEDULE = {
     # },
 }
 
+
 # django-cors-headers
 CORS_ALLOWED_ORIGINS = [
     'http://43.202.59.123',
 ]
+
+# For daphne
+ASGI_APPLICATION = "config.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+# 비동기 함수에서의 ORM 작성
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'

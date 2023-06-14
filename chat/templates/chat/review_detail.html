@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  {# ToastUI #}
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
+  />
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+  <link
+    rel="stylesheet"
+    href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
+  />
+</head>
+<body>
+  
+  <h1 hidden>문제 - {{ problem.title }}</h1>
+  <div id="viewer" hidden>{{ problem.description|json_script:'problem_description' }}</div>
+  
+  <div id="reviewViewer">{{ review.content|json_script:'review.content' }}</div>
+  
+  <a href="{% url 'chat:reviews' study_pk problem_pk %}">Back to Parent</a>
+
+  {# ToastUI #}
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+  <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+
+  <script src="{% static 'reviews/toastViewer.js' %}"></script>
+</body>
+</html>

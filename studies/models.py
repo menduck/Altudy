@@ -139,15 +139,6 @@ class AnnouncementRead(models.Model):
     announcement = models.ForeignKey(to=Announcement, on_delete=models.CASCADE)
     
     is_read = models.BooleanField(default=False)
-    
-
-# 라이브 스터디방(?) 테이블
-# class Attendance(models.Model):
-#     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     class = models.ForeignKey(to=, on_delete=models.CASCADE)
-    
-#     start_time = models.TimeField(blank=True, null=True)
-#     end_time = models.TimeField(blank=True, null=True)
 
 
 class StudyComment(models.Model):

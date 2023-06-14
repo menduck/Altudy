@@ -1,0 +1,460 @@
+.canvas-container {
+  z-index: 3;
+  margin-top: 10px;
+  margin-right: 30%;
+  display: flex;
+  flex-direction: row;
+  /*
+  flex-flow: column wrap;
+  justify-content: center; */
+}
+
+#drawing-canvas {
+  margin: auto;
+  display: block;
+  /* background: #eee; */
+  /* background: url('https://images.ctfassets.net/hrltx12pl8hq/5KiKmVEsCQPMNrbOE6w0Ot/341c573752bf35cb969e21fcd279d3f9/hero-img_copy.jpg?fit=fill&w=600&h=400'); */
+  background: url('http://127.0.0.1:8000/chat/2/problems/1/reviews/2');
+  /* background-color: transparent; */
+}
+
+.color-btn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+}
+
+.color-btn[data-color='black'] {
+  background: black;
+}
+.color-btn[data-color='red'] {
+  background: red;
+}
+.color-btn[data-color='green'] {
+  background: green;
+}
+.color-btn[data-color='blue'] {
+  background: blue;
+}
+
+.size-btn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+}
+
+.size-btn[data-size='5']::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: black;
+  border-radius: 50%;
+}
+.size-btn[data-size='15']::before {
+  content: '';
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: black;
+  border-radius: 50%;
+}
+.size-btn[data-size='30']::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: black;
+  border-radius: 50%;
+}
+.position-ex {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background-color: #9bf50b;
+  display: none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  pointer-events: none;
+}
+
+
+/* chat */
+#chat-container {
+  z-index: 10;
+  background-color: white;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  border: grey;
+  width: 30%;
+  min-width: 250px;
+  height: 100%;
+}
+
+#chat-log {
+  width: 100%;
+  height: 85%;
+  padding: 10px 15px;
+  border: 0;
+  line-height: 40px;
+}
+
+#chat-close-btn {
+  border: 0;
+  background-color: transparent;
+  margin-top: 7px;
+  margin-left: 7px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#chat-open-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding-left: 7px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  border: 0;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(31, 31, 31);
+  border-radius: 50%; 
+  font-size: 30px;
+}
+
+.chat-message-container {
+  height: 11%;
+  margin: 0;
+  border-top: 2px double rgb(158, 158, 158);
+}
+
+#chat-message-input {
+  display: inline;
+  margin: 0;
+  padding: 10px;
+  width: 80%;
+  height: 100%;
+  border: 0;
+  border-right: 1px solid rgb(158, 158, 158);
+}
+#chat-message-input:focus {
+  border: 0;
+}
+
+#chat-message-submit {
+  display: inline;
+  margin: 0px;
+  margin-left: -6px;
+  width: 20%;
+  height: 100%;
+  text-overflow: nowrap;
+  font-size: 15px;
+  background-color: transparent;
+  border: 0;
+}
+
+#chat-message-submit:hover {
+  background-color: rgb(226, 226, 226);
+}
+
+
+/* video */
+video {
+  display: grid;
+  background-color: black;
+  border-radius: 8px;
+  width: 210px;
+  height: 115px;
+}
+
+.mySwiper {
+  display: flex; /* 임시 */
+  justify-content: center;
+  height: 120px;
+  overflow: hidden;
+}
+
+#local-video {
+  float: left;
+}
+
+#video-container div {
+  color: white;
+}
+
+#video-container label {
+  position: absolute;
+  background-color: rgba(78, 78, 78, 0.445);
+  padding: 0 15px;
+  bottom: 10px;
+  left: 0px;
+}
+
+/* video-swiper */
+swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* attendence */
+.user-list {
+  width: 200px; /* 적당한 너비 설정 */
+  height: 300px; /* 적당한 높이 설정 */
+  overflow: scroll; /* 세로 스크롤 가능하도록 설정 */
+}
+
+/* join */
+#join-btn {
+  display: block;
+  margin: auto;
+  margin-top: 20%;
+  padding: 10px 20px;
+
+  color: white;
+  background-color: rgb(0, 89, 255);
+  border: 0;
+  border-radius: 10px;
+}
+
+#join-btn:hover {
+  background-color: rgb(2, 66, 185);
+}
+
+body {
+  background-color: rgb(48, 48, 48);
+  color: white;
+}
+
+main {
+  position: relative;
+  width: 70%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+/* footer */
+.room-controller {
+  z-index: 5;
+  position: fixed;
+  bottom: 0px;
+  background-color: black;
+  width: 100%;
+}
+
+.room-controller-container {
+  margin-right: 30%;
+}
+
+.video-controller {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+#btn-toggle-audio, #btn-toggle-video {
+  margin-top: 5px;
+  margin-right: 15px;
+  padding: 10px 0;
+  width: 86px;
+  color: rgb(197, 197, 197);
+  background-color: transparent;
+  border: 0;
+  border-radius: 8px;
+}
+
+#btn-toggle-audio:hover, #btn-toggle-video:hover {
+  color: white;
+  background-color: rgb(104, 104, 104);
+}
+
+.exit-btn {
+  float: right;
+  margin: 10px 10px;
+  padding: 5px 17px;
+  border: 0;
+  color: white;
+  background-color: rgb(226, 49, 49);
+  border-radius: 8px;
+}
+
+
+/* 그림판 도구 */
+.draw-tool-container {
+  background-color: white;
+  border: grey;
+  height: 800px;
+  max-width: 200px;
+  padding: 10px;
+}
+
+.draw-tool-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid var(--color-gray-5);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.draw-tool-btn:hover {
+  background-color: #eee;
+}
+
+.draw-tool-btn-active {
+  background-color: #eee;
+}
+
+.control {
+  padding-left: 15px;
+  padding-right: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+  justify-items: center;
+}
+
+.color-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.current-color {
+  margin-left: 15px;
+  background-color: black;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  padding: 10px;
+  justify-items: center;
+}
+/* 도구 end */
+
+
+/* canvas background */
+.canvas-bg-container {
+  position: absolute;
+  top: 130px;
+  left: 180px;
+  width: 1700px;
+  height: 750px;
+  background-color: #eee;
+  padding: 15px;
+  z-index: 1;
+  color: black;
+  overflow-y: scroll;
+}
+
+.canvas-bg-container code {
+  font-size: 15px;
+}
+
+
+/* review controll */
+.review-controller-container {
+  z-index: 3;
+  background-color: white;
+  color: black;
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  border: grey;
+  width: 20%;
+  min-width: 250px;
+  height: 60%;
+  border-radius: 10px 0 0 10px;
+  border: 1px solid rgb(185, 185, 185);
+  overflow-y: scroll;
+}
+
+.review-controller-container ul {
+  margin-top: 20px;
+}
+
+.review-controller-close-btn {
+  float: right;
+  border: 0;
+  background-color: transparent;
+  margin-top: 7px;
+  margin-right: 7px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.review-controller-open-btn {
+  z-index: 5;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  border: 0;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(31, 31, 31);
+  border-radius: 50%; 
+  font-size: 20px;
+}
+
+.review-controller-title {
+  margin: 10px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.problem-list {
+  margin-top: 10px;
+}
+.review-list {
+}
+
+.review-btn {
+  margin: 0;
+}
+
+
+
+/* 반응형 */
+@media (min-width: 1300px) {
+  main {
+    width: 80%;
+  }
+
+  #chat-container {
+    width: 20%;
+  }
+
+  .room-controller-container, .canvas-container {
+    margin-right: 20%;
+  }
+}

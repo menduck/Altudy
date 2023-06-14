@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      🐣 Chat Room
+    </title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <link 
+      rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link 
+      rel="stylesheet" 
+      href={% static 'CSS/chat/live_room.css' %}
+    />
+
+    {# ToastUI #}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
+    />
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
+    />
+
+  </head>
+  <body>
+    {% comment %} <div class="position-ex"></div> {% endcomment %}
+    <h1 id="request-user-name" hidden>{{ request.user }}</h1>
+
+    <button id="join-btn">입장하기</button>
+
+    <main hidden>
+      <div class="mySwiper">
+        <swiper-container init="false" id="video-container">
+          <swiper-slide>
+            <label for="local-video">{{ request.user }}</label>
+            <video id="local-video" autoplay playsinline></video>
+          </swiper-slide>
+        </swiper-container>
+      </div>
+
+      <div class="canvas-container">
+        <div class="draw-tool-container">
+          <div>
+            <div class="pencil-mode">
+              <button class="pencil draw-tool-btn" data-pencil="1">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="eraser draw-tool-btn" data-pencil="0">
+                <i class="bi bi-eraser-fill"></i>
+              </button>
+            </div>
+            <button id="erase-all" class="draw-tool-btn">전체 지우기</button>
+          </div>
+          <div class="color-container">
+            <div class="current-color"></div>
+            <div class="control">
+              <button class="color-btn" data-color="black"></button>
+              <button class="color-btn" data-color="red"></button>
+              <button class="color-btn" data-color="green"></button>
+              <button class="color-btn" data-color="blue"></button>
+            </div>
+          </div>
+          <div class="sizeControl">
+            <input type="range" class="size-range" min="1" max="30" value="5" step="1">
+          </div>
+        </div>
+        <div>
+          <canvas id="drawing-canvas" width="1650" height="800"></canvas>
+        </div>
+      </div>     
+
+      <div class="canvas-bg-container">
+        <div id="viewer" hidden></div>
+        <div id="reviewViewer"></div>
+      </div>
+      
+      <hr>
+      <p>참가자</p>
+      <div class="user-list">
+        <ul>
+          {% comment %} <li>
+            <p class="user-name"></p>
+            <button class="authorization-btn">발표자 지정</button>
+          </li> {% endcomment %}
+        </ul>
+      </div>
+      
+      <footer class="room-controller">
+        <div class="room-controller-container">
+          <div class="video-controller">
+            <button id="btn-toggle-audio">음소거 해제</button>
+            <button id="btn-toggle-video">비디오 시작</button>
+          </div>
+          <button type="button" class="exit-btn" onclick="location.href='{% url 'studies:mainboard' room_name %}'">나가기</button>
+        </div>
+      </footer>
+    </main>
+    
+    <div id="chat-container" hidden>
+      <button id="chat-close-btn">
+        <i class="bi bi-arrow-bar-right"></i>
+      </button>
+      <textarea id="chat-log" cols="60" readonly></textarea><br />
+      <div class="chat-message-container">
+      <input id="chat-message-input" type="text" placeholder="메세지를 입력하세요."/>
+        <button id="chat-message-submit" type="button">전송</button>
+      </div>
+    </div>
+
+    <button id="chat-open-btn" hidden>
+      <i class="bi bi-arrow-bar-left"></i>
+    </button>
+    
+    <div class="review-controller-container" hidden>
+      <button class="review-controller-close-btn">
+        <i class="bi bi-x"></i>
+      </button>
+      <p class="review-controller-title">문제 리스트</p>
+      <ul>
+        {% for problem in problems %}
+          <li id="problem-list-{{ problem.pk }}" class="problem-list" value="{{ problem.pk }}">
+            {{ problem.title }}
+          </li>
+          <div id="review-list-{{ problem.pk }}" class="review-list" hidden>
+            {% for review in problem.review_set.all %}
+              <p id="review-btn-{{ review.pk }}" class="review-btn" value="{{ review.pk }}">&nbsp;ㄴ {{ review.user }}</p>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <button class="review-controller-open-btn" hidden>
+      <i class="bi bi-card-list"></i>
+    </button>
+    
+
+    {{ room_name|json_script:"room-name" }}
+    
+
+    {# ToastUI #}
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+    {% comment %} <script src="{% static 'reviews/toastViewer.js' %}"></script> {% endcomment %}
+
+    {# Swiper #}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
+
+    {# Axios #}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    {# Custom JS #}
+    <script src="{% static 'JS/rtc.js' %}"></script>
+    <script src="{% static 'JS/video_review.js' %}"></script>
+  </body>
+</html>

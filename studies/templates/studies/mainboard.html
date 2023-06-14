@@ -16,6 +16,7 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
 {% endblock style %} 
 
 {% block content %}
+<a href="{% url 'chat:room' study.pk %}">라이브 스터디룸</a>
 <a href="{% url 'studies:detail' study.pk %}">
   <div class="main__title">
     {{ study.title}}
