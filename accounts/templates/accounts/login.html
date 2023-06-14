@@ -15,7 +15,7 @@
       </div>
       <form action="{% url 'accounts:login' %}" method="POST" class="main__loginbox">
         {% csrf_token %}
-        <div>
+        <div style="display:flex; flex-direction:column; align-items:center;">
           {{ form.as_p }}
           <input type="submit" value="로그인" class="main__loginbutton">
           <div class="main__socialbox">

@@ -21,11 +21,11 @@ class CustomUserCreationForm(UserCreationForm):
     )
     password1 = forms.CharField(
         label='비밀번호',
-        widget=forms.PasswordInput(attrs={'class': 'my-custom-class'})
+        widget=forms.PasswordInput(attrs={'class': 'my-custom-class'}),
     )
     password2 = forms.CharField(
         label='비밀번호 확인',
-        widget=forms.PasswordInput(attrs={'class': 'my-custom-class'})
+        widget=forms.PasswordInput(attrs={'class': 'my-custom-class'}),
     )
 
     def __init__(self, *args, **kwargs):
@@ -41,9 +41,13 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomAuthenticationFormForm(AuthenticationForm):
-    class Meta(AuthenticationForm):
+    error_messages = {
+        'invalid_login': '정확한 정보를 입력해주세요.',
+    }
+    class Meta:
         model = get_user_model()
         fields = ('username', 'password',)
+        
 
 
 class CustomUserChangeForm(UserChangeForm):
