@@ -364,11 +364,19 @@ def like(request):
         context = {
             'liked': False
         }
+        if model == 'Review':
+            # 좋아요 취소 시 받은 경험치 되돌림
+            obj.user.experience -= 10
+            obj.user.save()
     else:
         obj.like_users.add(request.user)
         context = {
             'liked': True
         }
+        if model == 'Review':
+            # 작성자에게 경험치 10 추가
+            obj.user.experience += 10
+            obj.user.save()
     context['count'] = obj.like_users.count()
     return JsonResponse(context)
 
