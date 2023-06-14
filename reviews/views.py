@@ -4,25 +4,20 @@ import logging
 from functools import reduce
 from typing import Any
 
-from django.http import JsonResponse, Http404, QueryDict, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, Http404, QueryDict
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.db import transaction
-# from rest_framework import status
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
 
 from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
-from .utils import render_HXResponse, HXResponse
-# from .serializers import CommentSerializer
+from .utils import render, HttpResponse, HTTPResponseHXRedirect
 
 from studies.models import Study
 
@@ -31,27 +26,26 @@ from studies.models import Study
 logger = logging.getLogger(__name__)
 
 
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    '''HTMX를 사용해 페이지를 redirect 하기 위한 클래스'''
-    def __init__(self, redirect_to: str, *args: Any, **kwargs: Any) -> None:
-        super().__init__(redirect_to, *args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-    
-    status_code = 200
-
-
 # Create your views here.
 @login_required
 def detail(request, pk):
     '''
-    - ✅ Problem, Review, Comment에 달린 모든 태그를 모아보는 기능
+    42 queries in 14.26ms → 31 queries in 13.03ms
     '''
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
-            'review_set__comment_set',
-            'review_set__tags',
-        ).select_related('study'),
+            Prefetch(
+                'review_set', 
+                queryset=Review.objects.prefetch_related(
+                    'tags',
+                    Prefetch(
+                        'comment_set',
+                        queryset=Comment.objects.select_related('user').prefetch_related('like_users'),
+                    ),
+                ).select_related('user').prefetch_related('like_users'),
+            ),
+        ).select_related('study', 'user'),
         pk=pk
     )
 
@@ -61,7 +55,6 @@ def detail(request, pk):
     querydict = {
         'problem': Q(problem_set=pk),
         'review': Q(review_set__in=problem.review_set.values('id')),
-        # 'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
     }
 
     tags = Tag.objects.filter(reduce(operator.__or__, querydict.values()))
@@ -71,7 +64,6 @@ def detail(request, pk):
     context = {
         'problem': problem,
         'tags': ordered_tags.values(),
-        # 'comment_form': CommentForm(),
     }
     return render(request, 'reviews/detail.html', context)
 
@@ -194,11 +186,9 @@ def review_update(request, review_pk):
     study_pk = review.problem.study.pk
     if not review.problem.study.studying_users.filter(username=request.user).exists():
         return HTTPResponseHXRedirect(redirect_to=reverse_lazy('studies:detail', kwargs={'study_pk': study_pk}))
-        return redirect('studies:detail', review.problem.study.pk)
     
     if request.user != review.user:
         return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': review.problem.pk}))
-        return redirect('reviews:detail', review.problem.pk)
     
     if request.method == 'PUT':
         data = QueryDict(request.body).dict()
@@ -230,33 +220,6 @@ def review_delete(request, review_pk):
     return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': problem_pk}))
 
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def comment_create(request, review_pk):
-#     try:
-#         review = get_object_or_404(
-#             Review.objects.select_related('problem__study'),
-#             pk=review_pk
-#         )
-
-#         if review is None:
-#             logger.error(f"No Review found with pk: {review_pk}")
-#             return Response({"error": "No Review found."}, status=status.HTTP_404_NOT_FOUND)
-        
-#         serializer = CommentSerializer(data=request.data, context={'review': review, 'user': request.user})
-
-#         if not serializer.is_valid():
-#             logger.error(f"Serializer validation failed with errors: {serializer.errors}")
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-#     except Exception as e:
-#         logger.error(f"Unexpected error occurred: {e}")
-#         return Response({"error": "Unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 @require_http_methods(['GET', 'POST'])
 @login_required
 def comment_create(request, review_pk):
@@ -269,10 +232,10 @@ def comment_create(request, review_pk):
             comment.save()
 
             # 작성한 유저에게 5의 경험치 추가
-            request.user.experience += 5
-            request.user.save()
+            comment.user.experience += 5
+            comment.user.save()
             context = {
-                'review': review,
+                'review': Review.objects.prefetch_related('comment_set__user').get(pk=review_pk),
             }
             trigger = json.dumps({
                 'clear-textarea': {
@@ -283,8 +246,8 @@ def comment_create(request, review_pk):
                     'count': review.comment_set.count(),
                 }
             })
-            return render_HXResponse(request, 'reviews/comments/list.html', context, trigger=trigger)
-        return render(request, 'reviews/components/comment_create_not_valid.html')   # 작성 필요
+            return render(request, 'reviews/comments/list.html', context, trigger=trigger)
+        return render(request, 'reviews/comments/list.html', context)
     else:
         form = CommentForm()
     context = {
@@ -338,7 +301,7 @@ def comment_delete(request, comment_pk):
                 'count': review.comment_set.count(),
             }
         })
-        return HXResponse(trigger=trigger)
+        return HttpResponse(trigger=trigger)
     
     return render(request, 'reviews/comments/item.html', context)
 
@@ -364,15 +327,18 @@ def like(request):
         context = {
             'liked': False
         }
+        if model == 'Review':
+            # 좋아요 취소 시 받은 경험치 되돌림
+            obj.user.experience -= 10
+            obj.user.save()
     else:
         obj.like_users.add(request.user)
         context = {
             'liked': True
         }
+        if model == 'Review':
+            # 작성자에게 경험치 10 추가
+            obj.user.experience += 10
+            obj.user.save()
     context['count'] = obj.like_users.count()
     return JsonResponse(context)
-
-
-def get_comment_count(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
-    return HttpResponse(review.comment_set.count())
