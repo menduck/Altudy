@@ -80,23 +80,15 @@
           </div>
         </div>
         <div>
-          <canvas id="drawing-canvas" width="1650" height="750"></canvas>
+          <canvas id="drawing-canvas" width="1650" height="700"></canvas>
         </div>
       </div>     
 
       <div class="canvas-bg-container">
+        <div id="presentTag" hidden>당신은 발표자입니다</div>
         <div id="reviewViewer"></div>
       </div>
       
-      <footer class="room-controller">
-        <div class="room-controller-container">
-          <div class="video-controller">
-            <button id="btn-toggle-audio">음소거 해제</button>
-            <button id="btn-toggle-video">비디오 시작</button>
-          </div>
-          <button type="button" class="exit-btn" onclick="location.href='{% url 'studies:mainboard' room_name %}'">나가기</button>
-        </div>
-      </footer>
     </main>
     
     <div id="chat-container" hidden>
@@ -156,6 +148,15 @@
       </div>
     </div>
 
+    <footer class="room-controller">
+      <div class="room-controller-container">
+        <div class="video-controller">
+          <button id="btn-toggle-audio">음소거 해제</button>
+          <button id="btn-toggle-video">비디오 시작</button>
+        </div>
+        <button type="button" class="exit-btn" onclick="location.href='{% url 'studies:mainboard' room_name %}'">나가기</button>
+      </div>
+    </footer>
 
     {{ room_name|json_script:"room-name" }}
     
