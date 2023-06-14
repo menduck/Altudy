@@ -1,4 +1,6 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse as HttpResponseBase
+from django.http import HttpResponseRedirect
+
 from django.template import loader
 from typing import Any
 
@@ -12,14 +14,15 @@ class HTTPResponseHXRedirect(HttpResponseRedirect):
     status_code = 200
 
 
-class HXResponse(HttpResponse):
+class HttpResponse(HttpResponseBase):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
-        trigger = kwargs.pop('trigger')
+        trigger = kwargs.pop('trigger', None)
         super().__init__(*args, **kwargs)
         self.headers["HX-Trigger"] = trigger
 
 
-def render_HXResponse(request, template_name, context=None, content_type=None, status=None, using=None, trigger=None):
+def render(request, template_name, context=None, content_type=None, status=None, using=None, **kwargs: Any):
     content = loader.render_to_string(template_name, context, request, using=using)
-    response = HXResponse(content, content_type, status, trigger=trigger)
+    trigger = kwargs.pop('trigger', None)
+    response = HttpResponse(content, content_type, status, trigger=trigger)
     return response

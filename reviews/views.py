@@ -17,7 +17,7 @@ from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
-from .utils import render_HXResponse, HXResponse
+from .utils import render, HttpResponse, HTTPResponseHXRedirect
 
 from studies.models import Study
 
@@ -245,8 +245,7 @@ def comment_create(request, review_pk):
                     'count': review.comment_set.count(),
                 }
             })
-            return render_HXResponse(request, 'reviews/comments/list.html', context, trigger=trigger)
-        return render(request, 'reviews/components/comment_create_not_valid.html')   # 작성 필요
+            return render(request, 'reviews/comments/list.html', context, trigger=trigger)
     else:
         form = CommentForm()
     context = {
@@ -300,7 +299,7 @@ def comment_delete(request, comment_pk):
                 'count': review.comment_set.count(),
             }
         })
-        return HXResponse(trigger=trigger)
+        return HttpResponse(trigger=trigger)
     
     return render(request, 'reviews/comments/item.html', context)
 
