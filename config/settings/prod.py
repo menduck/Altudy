@@ -111,3 +111,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 STORAGES = {
     "staticfiles": {"BACKEND": "config.storage.S3Storage"}
 }
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
