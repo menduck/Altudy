@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_htmx.middleware.HtmxMiddleware",
+    'config.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -249,7 +250,6 @@ CELERY_BEAT_SCHEDULE = {
     #     'schedule': 20,
     # },
 }
-
 
 # django-cors-headers
 CORS_ALLOWED_ORIGINS = [

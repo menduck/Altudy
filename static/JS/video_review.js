@@ -1,18 +1,3 @@
-// getFetch()
-
-function getFetch() {
-  const canvasBgContainer = document.querySelector('.canvas-bg-container')
-
-  // fetch는 JS 적용 불가...
-  // fetch(window.location.href + '/chat/2/problems/1/reviews/2/')
-  // fetch(window.location.href + '/reviews/1/')
-  .fetch()
-    .then(response => response.text())
-    .then(content => {
-      canvasBgContainer.innerHTML = content
-    })
-}
-
 const btnChatClose = document.getElementById('chat-close-btn')
 const btnChatOpen = document.getElementById('chat-open-btn')
 const chatContainer = document.getElementById('chat-container')
@@ -70,35 +55,21 @@ btnProblems.forEach(btn => {
   })
 })
 
-const btnReviews = document.querySelectorAll('.review-list')
-btnReviews.forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    const reviewId = e.target.getAttribute('value')
 
-    axios({
-      method: 'GET',
-      url: `/chat/review/${reviewId}/`,
-    })
-      .then(response => {
-        const { Editor } = toastui;
-        const { codeSyntaxHighlight } = Editor.plugin;
+// 참가자 리스트 액션
+const userListContainer = document.querySelector('.user-list-container')
+const btnOpenUser = document.querySelector('.user-list-open-btn')
+const btnCloseUser = document.querySelector('.user-list-close-btn')
 
-        const content = response.data.content
-        const reviewView = document.getElementById('reviewViewer')
-
-        console.log(JSON.stringify(content))
-        reviewView.textContent = JSON.stringify(content)
-
-        const viewer = Editor.factory({
-          el: reviewView,
-          viewer: true,
-          height: '100%',
-          initialValue: JSON.parse(reviewView.textContent),
-          plugins: [codeSyntaxHighlight]
-        });
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  })
+btnOpenUser.addEventListener('click', (e) => {
+  userListContainer.hidden = !userListContainer.hidden
+  btnCloseUser.disabled = false
+  btnOpenUser.hidden = !btnOpenUser.hidden
+  btnOpenUser.disabled = true
+})
+btnCloseUser.addEventListener('click', () => {
+  userListContainer.hidden = !userListContainer.hidden
+  btnCloseUser.disabled = true
+  btnOpenUser.hidden = !btnOpenUser.hidden
+  btnOpenUser.disabled = false
 })

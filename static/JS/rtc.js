@@ -17,7 +17,7 @@ const canvas = document.getElementById('drawing-canvas');
 const context = canvas.getContext('2d');
 const eraseAllBtn = document.getElementById('erase-all');
 const colorControl = document.querySelector('.control');
-const sizeControl = document.querySelector('.sizeControl');
+// const sizeControl = document.querySelector('.sizeControl');
 const pencilMode = document.querySelector('.pencil-mode');
 const pencil = document.querySelector(".pencil")
 const eraser = document.querySelector(".eraser")
@@ -43,8 +43,9 @@ let presenterUser = ''; // 현재 발표자 이름 담을 변수
 // 비동기 in promise를 위한 방 입장 버튼
 btnJoin.addEventListener('click', (e) => {
   btnJoin.parentNode.removeChild(btnJoin)
-  chatContainer.hidden = false
-  document.querySelector('.review-controller-container').hidden = false
+  document.querySelector('#chat-container').hidden = false
+  document.querySelector('.review-controller-open-btn').hidden = false
+  document.querySelector('.user-list-open-btn').hidden = false
 
   document.querySelector('main').hidden = false
 
@@ -71,7 +72,7 @@ btnJoin.addEventListener('click', (e) => {
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
     colorControl.addEventListener('click', setColor);
-    sizeControl.addEventListener('click', setSize);
+    // sizeControl.addEventListener('click', setSize);
     eraseAllBtn.addEventListener('click', eraseAll);
     pencil.addEventListener('click', setPencilMode);
     eraser.addEventListener('click', setEraserMode);
@@ -90,7 +91,6 @@ function chatSocketOnMessage(e) {
   const data = JSON.parse(e.data);
   if (data['now'] == 'chat') {
     // 채팅을 수신한 경우
-    console.log('채팅 수신');
     const chatLog = document.querySelector('#chat-log')
     chatLog.value += data.user + ' : ' + data.message + '\n';
     chatLog.scrollTop = chatLog.scrollHeight
@@ -112,8 +112,8 @@ function chatSocketOnMessage(e) {
         lastX: x,
         lastY: y,
         positionEx: addPositionExElement(clientId),
-        color: color,
-        size: size,
+        // color: color,
+        // size: size,
       };
 
     } else {
@@ -122,8 +122,8 @@ function chatSocketOnMessage(e) {
         lastX,
         lastY,
         positionEx,
-        color: clientColor,
-        size: clientSize,
+        // color: clientColor,
+        // size: clientSize,
       } = drawingStates[clientId];
 
       if (data.now === 'start') {
@@ -144,10 +144,7 @@ function chatSocketOnMessage(e) {
         } else if (data.now === 'eraser') {
           context.strokeStyle = color;
           context.lineWidth = size;
-          context.beginPath();
-          context.moveTo(lastX, lastY);
-          context.lineTo(x, y);
-          context.stroke();
+          context.clearRect(x-size/2, y-size/2, size, size);
         } 
 
         // 상태 업데이트
@@ -158,6 +155,7 @@ function chatSocketOnMessage(e) {
           positionEx.style.display = 'block'
           positionEx.style.left = x + 'px';
           positionEx.style.top = y + 'px';
+          positionEx.style.zIndex = 3;
         }
       } 
     }
@@ -170,7 +168,6 @@ function chatSocketOnMessage(e) {
     // 유저목록 업데이트
     updateUserList();
   } else if (data.now === 'presenter_authorized') {
-    console.log('권한!')
     presenterUser = data.next_presenter
     updateUserList();
   } else if (
@@ -187,13 +184,13 @@ function chatSocketOnMessage(e) {
     }
     
     if (data.now === 'new-peer') {
-      console.log('new-peer action!')
+      console.log('new-peer action!!!')
       
       createOfferer(peerUsername, receiver_channel_name)
 
       return
     } else if (data.now === 'new-offer') {
-      console.log('new-offer action!')
+      console.log('new-offer action!!!')
       
       const offer = data.message.sdp
       
@@ -201,7 +198,7 @@ function chatSocketOnMessage(e) {
 
       return
     } else if (data.now === 'new-answer') {
-      console.log('new-answer action!')
+      console.log('new-answer action!!!')
       
       const answer = data.message.sdp
       const peer = mapPeers[peerUsername][0]
@@ -219,8 +216,36 @@ function chatSocketOnMessage(e) {
         })
 
         return
-    }
-  }
+      }
+    } else if (data.now === 'review') {
+        console.log('review action!!!')
+        const reviewId = data.reviewId
+        
+        axios({
+          method: 'GET',
+          url: `/chat/review/${reviewId}/`,
+        })
+          .then(response => {
+            const { Editor } = toastui;
+            const { codeSyntaxHighlight } = Editor.plugin;
+    
+            const content = response.data.content
+            const reviewView = document.getElementById('reviewViewer')
+    
+            reviewView.textContent = JSON.stringify(content)
+    
+            const viewer = Editor.factory({
+              el: reviewView,
+              viewer: true,
+              height: '100%',
+              initialValue: JSON.parse(reviewView.textContent),
+              plugins: [codeSyntaxHighlight]
+            });
+          })
+          .catch(error => {
+            console.error(error)
+          })
+  } 
 };
 
 document.querySelector('#chat-message-input').focus();
@@ -263,7 +288,7 @@ function updateUserList() {
       const authorizationBtn = document.createElement('button');
       authorizationBtn.className = 'authorization-btn';
       // 버튼에 원하는 내용 설정
-      authorizationBtn.textContent = '발표자 권한 부여';
+      authorizationBtn.textContent = '발표자 지정';
 
       // 버튼 클릭 이벤트 핸들러 추가
       authorizationBtn.addEventListener('click', () => {
@@ -291,10 +316,8 @@ function authorizePresenter(user) {
 
 function startDrawing(e) {
   if (curUser === presenterUser) {
-    console.log('startDrawing')
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
-    console.log(lastX, lastY)
     // 클라이언트별 시작 좌표를 갱신해주기 위해 시작점 따로 전송
     chatSocket.send(
       JSON.stringify({
@@ -307,7 +330,6 @@ function startDrawing(e) {
 }
 
 function draw(e) {
-  console.log('draw')
   const mouseX = e.pageX;
   const mouseY = e.pageY;
   chatSocket.send(
@@ -330,6 +352,7 @@ function draw(e) {
       context.stroke();
       [lastX, lastY] = [e.offsetX, e.offsetY];
     } else {
+      /*
       // 지우개모드
       context.beginPath();
       // 배경색으로 칠하기
@@ -339,6 +362,9 @@ function draw(e) {
       context.lineTo(x, y);
       context.stroke();
       [lastX, lastY] = [e.offsetX, e.offsetY];
+      */
+     
+      context.clearRect(x-sizeValue/2, y-sizeValue/2, sizeValue, sizeValue);
     }
       // 그림 모드, 좌표, 두께정보 서버로 전송
       chatSocket.send(
@@ -354,21 +380,22 @@ function draw(e) {
 }
 
 function stopDrawing() {
-  console.log('stopDrawing')
   // mouseout 시에 마우스 위치 공유 사라지게
   // positionEx.style.display = 'none'
   isDrawing = false;
 }
 
 function eraseAll() {
-  // 0,0 부터 canvas의 width, height 까지 모두 지움
-  context.clearRect(0, 0, canvas.width, canvas.height);
-
-  chatSocket.send(
-    JSON.stringify({
-      now: 'eraseAll',
-    })
-  );
+  if (curUser === presenterUser) {
+    // 0,0 부터 canvas의 width, height 까지 모두 지움
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  
+    chatSocket.send(
+      JSON.stringify({
+        now: 'eraseAll',
+      })
+    );
+  }
 }
 
 function setColor(e) {
@@ -592,8 +619,7 @@ function createAnswerer(offer, peerUsername, receiver_channel_name) {
     
   peer.addEventListener('icecandidate', e => {
     if (e.candidate) {
-      // console.log('[createAnswerer()] New ice candidate: ', JSON.stringify(peer.localDescription))
-      
+      // console.log('[createAnswerer()] New ice candidate: ', JSON.stringify(peer.localDescription)) 
       return
     }
 
@@ -704,3 +730,22 @@ document.getElementById("join-btn").addEventListener("click", () => {
   const logoImg = document.querySelector(".logo_img");
   logoImg.classList.add("hidden");
 });
+
+
+// review
+const reviewsBtn = document.querySelectorAll('.review-list')
+reviewsBtn.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const reviewId = e.target.getAttribute('value')
+    if (curUser === presenterUser) {
+      chatSocket.send(
+        JSON.stringify({
+          'now': 'review',
+          'reviewId': reviewId,
+        })
+      )
+    }
+
+  })
+})
+

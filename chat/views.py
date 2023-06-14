@@ -16,12 +16,10 @@ def room(request, study_pk: int):
 
     room = ChatRooms.objects.get_or_create(title=str(study_pk))
     problems = study.problem_set.all()
-    review = Review.objects.get(pk=2)
 
     context = {
         'room_name': study_pk,
         'problems': problems,
-        'review': review,
     }
     return render(request, "chat/room.html", context)
 
