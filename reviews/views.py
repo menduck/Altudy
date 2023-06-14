@@ -4,7 +4,7 @@ import logging
 from functools import reduce
 from typing import Any
 
-from django.http import JsonResponse, Http404, QueryDict, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, Http404, QueryDict, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
@@ -347,8 +347,3 @@ def like(request):
             obj.user.save()
     context['count'] = obj.like_users.count()
     return JsonResponse(context)
-
-
-def get_comment_count(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
-    return HttpResponse(review.comment_set.count())
