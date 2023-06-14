@@ -4,7 +4,7 @@ import logging
 from functools import reduce
 from typing import Any
 
-from django.http import JsonResponse, Http404, QueryDict, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, Http404, QueryDict
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
@@ -12,17 +12,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.db import transaction
-# from rest_framework import status
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
 
 from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
-from .utils import render_HXResponse, HXResponse
-# from .serializers import CommentSerializer
+from .utils import render, HttpResponse, HTTPResponseHXRedirect
 
 from studies.models import Study
 
@@ -31,13 +26,7 @@ from studies.models import Study
 logger = logging.getLogger(__name__)
 
 
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    '''HTMX를 사용해 페이지를 redirect 하기 위한 클래스'''
-    def __init__(self, redirect_to: str, *args: Any, **kwargs: Any) -> None:
-        super().__init__(redirect_to, *args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-    
-    status_code = 200
+
 
 
 # Create your views here.
@@ -230,33 +219,6 @@ def review_delete(request, review_pk):
     return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': problem_pk}))
 
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def comment_create(request, review_pk):
-#     try:
-#         review = get_object_or_404(
-#             Review.objects.select_related('problem__study'),
-#             pk=review_pk
-#         )
-
-#         if review is None:
-#             logger.error(f"No Review found with pk: {review_pk}")
-#             return Response({"error": "No Review found."}, status=status.HTTP_404_NOT_FOUND)
-        
-#         serializer = CommentSerializer(data=request.data, context={'review': review, 'user': request.user})
-
-#         if not serializer.is_valid():
-#             logger.error(f"Serializer validation failed with errors: {serializer.errors}")
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-#     except Exception as e:
-#         logger.error(f"Unexpected error occurred: {e}")
-#         return Response({"error": "Unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 @require_http_methods(['GET', 'POST'])
 @login_required
 def comment_create(request, review_pk):
@@ -283,8 +245,7 @@ def comment_create(request, review_pk):
                     'count': review.comment_set.count(),
                 }
             })
-            return render_HXResponse(request, 'reviews/comments/list.html', context, trigger=trigger)
-        return render(request, 'reviews/components/comment_create_not_valid.html')   # 작성 필요
+            return render(request, 'reviews/comments/list.html', context, trigger=trigger)
     else:
         form = CommentForm()
     context = {
@@ -338,7 +299,7 @@ def comment_delete(request, comment_pk):
                 'count': review.comment_set.count(),
             }
         })
-        return HXResponse(trigger=trigger)
+        return HttpResponse(trigger=trigger)
     
     return render(request, 'reviews/comments/item.html', context)
 
@@ -379,8 +340,3 @@ def like(request):
             obj.user.save()
     context['count'] = obj.like_users.count()
     return JsonResponse(context)
-
-
-def get_comment_count(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
-    return HttpResponse(review.comment_set.count())
