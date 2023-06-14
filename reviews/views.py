@@ -232,10 +232,10 @@ def comment_create(request, review_pk):
             comment.save()
 
             # 작성한 유저에게 5의 경험치 추가
-            request.user.experience += 5
-            request.user.save()
+            comment.user.experience += 5
+            comment.user.save()
             context = {
-                'review': review,
+                'review': Review.objects.prefetch_related('comment_set__user').get(pk=review_pk),
             }
             trigger = json.dumps({
                 'clear-textarea': {
@@ -247,6 +247,7 @@ def comment_create(request, review_pk):
                 }
             })
             return render(request, 'reviews/comments/list.html', context, trigger=trigger)
+        return render(request, 'reviews/comments/list.html', context)
     else:
         form = CommentForm()
     context = {
