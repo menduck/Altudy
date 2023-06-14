@@ -7,7 +7,7 @@ from typing import Any
 from django.http import JsonResponse, Http404, QueryDict
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
@@ -26,21 +26,26 @@ from studies.models import Study
 logger = logging.getLogger(__name__)
 
 
-
-
-
 # Create your views here.
 @login_required
 def detail(request, pk):
     '''
-    - ✅ Problem, Review, Comment에 달린 모든 태그를 모아보는 기능
+    42 queries in 14.26ms → 31 queries in 13.03ms
     '''
     problem = get_object_or_404(
         Problem.objects.prefetch_related(
             'tags',
-            'review_set__comment_set',
-            'review_set__tags',
-        ).select_related('study'),
+            Prefetch(
+                'review_set', 
+                queryset=Review.objects.prefetch_related(
+                    'tags',
+                    Prefetch(
+                        'comment_set',
+                        queryset=Comment.objects.select_related('user').prefetch_related('like_users'),
+                    ),
+                ).select_related('user').prefetch_related('like_users'),
+            ),
+        ).select_related('study', 'user'),
         pk=pk
     )
 
@@ -50,7 +55,6 @@ def detail(request, pk):
     querydict = {
         'problem': Q(problem_set=pk),
         'review': Q(review_set__in=problem.review_set.values('id')),
-        # 'comment': Q(comment_set__in=Comment.objects.filter(review__in=problem.review_set.all()).values('id'))
     }
 
     tags = Tag.objects.filter(reduce(operator.__or__, querydict.values()))
@@ -60,7 +64,6 @@ def detail(request, pk):
     context = {
         'problem': problem,
         'tags': ordered_tags.values(),
-        # 'comment_form': CommentForm(),
     }
     return render(request, 'reviews/detail.html', context)
 
