@@ -283,6 +283,7 @@ hgroup {
 
 
 /* 리뷰 태그 */
+
 .tag-item {
   background-color: var(--color-white);
   font-size: var(--font-micro);
@@ -336,7 +337,7 @@ hgroup {
   justify-content: end;
 }
 
-#like-forms input[type="submit"] {
+#like-forms button[type="submit"] {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -345,16 +346,20 @@ hgroup {
   margin: 0 10px;
   border: 1px solid var(--color-green);
   border-radius: var(--border-radius-soft);
-  background-color: var(--color-green);
+  background-color: var(--color-gray-6);
   color: var(--color-white);
   line-height: 30px;
   
 }
 
-#like-forms input[type="submit"]:hover {
+#like-forms button[type="submit"]:hover {
   border: 1px solid var(--color-green);
   background-color: var(--color-white);
   color: var(--color-green);
+}
+
+#like-forms button[type="submit"] .bi::before{
+  margin-right: 5px;
 }
 
 .gray-button {
@@ -366,4 +371,15 @@ hgroup {
 .null-message{
   text-align: center;
   color: var(--color-gray-5);
+}
+
+/* tag */
+.problem-tag__container{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.problem-tag__container button {
+  border: none;
+  margin-right: 3px;
 }

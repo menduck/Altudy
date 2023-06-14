@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'daphne',
     'chat',
     'accounts',
+    'corsheaders',
     'reviews',
     'studies',
     'django_extensions',
@@ -61,12 +62,14 @@ TUI_EDITOR_LANGUAGE = ['ko']
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_htmx.middleware.HtmxMiddleware",
+    'config.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -142,9 +145,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
@@ -262,3 +262,8 @@ CHANNEL_LAYERS = {
 
 # 비동기 함수에서의 ORM 작성
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+
+# django-cors-headers
+CORS_ALLOWED_ORIGINS = [
+    'http://43.202.59.123',
+]

@@ -22,11 +22,6 @@
     </div>
     <div class="study__crudInfo">
       {{ comment.updated_at }}
-    {% if user.is_authenticated %}
-    <div>
-      {% include 'reviews/components/like.html' with obj=comment %}
-    </div>
-    {% endif %}
     </div>
   </div>
 </div>
