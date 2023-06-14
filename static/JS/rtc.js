@@ -165,10 +165,33 @@ function chatSocketOnMessage(e) {
     // 유저 리스트를 수신한 경우
     userList = data.user_list; // 유저 목록 업데이트
     presenterUser = data.presenter
+    if (curUser === presenterUser) {
+      const localVid = document.querySelector('#local-video')
+      localVid.style.border = "3px solid #BBD885"
+      const presentTag = document.querySelector('#presentTag')
+      presentTag.hidden = false
+    }
     // 유저목록 업데이트
     updateUserList();
   } else if (data.now === 'presenter_authorized') {
+    const videos = document.querySelectorAll('video')
+    videos.forEach(video => {
+      video.style.border = "0"
+    })
+    if (curUser === presenterUser) {
+      const presentTag = document.querySelector('#presentTag')
+      presentTag.hidden = true
+    }
     presenterUser = data.next_presenter
+    if (curUser === presenterUser) {
+      const localVid = document.querySelector('#local-video')
+      const presentTag = document.querySelector('#presentTag')
+      localVid.style.border = "3px solid #BBD885"
+      presentTag.hidden = false
+    } else {
+      const userVid = document.querySelector(`#${presenterUser}-video`)
+      userVid.style.border = "3px solid #BBD885"
+    }
     updateUserList();
   } else if (
     data.now === 'new-peer'   ||
@@ -668,6 +691,10 @@ function createVideo(peerUsername) {
   const nameLabel = document.createElement('label')
   nameLabel.for = remoteVideo.id
   nameLabel.textContent = peerUsername
+
+  if (peerUsername === presenterUser) {
+    remoteVideo.style.border = "3px solid #BBD885"
+  }
 
   videoContainer.appendChild(videoWrapper)
   videoWrapper.appendChild(nameLabel)
