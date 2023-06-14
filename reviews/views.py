@@ -4,7 +4,7 @@ import logging
 from functools import reduce
 from typing import Any
 
-from django.http import JsonResponse, Http404, QueryDict, HttpResponseRedirect
+from django.http import JsonResponse, Http404, QueryDict
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
@@ -26,13 +26,7 @@ from studies.models import Study
 logger = logging.getLogger(__name__)
 
 
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    '''HTMX를 사용해 페이지를 redirect 하기 위한 클래스'''
-    def __init__(self, redirect_to: str, *args: Any, **kwargs: Any) -> None:
-        super().__init__(redirect_to, *args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-    
-    status_code = 200
+
 
 
 # Create your views here.

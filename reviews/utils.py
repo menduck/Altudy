@@ -1,6 +1,15 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from typing import Any
+
+
+class HTTPResponseHXRedirect(HttpResponseRedirect):
+    '''HTMX를 사용해 페이지를 redirect 하기 위한 클래스'''
+    def __init__(self, redirect_to: str, *args: Any, **kwargs: Any) -> None:
+        super().__init__(redirect_to, *args, **kwargs)
+        self["HX-Redirect"] = self["Location"]
+    
+    status_code = 200
 
 
 class HXResponse(HttpResponse):
