@@ -32,7 +32,7 @@
 .aside__container {
   width: 20%;
   min-width: 100px;
-  height: 650px;
+  height: 700px;
   background-color: var(--color-white);
   box-shadow: 2px 2px 4px var(--color-gray-4);
   border-radius: 10px;

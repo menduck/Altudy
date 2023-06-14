@@ -16,7 +16,6 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
 {% endblock style %} 
 
 {% block content %}
-<a href="{% url 'chat:room' study.pk %}">라이브 스터디룸</a>
 <a href="{% url 'studies:detail' study.pk %}">
   <div class="main__title">
     {{ study.title}}
@@ -26,6 +25,9 @@ https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
   <aside class="aside__container">
     <div class="aside__item" data-content="mainboard">대시보드</div>
     <div class="aside__item" data-content="problem">학습관리</div>
+    <div class="aside__item">
+      <a  href="{% url 'chat:room' study.pk %}">라이브 스터디룸</a>
+    </div>
     {% if request.user == study.user %}
     <div class="aside__item" data-content="member">스터디 관리</div>
     {% endif %}
