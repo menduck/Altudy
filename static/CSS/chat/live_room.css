@@ -453,11 +453,6 @@ main {
   margin-right: 10px;
 }
 
-/* .review-btn::before {
-  content: "✏️";
-  margin-right: 7px;
-} */
-
 .review-btn span:last-child {
   color: rgb(87, 87, 255);
   text-decoration: underline;
