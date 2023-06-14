@@ -4,8 +4,9 @@ function getFetch() {
   const canvasBgContainer = document.querySelector('.canvas-bg-container')
 
   // fetch는 JS 적용 불가...
-  // fetch('http://127.0.0.1:8000/chat/2/problems/1/reviews/2/')
-  fetch('http://127.0.0.1:8000/reviews/1/')
+  // fetch(window.location.href + '/chat/2/problems/1/reviews/2/')
+  // fetch(window.location.href + '/reviews/1/')
+  .fetch()
     .then(response => response.text())
     .then(content => {
       canvasBgContainer.innerHTML = content
@@ -56,4 +57,48 @@ btnReviewOpen.addEventListener('click', (e) => {
   btnReviewOpen.disabled = true
   reviewContainer.hidden = false
   btnReviewClose.disabled = false
+})
+
+const btnProblems = document.querySelectorAll('.problem-list')
+
+btnProblems.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const problemId = e.target.value
+    const reviewList = document.getElementById(`review-list-${problemId}`)
+
+    reviewList.hidden = !reviewList.hidden
+  })
+})
+
+const btnReviews = document.querySelectorAll('.review-list')
+btnReviews.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const reviewId = e.target.getAttribute('value')
+
+    axios({
+      method: 'GET',
+      url: `/chat/review/${reviewId}/`,
+    })
+      .then(response => {
+        const { Editor } = toastui;
+        const { codeSyntaxHighlight } = Editor.plugin;
+
+        const content = response.data.content
+        const reviewView = document.getElementById('reviewViewer')
+
+        console.log(JSON.stringify(content))
+        reviewView.textContent = JSON.stringify(content)
+
+        const viewer = Editor.factory({
+          el: reviewView,
+          viewer: true,
+          height: '100%',
+          initialValue: JSON.parse(reviewView.textContent),
+          plugins: [codeSyntaxHighlight]
+        });
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  })
 })

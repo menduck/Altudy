@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from .models import ChatRooms
 from studies.models import Study
@@ -23,6 +24,14 @@ def room(request, study_pk: int):
         'review': review,
     }
     return render(request, "chat/room.html", context)
+
+
+def get_review_content(request, review_pk: int):
+    review = get_object_or_404(Review, pk=review_pk)
+    context = {
+        'content': review.content,
+    }
+    return JsonResponse(context)
 
 
 @login_required
