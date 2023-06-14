@@ -143,10 +143,7 @@ function chatSocketOnMessage(e) {
         } else if (data.now === 'eraser') {
           context.strokeStyle = color;
           context.lineWidth = size;
-          context.beginPath();
-          context.moveTo(lastX, lastY);
-          context.lineTo(x, y);
-          context.stroke();
+          context.clearRect(x-size/2, y-size/2, size, size);
         } 
 
         // 상태 업데이트
@@ -157,7 +154,7 @@ function chatSocketOnMessage(e) {
           positionEx.style.display = 'block'
           positionEx.style.left = x + 'px';
           positionEx.style.top = y + 'px';
-          // positionEx.style.z-index = 10;
+          positionEx.style.zIndex = 10;
         }
       } 
     }
@@ -354,6 +351,7 @@ function draw(e) {
       context.stroke();
       [lastX, lastY] = [e.offsetX, e.offsetY];
     } else {
+      /*
       // 지우개모드
       context.beginPath();
       // 배경색으로 칠하기
@@ -363,6 +361,9 @@ function draw(e) {
       context.lineTo(x, y);
       context.stroke();
       [lastX, lastY] = [e.offsetX, e.offsetY];
+      */
+     
+      context.clearRect(x-sizeValue/2, y-sizeValue/2, sizeValue, sizeValue);
     }
       // 그림 모드, 좌표, 두께정보 서버로 전송
       chatSocket.send(
