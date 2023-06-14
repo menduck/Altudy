@@ -5,7 +5,7 @@
 <div class="comment__wrapper">
   {% if user == comment.user %}
     <div class="comment-ud__info">
-      <button id="edit-btn-{{ comment.pk }}" hx-get="{% url 'reviews:comment_update' comment.pk %}" class="study__crudInfo-item comment-update-btn" hx-target="#comment-item-{{ comment.pk }}-on-{{ comment.review.pk }}" hx-swap="innerHTML">
+      <button id="edit-btn-{{ comment.pk }}" hx-get="{% url 'reviews:comment_update' comment.pk %}" class="study__crudInfo-item comment-update-btn" hx-target="#comment-item-{{ comment.pk }}-on-{{ review.pk }}" hx-swap="innerHTML">
         <i class="bi bi-pencil-fill"></i>
       </button>
       <button class="study__crudInfo-item comment-delete-btn" hx-delete="{% url 'reviews:comment_delete' comment.pk %}" hx-target="#comment-item-{{ comment.pk }}-on-{{ review.pk }}" hx-swap="outerHTML">
@@ -14,7 +14,7 @@
     </div>
   {% endif %}
   <div class="comment__container">
-    <div class="study__userInfo" id="comment-{{ comment.pk}}">
+    <div class="study__userInfo" id="comment-{{ comment.pk }}">
     <div class="study__userInfo-username">{{ comment.user.emoji_username }}</div>
     </div>
     <div class="review-content__container">
