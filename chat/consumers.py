@@ -1,5 +1,6 @@
 import json
 import asyncio
+import sys
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
@@ -143,14 +144,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             remaining_user_chat_room.is_presenter = 1
             remaining_user_chat_room.save()
 
-        presenter_user_chat_room = None
         presenter_user_chat_room = UserChatRooms.objects.filter(chatroom=self.room, is_presenter=1).first()
-        if not presenter_user_chat_room:
-            # The leaving user was the presenter
-            new_presenter_user_chat_room = UserChatRooms.objects.filter(chatroom=self.room).order_by('pk').first()
-            new_presenter_user_chat_room.is_presenter = 1
-            new_presenter_user_chat_room.save()
-
+        try:
+            if not presenter_user_chat_room:
+                # The leaving user was the presenter
+                new_presenter_user_chat_room = UserChatRooms.objects.filter(chatroom=self.room).order_by('pk').first()
+                new_presenter_user_chat_room.is_presenter = 1
+                new_presenter_user_chat_room.save()
+        except UserChatRooms.DoesNotExist as e:{
+              print("UserChatRooms.DoesNotExist:", e, file=sys.stderr)
+        }
         await self.update_user_list()
 
 
