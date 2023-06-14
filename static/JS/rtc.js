@@ -245,30 +245,32 @@ function chatSocketOnMessage(e) {
         console.log('review action!!!')
         const reviewId = data.reviewId
         
-        axios({
-          method: 'GET',
-          url: `/chat/review/${reviewId}/`,
-        })
-          .then(response => {
-            const { Editor } = toastui;
-            const { codeSyntaxHighlight } = Editor.plugin;
-    
-            const content = response.data.content
-            const reviewView = document.getElementById('reviewViewer')
-    
-            reviewView.textContent = JSON.stringify(content)
-    
-            const viewer = Editor.factory({
-              el: reviewView,
-              viewer: true,
-              height: '100%',
-              initialValue: JSON.parse(reviewView.textContent),
-              plugins: [codeSyntaxHighlight]
-            });
+        if (reviewId) {
+          axios({
+            method: 'GET',
+            url: `/chat/review/${reviewId}/`,
           })
-          .catch(error => {
-            console.error(error)
-          })
+            .then(response => {
+              const { Editor } = toastui;
+              const { codeSyntaxHighlight } = Editor.plugin;
+      
+              const content = response.data.content
+              const reviewView = document.getElementById('reviewViewer')
+      
+              reviewView.textContent = JSON.stringify(content)
+      
+              const viewer = Editor.factory({
+                el: reviewView,
+                viewer: true,
+                height: '100%',
+                initialValue: JSON.parse(reviewView.textContent),
+                plugins: [codeSyntaxHighlight]
+              });
+            })
+            .catch(error => {
+              console.error(error)
+            })
+        }
   } 
 };
 
