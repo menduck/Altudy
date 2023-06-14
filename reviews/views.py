@@ -247,6 +247,7 @@ def comment_create(request, review_pk):
                 }
             })
             return render(request, 'reviews/comments/list.html', context, trigger=trigger)
+        return render(request, 'reviews/comments/list.html', context)
     else:
         form = CommentForm()
     context = {
