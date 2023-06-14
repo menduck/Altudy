@@ -12,17 +12,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.db import transaction
-# from rest_framework import status
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
 
 from taggit.models import Tag
 
 from .forms import ProblemForm, ReviewForm, CommentForm
 from .models import Problem, Review, Comment
 from .utils import render_HXResponse, HXResponse
-# from .serializers import CommentSerializer
 
 from studies.models import Study
 
@@ -228,33 +223,6 @@ def review_delete(request, review_pk):
         review.delete()
         messages.add_message(request, messages.SUCCESS, "리뷰가 성공적으로 삭제되었습니다.")
     return HTTPResponseHXRedirect(redirect_to=reverse_lazy('reviews:detail', kwargs={'pk': problem_pk}))
-
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def comment_create(request, review_pk):
-#     try:
-#         review = get_object_or_404(
-#             Review.objects.select_related('problem__study'),
-#             pk=review_pk
-#         )
-
-#         if review is None:
-#             logger.error(f"No Review found with pk: {review_pk}")
-#             return Response({"error": "No Review found."}, status=status.HTTP_404_NOT_FOUND)
-        
-#         serializer = CommentSerializer(data=request.data, context={'review': review, 'user': request.user})
-
-#         if not serializer.is_valid():
-#             logger.error(f"Serializer validation failed with errors: {serializer.errors}")
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-#     except Exception as e:
-#         logger.error(f"Unexpected error occurred: {e}")
-#         return Response({"error": "Unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @require_http_methods(['GET', 'POST'])
