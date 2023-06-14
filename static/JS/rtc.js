@@ -698,3 +698,9 @@ Object.assign(swiperEl, {
   },
   });
 swiperEl.initialize();
+
+// 로고 이미지 hidden
+document.getElementById("join-btn").addEventListener("click", () => {
+  const logoImg = document.querySelector(".logo_img");
+  logoImg.classList.add("hidden");
+});

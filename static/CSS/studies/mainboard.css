@@ -41,7 +41,7 @@
   position: relative;
 }
 
-.aside__item {
+.aside__item, .aside__item-a {
   color: var(--color-gray-7);
   font-weight: var(--weight-semi-bold);
   margin-bottom: 30px;

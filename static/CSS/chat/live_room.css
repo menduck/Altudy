@@ -212,6 +212,7 @@ swiper-slide {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 200px;
 }
 
 swiper-slide img {
@@ -229,21 +230,46 @@ swiper-slide img {
   overflow: scroll; /* 세로 스크롤 가능하도록 설정 */
 }
 
+/* 로고 */
+.logo_img {
+  margin-top: 200px;
+  text-align: center;
+  opacity: 0;
+  animation: appear 1s ease-in-out forwards;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.hidden{
+  display: none;
+}
+
 /* join */
 #join-btn {
   display: block;
   margin: auto;
-  margin-top: 20%;
+  margin-top: 10px;
   padding: 10px 20px;
-
+  width: 150px;
+  height: 50px;
+  font-size: large;
   color: white;
-  background-color: rgb(0, 89, 255);
+  font-weight: 600;
+  background-color: #6C8E2D;
   border: 0;
   border-radius: 10px;
 }
 
 #join-btn:hover {
-  background-color: rgb(2, 66, 185);
+  background-color: rgb(120, 160, 80);
 }
 
 body {
@@ -308,9 +334,11 @@ main {
 .draw-tool-container {
   background-color: white;
   border: grey;
-  height: 800px;
+  height: 750px;
   max-width: 200px;
   padding: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px gray;
 }
 
 .draw-tool-btn {
