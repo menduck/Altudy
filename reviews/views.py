@@ -279,6 +279,7 @@ def comment_update(request, comment_pk):
             form.save()
             return render(request, 'reviews/comments/item.html', context)
         context['comment_form'] = form
+        return render(request, 'reviews/comments/list.html', context)
     else:
         context['comment_form'] = CommentForm(instance=comment)
     return render(request, 'reviews/comments/update.html', context)
