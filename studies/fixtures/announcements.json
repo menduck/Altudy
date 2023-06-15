@@ -9,5 +9,60 @@
         "created_at": "2023-06-13T01:58:59.162Z",
         "updated_at": "2023-06-13T01:59:03.907Z"
     }
+},
+{
+    "model": "studies.announcement",
+    "pk": 2,
+    "fields": {
+        "study": 14,
+        "title": "스터디원 모집이 끝났습니다.",
+        "content": "멤버가 모두 모였네요! 앞으로 잘해봅시다 ㅎㅎ 화이팅",
+        "created_at": "2023-06-15T00:53:41.533Z",
+        "updated_at": "2023-06-15T00:53:41.533Z"
+    }
+},
+{
+    "model": "studies.announcement",
+    "pk": 3,
+    "fields": {
+        "study": 14,
+        "title": "6/16(금) 정기 모임",
+        "content": "모임 장소 서울역 모임 시간 오후 3시입니다! 잊지 말고 참여해주시죠~\r\n을지로에서 뭐 먹고 싶은지 생각해오세요 ㅎㅎ",
+        "created_at": "2023-06-15T01:07:02.744Z",
+        "updated_at": "2023-06-15T01:07:52.687Z"
+    }
+},
+{
+    "model": "studies.announcement",
+    "pk": 4,
+    "fields": {
+        "study": 1,
+        "title": "햇님반 스터디를 개설했습니다!",
+        "content": "초원 지수 신혜 윤원 충현 상윤 .. 프로젝트 끝나면 다시 돌아오실거죠?",
+        "created_at": "2023-06-15T01:13:21.974Z",
+        "updated_at": "2023-06-15T01:13:21.974Z"
+    }
+},
+{
+    "model": "studies.announcement",
+    "pk": 5,
+    "fields": {
+        "study": 1,
+        "title": "햇님반 새 멤버 모집 건에 대하여",
+        "content": "지원이 많은데 다들 이 안건에 대해 일요일 9시에 회의해보죠!",
+        "created_at": "2023-06-15T01:13:59.874Z",
+        "updated_at": "2023-06-15T01:13:59.874Z"
+    }
+},
+{
+    "model": "studies.announcement",
+    "pk": 6,
+    "fields": {
+        "study": 4,
+        "title": "☕️TWIL - 2nd",
+        "content": "☕️TWIL 2기가 시작됩니다.\r\n\r\n공부방 같은 느낌으로 진행하려고 합니다.\r\n게더타운에서 모여요.\r\n\r\n- 기간 : ~ 취업시까지\r\n- 대상 : 우리모두\r\n\r\n혼자 공부하기 힘드실 때 서로에게 힘이 되어요",
+        "created_at": "2023-06-15T01:36:15.176Z",
+        "updated_at": "2023-06-15T01:36:15.176Z"
+    }
 }
 ]

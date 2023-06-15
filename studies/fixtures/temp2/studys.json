@@ -27,7 +27,7 @@
         "user": 2,
         "title": "📑Daily Algorithm",
         "description": "하루에 하나씩 지정된 문제 코드풀이나 코드리뷰 진행하기!\r\n깃헙에 업로드하기!\r\n주에 한번 지정된 문제에 대한 음성 코드리뷰 진행하기!",
-        "language": "py,java,c,c++",
+        "language": "py",
         "capacity": 10,
         "start_date": null,
         "end_date": null,
@@ -37,7 +37,7 @@
         "created_at": "2023-06-13T01:12:56.068Z",
         "join_condition": 1,
         "is_recruiting": 1,
-        "post_index": 3,
+        "post_index": 1,
         "join_request": []
     }
 },
@@ -143,9 +143,7 @@
         "join_condition": 1,
         "is_recruiting": 1,
         "post_index": 1,
-        "join_request": [
-            2
-        ]
+        "join_request": []
     }
 },
 {
@@ -240,19 +238,17 @@
         "title": "뛰뛰빵빵 알고리즘🚗",
         "description": "쉬지 않고 알고리즘 실력을 늘려갈 분 모집합니다!\r\n일주일에 한 번 모여 코드리뷰 시간을 가질 것이고, 요일을 멤버 모집 후 협의 하여 공지 올리겠습니다-\r\n다들 열심히 문제 풀어봐요 :)",
         "language": "js,node_js",
-        "capacity": 4,
-        "start_date": "2023-06-01",
-        "end_date": "2023-08-31",
+        "capacity": 5,
+        "start_date": null,
+        "end_date": null,
         "days": "",
-        "start_time": "13:00:00",
-        "end_time": "15:00:00",
+        "start_time": null,
+        "end_time": null,
         "created_at": "2023-06-13T01:48:50.951Z",
         "join_condition": 1,
         "is_recruiting": 1,
-        "post_index": 5,
-        "join_request": [
-            12
-        ]
+        "post_index": 1,
+        "join_request": []
     }
 },
 {
@@ -293,7 +289,7 @@
         "created_at": "2023-06-13T01:54:44.156Z",
         "join_condition": 1,
         "is_recruiting": 2,
-        "post_index": 16,
+        "post_index": 2,
         "join_request": []
     }
 }

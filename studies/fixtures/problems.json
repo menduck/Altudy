@@ -13,5 +13,219 @@
         "updated_at": "2023-06-13T01:58:11.091Z",
         "like_users": []
     }
+},
+{
+    "model": "reviews.problem",
+    "pk": 2,
+    "fields": {
+        "post_num": 1,
+        "title": "프로그래머스-[1차]프랜즈4블록",
+        "user": 11,
+        "url": "https://school.programmers.co.kr/learn/courses/30/lessons/17679",
+        "description": "# lv2. 프로그래머스-[1차]프랜즈4블록",
+        "study": 12,
+        "created_at": "2023-06-15T00:29:22.429Z",
+        "updated_at": "2023-06-15T00:29:22.429Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 3,
+    "fields": {
+        "post_num": 2,
+        "title": "프로그래머스-뒤에있는큰수찾기",
+        "user": 11,
+        "url": "https://school.programmers.co.kr/learn/courses/30/lessons/154539",
+        "description": "# lv2. 프로그래머스-뒤에있는큰수찾기",
+        "study": 12,
+        "created_at": "2023-06-15T00:30:31.353Z",
+        "updated_at": "2023-06-15T00:30:31.353Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 4,
+    "fields": {
+        "post_num": 3,
+        "title": "프로그래머스-2xn타일",
+        "user": 11,
+        "url": "https://school.programmers.co.kr/learn/courses/30/lessons/12900",
+        "description": "# lv2. 프로그래머스-2xn타일",
+        "study": 12,
+        "created_at": "2023-06-15T00:31:41.375Z",
+        "updated_at": "2023-06-15T00:31:41.375Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 5,
+    "fields": {
+        "post_num": 4,
+        "title": "프로그래머스-파일명정렬",
+        "user": 11,
+        "url": "https://school.programmers.co.kr/learn/courses/30/lessons/17686",
+        "description": "# lv2. 프로그래머스-파일명정렬",
+        "study": 12,
+        "created_at": "2023-06-15T00:32:31.207Z",
+        "updated_at": "2023-06-15T00:32:31.207Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 6,
+    "fields": {
+        "post_num": 2,
+        "title": "백준 A+B",
+        "user": 2,
+        "url": "https://www.acmicpc.net/problem/1000",
+        "description": "두 정수 A와 B를 입력받은 다음, A+B를 출력하는 프로그램을 작성하시오.",
+        "study": 2,
+        "created_at": "2023-03-15T00:48:41Z",
+        "updated_at": "2023-06-15T01:59:07.154Z",
+        "like_users": [
+            2
+        ]
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 7,
+    "fields": {
+        "post_num": 7,
+        "title": "[백준] 유기농 배추",
+        "user": 13,
+        "url": "https://www.acmicpc.net/problem/1012",
+        "description": "마감기한 : 6/23 (금)",
+        "study": 14,
+        "created_at": "2023-06-15T00:55:22.189Z",
+        "updated_at": "2023-06-15T01:00:53.002Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 9,
+    "fields": {
+        "post_num": 8,
+        "title": "[프로그래머스] 기능개발",
+        "user": 11,
+        "url": "https://school.programmers.co.kr/learn/courses/30/lessons/42586",
+        "description": "스택/큐 유형에 도움이 될 거 같아 가져와봤습니다.",
+        "study": 14,
+        "created_at": "2023-06-15T01:01:39.258Z",
+        "updated_at": "2023-06-15T01:01:39.258Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 10,
+    "fields": {
+        "post_num": 9,
+        "title": "[백준] 새싹",
+        "user": 1,
+        "url": "https://www.acmicpc.net/problem/25083",
+        "description": "다들 새싹 만들어보세요! 우하하",
+        "study": 14,
+        "created_at": "2023-06-15T01:01:49.934Z",
+        "updated_at": "2023-06-15T01:01:49.934Z",
+        "like_users": [
+            3
+        ]
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 11,
+    "fields": {
+        "post_num": 10,
+        "title": "[백준] 미로 탐색",
+        "user": 12,
+        "url": "https://www.acmicpc.net/problem/2178",
+        "description": "풀어보세요",
+        "study": 14,
+        "created_at": "2023-06-15T01:03:06.275Z",
+        "updated_at": "2023-06-15T01:03:06.275Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 12,
+    "fields": {
+        "post_num": 11,
+        "title": "[백준] 하노이 탑 이동 순서",
+        "user": 13,
+        "url": "https://www.acmicpc.net/problem/11729",
+        "description": "자유 문제입니다.",
+        "study": 14,
+        "created_at": "2023-06-15T01:07:18.415Z",
+        "updated_at": "2023-06-15T01:07:18.415Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 13,
+    "fields": {
+        "post_num": 12,
+        "title": "[SWEA] 다솔이의 다이아몬드 장식",
+        "user": 13,
+        "url": "https://swexpertacademy.com/main/code/problem/problemDetail.do?problemLevel=3&contestProbId=AWSNw5jKzwMDFAUr",
+        "description": "이번주는 쉬운 문제입니다!",
+        "study": 14,
+        "created_at": "2023-06-15T01:13:31.590Z",
+        "updated_at": "2023-06-15T01:13:31.590Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 14,
+    "fields": {
+        "post_num": 13,
+        "title": "[백준] 녹색 옷 입은 애가 젤다지?",
+        "user": 13,
+        "url": "https://www.acmicpc.net/problem/4485",
+        "description": "젤다가 재밌다죠?",
+        "study": 14,
+        "created_at": "2023-06-15T01:46:38.360Z",
+        "updated_at": "2023-06-15T01:46:38.360Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 15,
+    "fields": {
+        "post_num": 14,
+        "title": "[백준] 토마토",
+        "user": 13,
+        "url": "https://www.acmicpc.net/problem/7576",
+        "description": "마감기한 없는 자유 문제입니다~",
+        "study": 14,
+        "created_at": "2023-06-15T01:48:32.541Z",
+        "updated_at": "2023-06-15T01:48:32.541Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.problem",
+    "pk": 16,
+    "fields": {
+        "post_num": 15,
+        "title": "[백준] 플로이드",
+        "user": 13,
+        "url": "https://www.acmicpc.net/problem/11404",
+        "description": "플로이드-워셜 알고리즘 문제입니다. 알고리즘에 대해서 검색해서 학습하시고 문제를 풀어보시는 것을 추천드립니다!",
+        "study": 14,
+        "created_at": "2023-06-15T01:50:28.256Z",
+        "updated_at": "2023-06-15T01:50:28.256Z",
+        "like_users": []
+    }
 }
 ]

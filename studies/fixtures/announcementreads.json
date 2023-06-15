@@ -14,7 +14,7 @@
     "fields": {
         "user": 1,
         "announcement": 1,
-        "is_read": false
+        "is_read": true
     }
 },
 {
@@ -23,7 +23,7 @@
     "fields": {
         "user": 11,
         "announcement": 1,
-        "is_read": false
+        "is_read": true
     }
 },
 {
@@ -32,7 +32,7 @@
     "fields": {
         "user": 3,
         "announcement": 1,
-        "is_read": false
+        "is_read": true
     }
 },
 {
@@ -50,6 +50,141 @@
     "fields": {
         "user": 12,
         "announcement": 1,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 7,
+    "fields": {
+        "user": 13,
+        "announcement": 2,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 8,
+    "fields": {
+        "user": 1,
+        "announcement": 2,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 9,
+    "fields": {
+        "user": 11,
+        "announcement": 2,
+        "is_read": false
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 10,
+    "fields": {
+        "user": 3,
+        "announcement": 2,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 11,
+    "fields": {
+        "user": 2,
+        "announcement": 2,
+        "is_read": false
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 12,
+    "fields": {
+        "user": 12,
+        "announcement": 2,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 13,
+    "fields": {
+        "user": 13,
+        "announcement": 3,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 14,
+    "fields": {
+        "user": 1,
+        "announcement": 3,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 15,
+    "fields": {
+        "user": 11,
+        "announcement": 3,
+        "is_read": false
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 16,
+    "fields": {
+        "user": 3,
+        "announcement": 3,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 17,
+    "fields": {
+        "user": 2,
+        "announcement": 3,
+        "is_read": false
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 18,
+    "fields": {
+        "user": 12,
+        "announcement": 3,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 19,
+    "fields": {
+        "user": 1,
+        "announcement": 4,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 20,
+    "fields": {
+        "user": 1,
+        "announcement": 5,
+        "is_read": true
+    }
+},
+{
+    "model": "studies.announcementread",
+    "pk": 21,
+    "fields": {
+        "user": 3,
+        "announcement": 6,
         "is_read": true
     }
 }

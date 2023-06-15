@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
         "password": "pbkdf2_sha256$260000$E4Pt4zbAQDit3kFLYdKt63$w0inpTgVN04qNSfS0uOazErDMhTG56dkRUDRK+Qq/pY=",
-        "last_login": "2023-06-15T01:08:02.113Z",
+        "last_login": "2023-06-15T00:34:36.774Z",
         "is_superuser": true,
         "username": "kimfield",
         "first_name": "",
@@ -13,7 +13,7 @@
         "is_staff": true,
         "is_active": true,
         "date_joined": "2023-06-13T01:02:28Z",
-        "experience": 80,
+        "experience": 0,
         "groups": [],
         "user_permissions": []
     }
@@ -23,7 +23,7 @@
     "pk": 2,
     "fields": {
         "password": "pbkdf2_sha256$260000$jJxdtFbS8HZYD2i4I2ltTr$VMkXYHQN1apAHAEfnDF8ONwO7hixV+H6KpZSxdptlbo=",
-        "last_login": "2023-06-15T02:05:15.556Z",
+        "last_login": "2023-06-15T00:38:26Z",
         "is_superuser": true,
         "username": "jochang",
         "first_name": "",
@@ -32,7 +32,7 @@
         "is_staff": true,
         "is_active": true,
         "date_joined": "2023-06-13T01:11:29Z",
-        "experience": 140,
+        "experience": 30,
         "groups": [],
         "user_permissions": []
     }
@@ -42,7 +42,7 @@
     "pk": 3,
     "fields": {
         "password": "pbkdf2_sha256$260000$nqahAsIRH64lazHkbnjmiz$/kdrr89Vkv77vL52Fa9nDPph1TOTAr3AalR49SPKTWI=",
-        "last_login": "2023-06-15T01:19:14.788Z",
+        "last_login": "2023-06-13T02:08:26Z",
         "is_superuser": true,
         "username": "thebjko",
         "first_name": "",
@@ -51,7 +51,7 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2023-06-13T01:15:52Z",
-        "experience": 55,
+        "experience": 0,
         "groups": [],
         "user_permissions": []
     }
@@ -127,7 +127,7 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2023-06-13T01:24:28.052Z",
-        "experience": 20,
+        "experience": 0,
         "groups": [],
         "user_permissions": []
     }
@@ -194,7 +194,7 @@
     "pk": 11,
     "fields": {
         "password": "pbkdf2_sha256$260000$CZNobnBsGltJKfZNVbJG9K$eLpuF55B9hDlzGadBnH2y0tsGdUCeHLDIiqL9rfazac=",
-        "last_login": "2023-06-15T00:52:59.036Z",
+        "last_login": "2023-06-15T00:46:49.855Z",
         "is_superuser": true,
         "username": "menduck",
         "first_name": "",
@@ -203,7 +203,7 @@
         "is_staff": true,
         "is_active": true,
         "date_joined": "2023-06-13T01:46:40Z",
-        "experience": 215,
+        "experience": 70,
         "groups": [],
         "user_permissions": []
     }
@@ -213,7 +213,7 @@
     "pk": 12,
     "fields": {
         "password": "pbkdf2_sha256$260000$Vq7Az2aTNC44y1BAJ5GyK1$sC6uiINAB3ETK3tLBhMtV1k4xyuhjuEzOS2+/LG/yZU=",
-        "last_login": "2023-06-15T01:00:51.466Z",
+        "last_login": "2023-06-15T00:46:25.002Z",
         "is_superuser": true,
         "username": "hyundol2",
         "first_name": "",
@@ -222,7 +222,7 @@
         "is_staff": true,
         "is_active": true,
         "date_joined": "2023-06-13T01:49:49Z",
-        "experience": 80,
+        "experience": 0,
         "groups": [],
         "user_permissions": []
     }
@@ -232,16 +232,16 @@
     "pk": 13,
     "fields": {
         "password": "pbkdf2_sha256$260000$CtaAo7CaC6tlMbKWCSD8Ag$DFZGjpL6UJnCIvdkoxwL03q20Ngh9XT1d0KvFGdFMbE=",
-        "last_login": "2023-06-15T02:04:27.610Z",
-        "is_superuser": true,
+        "last_login": "2023-06-13T02:12:42.760Z",
+        "is_superuser": false,
         "username": "admin",
         "first_name": "",
         "last_name": "",
         "email": "admin@gmail.com",
-        "is_staff": true,
+        "is_staff": false,
         "is_active": true,
         "date_joined": "2023-06-13T01:52:02Z",
-        "experience": 1000,
+        "experience": 0,
         "groups": [],
         "user_permissions": []
     }
@@ -279,7 +279,7 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2023-06-15T00:40:48.656Z",
-        "experience": 35,
+        "experience": 5,
         "groups": [],
         "user_permissions": []
     }

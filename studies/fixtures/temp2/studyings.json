@@ -7,7 +7,7 @@
         "study": 1,
         "permission": 3,
         "joined_at": "2023-06-14T10:13:16.598Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -18,7 +18,7 @@
         "study": 2,
         "permission": 3,
         "joined_at": "2023-06-14T10:13:59.761Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -40,7 +40,7 @@
         "study": 4,
         "permission": 3,
         "joined_at": "2023-06-14T10:14:14.225Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -128,7 +128,7 @@
         "study": 12,
         "permission": 3,
         "joined_at": "2023-06-14T10:15:21.761Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -139,7 +139,7 @@
         "study": 13,
         "permission": 3,
         "joined_at": "2023-06-14T10:15:27.225Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -150,7 +150,7 @@
         "study": 14,
         "permission": 3,
         "joined_at": "2023-06-14T10:15:33.137Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -161,7 +161,7 @@
         "study": 14,
         "permission": 1,
         "joined_at": "2023-06-14T10:16:11.457Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -172,7 +172,7 @@
         "study": 14,
         "permission": 1,
         "joined_at": "2023-06-14T10:16:15.024Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -183,7 +183,7 @@
         "study": 14,
         "permission": 1,
         "joined_at": "2023-06-14T10:16:19.617Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -194,7 +194,7 @@
         "study": 14,
         "permission": 1,
         "joined_at": "2023-06-14T10:16:23.153Z",
-        "last_access_date": "2023-06-15"
+        "last_access_date": null
     }
 },
 {
@@ -205,61 +205,6 @@
         "study": 14,
         "permission": 1,
         "joined_at": "2023-06-14T10:16:26.622Z",
-        "last_access_date": "2023-06-15"
-    }
-},
-{
-    "model": "studies.studying",
-    "pk": 20,
-    "fields": {
-        "user": 15,
-        "study": 12,
-        "permission": 1,
-        "joined_at": "2023-06-15T00:47:43.249Z",
-        "last_access_date": "2023-06-15"
-    }
-},
-{
-    "model": "studies.studying",
-    "pk": 21,
-    "fields": {
-        "user": 11,
-        "study": 8,
-        "permission": 1,
-        "joined_at": "2023-06-15T01:28:13.765Z",
-        "last_access_date": "2023-06-15"
-    }
-},
-{
-    "model": "studies.studying",
-    "pk": 22,
-    "fields": {
-        "user": 11,
-        "study": 13,
-        "permission": 1,
-        "joined_at": "2023-06-15T01:29:13.899Z",
-        "last_access_date": "2023-06-15"
-    }
-},
-{
-    "model": "studies.studying",
-    "pk": 23,
-    "fields": {
-        "user": 2,
-        "study": 8,
-        "permission": 1,
-        "joined_at": "2023-06-15T01:38:20.000Z",
-        "last_access_date": "2023-06-15"
-    }
-},
-{
-    "model": "studies.studying",
-    "pk": 24,
-    "fields": {
-        "user": 2,
-        "study": 13,
-        "permission": 1,
-        "joined_at": "2023-06-15T01:39:41.152Z",
         "last_access_date": null
     }
 }

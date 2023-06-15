@@ -9,6 +9,8 @@
         "created_at": "2023-06-13T02:00:17.089Z",
         "updated_at": "2023-06-13T02:00:17.089Z",
         "like_users": [
+            1,
+            2,
             3,
             11
         ]
@@ -24,7 +26,9 @@
         "created_at": "2023-06-13T02:01:27.747Z",
         "updated_at": "2023-06-13T02:01:27.747Z",
         "like_users": [
+            1,
             2,
+            11,
             12,
             13
         ]
@@ -40,10 +44,225 @@
         "created_at": "2023-06-13T02:03:11.781Z",
         "updated_at": "2023-06-13T02:03:11.781Z",
         "like_users": [
+            1,
             2,
             3,
+            12,
             13
         ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 4,
+    "fields": {
+        "content": "* HEAD => 대소문자 구별X, 사전순\r\n * NUMBER => 숫자 오름차순, 012=12\r\n * TAIL => 원래 입력 순\r\n```js\r\nfunction solution(files){\r\n  return files.sort((a,b) => {\r\n    const HEAD_A = a.match(/^\\D+/)[0].toLowerCase()\r\n    const HEAD_B = b.match(/^\\D+/)[0].toLowerCase()\r\n\r\n    const NUMBER_A = Number(a.match(/\\d+/)[0])\r\n    const NUMBER_B = Number(b.match(/\\d+/)[0])\r\n\r\n    // a>b 이면 return 1 이면 a->b 순으로 정렬\r\n    if (HEAD_A > HEAD_B) return 1;\r\n    else if(HEAD_A < HEAD_B) return -1;\r\n    else if(NUMBER_A > NUMBER_B) return 1;\r\n    else if(NUMBER_A < NUMBER_B) return -1;\r\n  })\r\n}\r\n```\r\n\r\n### solution - 실패\r\n\r\n * 새로운 오브젝트에 HEAD와 NUMBER를 담아 조건에 맞게 정렬함.\r\n * 하지만 반환값은 처음 files 형태로 반환해야되기때문에 TAIL를 다시 합치고 순서에 맞게 다시 for문을 돌아야 원본형태로 정렬할 수 있음.\r\n *  해결방안으로 처음부터 sort안에서 노는 방법을 생각함.\r\n\r\n```js\r\nfunction solution(files) {\r\n  // { HEAD: 'f-', NUMBER: 5 }, ...\r\n  const fileArray = []\r\n  for(let file of files){\r\n    let obj = {};\r\n    obj.HEAD = file.match(/^\\D+/)[0].toLowerCase()\r\n    obj.NUMBER = Number(file.match(/\\d+/)[0])\r\n    fileArray.push(obj)\r\n  }\r\n  fileArray.sort((a,b) => {\r\n    if(a.HEAD > b.HEAD) return 1;\r\n    else if(a.HEAD < b.HEAD) return -1;\r\n    else if (a.NUMBER > b.NUMBER) return 1;\r\n    else if (a.NUMBER < b.NUMBER) return -1;\r\n  })\r\n\r\n  console.log(fileArray)\r\n}\r\n\r\n// solution(    [\"img12.png\", \"img10.png\", \"img02.png\", \"img1.png\", \"IMG01.GIF\", \"img2.JPG\"])\r\nsolution(     [\"F-5 Freedom Fighter\", \"B-50 Superfortress\", \"A-10 Thunderbolt II\", \"F-14 Tomcat\"])\r\n// solution(     [\"a123a12.png\"])\r\n```",
+        "user": 11,
+        "problem": 5,
+        "created_at": "2023-06-15T00:34:11.661Z",
+        "updated_at": "2023-06-15T00:34:11.661Z",
+        "like_users": [
+            11
+        ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 5,
+    "fields": {
+        "content": "###  solution - stack으로 풀어야함 => O(n)\r\n###  stack에 index를 쌓으면서 가장 가까운 큰 수를 찾으면 pop을 하여 해당 index에 가장 가까운 큰 수를 저장한다.\r\n```js\r\n\r\nfunction solution(numbers) {\r\n  const answer = Array(numbers.length).fill(-1);\r\n  const stack = [];\r\n  for (let i = 0; i < numbers.length; i++) {\r\n    console.log(i,stack)\r\n    while (stack && numbers[stack.at(-1)] < numbers[i]) {\r\n      answer[stack.pop()] = numbers[i];\r\n    }\r\n\r\n    stack.push(i);\r\n  }\r\n  return answer;\r\n}\r\n```\r\n### 시간초과 O(n^2)\r\n```js\r\nfunction solution1(numbers) {\r\n  const result = []\r\n  for(let i = 0; i< numbers.length; i++){\r\n    const maxArray = numbers.slice(i+1).filter((num) => numbers[i] < num)[0]\r\n    result.push(maxArray ? maxArray : -1)\r\n  } return result\r\n}\r\n\r\nsolution([9, 1, 5, 3, 6, 2])\r\n```",
+        "user": 11,
+        "problem": 4,
+        "created_at": "2023-06-15T00:36:18.360Z",
+        "updated_at": "2023-06-15T00:36:18.360Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 6,
+    "fields": {
+        "content": "```\r\nfunction solution(files) {\r\n  return files.sort((a, b) => {\r\n    const aHead = a.match(/^\\D+/)[0].toLowerCase();\r\n    const bHead = b.match(/^\\D+/)[0].toLowerCase();\r\n\r\n    if(aHead < bHead) return -1;\r\n    if(aHead > bHead) return 1;\r\n\r\n    const aNum = a.match(/\\d+/)[0].replace(/^0+/, '');\r\n    const bNum = b.match(/\\d+/)[0].replace(/^0+/, '');\r\n\r\n    return aNum - bNum;\r\n  });\r\n}\r\n```\r\n\r\n##  file명의 NUMBER를 추출하고, replace(/^0+/, '')를 통해 앞의 0들을 제거한다.\r\n\r\n＼d : 숫자\r\n\r\n+ : 앞의 표현식이 1회 이상 연속으로 반복",
+        "user": 15,
+        "problem": 5,
+        "created_at": "2023-06-15T00:50:27.365Z",
+        "updated_at": "2023-06-15T00:50:27.365Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 7,
+    "fields": {
+        "content": "### 이문제는 푸는 원리는 다들 쉽게 이해할 테지만 구현력을 상당히 요구하는 문제였습니다. 문제 설명을 그대로 따라가며 알고리즘을 구현하면 되지만 배열에 익숙하지 않다면 많이 헤매야 했고, 풀이는 다음과 같습니다.\r\n\r\n* 먼저 배열의 문자열을 2차원 배열로 나눕니다.\r\n* 배열에서 지워질 블록의 인덱스를 구해 arr안에 넣습니다.\r\n* 배열에서 지워질 블록을 0으로 바꿉니다.\r\n* 깨진 블록을 없애고 위에서 블록을 당겨옵니다. (이 부분의 로직이 어려운데 먼저 위에서 가져올 블록이 있는지 검사합니다.)\r\n\r\n\r\n```js\r\nconst solution = (m, n, board) => {\r\n  let answer = 0;\r\n  //1. 먼저 배열의 문자열을 2차원 배열로 나눈다.\r\n  board = board.map((v) => v.split(\"\"));\r\n\r\n  //2. 배열에서 지워질 블록의 인덱스를 구해 arr안에 넣는다.\r\n  while (true) {\r\n    const arr = [];\r\n    for (let i = 0; i < m - 1; i++) {\r\n      for (let j = 0; j < n - 1; j++) {\r\n        if (\r\n          board[i][j] &&\r\n          board[i][j] === board[i + 1][j] &&\r\n          board[i][j] === board[i][j + 1] &&\r\n          board[i][j] === board[i + 1][j + 1]\r\n        ) {\r\n          arr.push([i, j]);\r\n        }\r\n      }\r\n    }\r\n    // 답을 구하는 로직 : 깨질 블록이 없다면 0인 개수를 세고 리턴한다.\r\n    if (!arr.length) {\r\n      return [].concat(...board).filter((v) => !v).length;\r\n    }\r\n\r\n    // 3. 배열에서 지워질 블록을 0으로 바꾼다.\r\n    for (let i = 0; i < arr.length; i++) {\r\n      const col = arr[i][0];\r\n      const row = arr[i][1];\r\n      board[col][row] = 0;\r\n      board[col][row + 1] = 0;\r\n      board[col + 1][row] = 0;\r\n      board[col + 1][row + 1] = 0;\r\n    }\r\n\r\n    // 4. 깨진 블록을 없애고 위에서 블록을 당겨온다.\r\n    for (let i = m - 1; i > 0; i--) {\r\n      if (!board[i].some((v) => !v)) continue;\r\n\r\n      for (let j = 0; j < n; j++) {\r\n        for (let k = i - 1; k >= 0 && !board[i][j]; k--) {\r\n          if (board[k][j]) {\r\n            board[i][j] = board[k][j];\r\n            board[k][j] = 0;\r\n            break;\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n};\r\n```",
+        "user": 15,
+        "problem": 2,
+        "created_at": "2023-06-15T00:52:14.880Z",
+        "updated_at": "2023-06-15T00:52:14.880Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 8,
+    "fields": {
+        "content": "```py\r\ndef dfs(x,y):\r\n    # 상하좌우\r\n    dx = [-1,1,0,0]\r\n    dy = [0,0,-1,1]\r\n\r\n    graph[x][y] = 0\r\n\r\n    q = list()\r\n    q.append([x,y])\r\n\r\n    while q:\r\n        x,y = q.pop()\r\n        for i in range(len(dx)):\r\n            nx = x + dx[i]\r\n            ny = y + dy[i]\r\n\r\n            if 0<=nx<m and 0<=ny<n and graph[nx][ny] == 1:\r\n                q.append([nx,ny])\r\n                graph[nx][ny] = 0\r\n            \r\nimport sys\r\nt = int(sys.stdin.readline().strip())\r\n# 정점의 개수 = 10 < 간선의 개수 = 17 인접 행렬이 효율\r\n\r\nfor _ in range(t):\r\n    m,n,k = map(int, sys.stdin.readline().strip().split())\r\n\r\n    graph = [[0]*n for _ in range(m)]\r\n\r\n    # 인접 리스트 생성\r\n    for _ in range(k):\r\n        v1, v2 = map(int, sys.stdin.readline().strip().split())\r\n        graph[v1][v2] = 1\r\n\r\n    count = 0\r\n    for i in range(m):\r\n        for j in range(n):\r\n            if graph[i][j] == 1:\r\n                count += 1\r\n                dfs(i,j)\r\n    \r\n    print(count)\r\n```",
+        "user": 11,
+        "problem": 7,
+        "created_at": "2023-06-15T00:58:07.309Z",
+        "updated_at": "2023-06-15T00:58:07.309Z",
+        "like_users": [
+            1,
+            12
+        ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 9,
+    "fields": {
+        "content": "```python\r\nprint(\"         ,r'\\\"7\")\r\nprint(\"r`-_   ,'  ,/\")\r\nprint(\" \\. \\\". L_r'\")\r\nprint(\"   `~\\/\")\r\nprint(\"      |\")\r\nprint(\"      |\")\r\n```",
+        "user": 1,
+        "problem": 10,
+        "created_at": "2023-06-15T01:03:29.577Z",
+        "updated_at": "2023-06-15T01:03:29.577Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 10,
+    "fields": {
+        "content": "```js\r\nfunction solution(progresses, speeds) {\r\n  const answer = [];\r\n  const days = progresses.map((progress, index) =>\r\n    Math.ceil((100 - progress) / speeds[index])\r\n  );\r\n  let count = 1;\r\n  let maxDay = days[0];\r\n\r\n  for (let i = 1; i < days.length; i++) {\r\n    if (days[i] <= maxDay) {\r\n      count++;\r\n    } else {\r\n      maxDay = days[i];\r\n      answer.push(count);\r\n      count = 1;\r\n    }\r\n  }\r\n\r\n  answer.push(count);\r\n\r\n  return answer;\r\n}\r\n```",
+        "user": 11,
+        "problem": 9,
+        "created_at": "2023-06-15T01:04:39.684Z",
+        "updated_at": "2023-06-15T01:04:39.684Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 11,
+    "fields": {
+        "content": "* bfs로 문제를 풀 수 있다.\r\n* bfs는 가능한 방향의 끝까지 탐색한다.\r\n* 해당 좌표에 몇번째로 도달했는지 판단하는 객체를 만들어 사용하면, 해당 객체를 통해서 끝까지 가는 최단경로를 알 수 있다.\r\n```js\r\nconst input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\\n');\r\n\r\n\r\nconst [N, M] = input.shift().split(' ').map(Number);\r\nconst map = input.map((row) => row.split('').map(Number));\r\n\r\n\r\nfunction bfs(x,y) {\r\n    const queue = [[x,y]];\r\n    const result = [];\r\n    const visisted = { };\r\n    visisted[[x,y]] = 1;\r\n    let dx = [0, 0, -1, 1];\r\n    let dy = [-1, 1, 0, 0];\r\n\t// vistied를 몇번째 방문했는지 판단하는 객체로 활용한다.\r\n    while(queue.length) {\r\n        for(let i=0; i<queue.length; i++) {\r\n            let coord = queue.shift();\r\n            result.push(coord);\r\n            for(let j=0; j<4; j++) {\r\n                let nx = coord[0] + dx[j];\r\n                let ny = coord[1] + dy[j];\r\n\r\n                if( nx >= 0 &&\r\n                    ny >= 0 &&\r\n                    nx < N &&\r\n                    ny < M &&\r\n                    !visisted[[nx,ny]] &&\r\n                    map[nx][ny] === 1) {\r\n                        visisted[[nx,ny]] = visisted[coord]+1;\r\n                  // 해당 좌표에 도달할때마다 visited 객체값을 증가시켜준다.\r\n                        queue.push([nx,ny]);\r\n                    }\r\n            }\r\n        }\r\n    }\r\n    return visisted[[N-1,M-1]];\r\n  // N, M 좌표에 도달했을 때 visited객체에 담겨져 있는 값을 리턴한다.\r\n}\r\n\r\nconsole.log(bfs(0,0));\r\n```",
+        "user": 11,
+        "problem": 11,
+        "created_at": "2023-06-15T01:05:56.908Z",
+        "updated_at": "2023-06-15T01:05:56.908Z",
+        "like_users": [
+            3,
+            12
+        ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 12,
+    "fields": {
+        "content": "```py\r\ndef dfs(x,y):\r\n    # 상하좌우\r\n    dx = [-1,1,0,0]\r\n    dy = [0,0,-1,1]\r\n\r\n    graph[x][y] = 0\r\n\r\n    q = list()\r\n    q.append([x,y])\r\n\r\n    while q:\r\n        x,y = q.pop()\r\n        for i in range(len(dx)):\r\n            nx = x + dx[i]\r\n            ny = y + dy[i]\r\n\r\n            if 0<=nx<m and 0<=ny<n and graph[nx][ny] == 1:\r\n                q.append([nx,ny])\r\n                graph[nx][ny] = 0\r\n            \r\nimport sys\r\nt = int(sys.stdin.readline().strip())\r\n# 정점의 개수 = 10 < 간선의 개수 = 17 인접 행렬이 효율\r\n\r\nfor _ in range(t):\r\n    m,n,k = map(int, sys.stdin.readline().strip().split())\r\n\r\n    graph = [[0]*n for _ in range(m)]\r\n\r\n    # 인접 리스트 생성\r\n    for _ in range(k):\r\n        v1, v2 = map(int, sys.stdin.readline().strip().split())\r\n        graph[v1][v2] = 1\r\n\r\n    count = 0\r\n    for i in range(m):\r\n        for j in range(n):\r\n            if graph[i][j] == 1:\r\n                count += 1\r\n                dfs(i,j)\r\n    \r\n    print(count)\r\n    ```",
+        "user": 12,
+        "problem": 7,
+        "created_at": "2023-06-15T01:06:32.290Z",
+        "updated_at": "2023-06-15T01:06:32.290Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 13,
+    "fields": {
+        "content": "```js\r\nconsole.log(`         ,r'\"7\r\nr\\`-_   ,'  ,/\r\n \\\\. \". L_r'\r\n   \\`~\\\\/\r\n      |\r\n      |`);\r\n```\r\n\r\n- 백틱을 사용해서 한번에 출력했습니다.\r\n- 백틱(`)으로 내용을 감쌌으므로 따옴표 종류(', \")를 백슬래쉬(\\) 없이도 표시할 수 있습니다.",
+        "user": 11,
+        "problem": 10,
+        "created_at": "2023-06-15T01:08:13.207Z",
+        "updated_at": "2023-06-15T01:08:13.207Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 14,
+    "fields": {
+        "content": "```py\n# 하노이 탑 이동 순서\n\nn = int(input())\nround = [[num for num in range(n, 0, -1)], [], []]\nmove = []\n\ndef recursive_hanoi(round: list, n: int, from_n: int, to_n: int, other_n: int, move: list):\n    # print(round, from_n, to_n, other_n, move)\n    if not n:\n        return\n    \n    recursive_hanoi(round, n-1, from_n, other_n, to_n, move)\n    round[to_n-1].append(round[from_n-1].pop())\n    move.append((from_n, to_n))\n    recursive_hanoi(round, n-1, other_n, to_n, from_n, move)\n\nrecursive_hanoi(round, n, 1, 3, 2, move)\n\nprint(len(move))\nfor t in move:\n    print(*t)\n```",
+        "user": 2,
+        "problem": 12,
+        "created_at": "2023-06-15T01:15:53.878Z",
+        "updated_at": "2023-06-15T01:16:15.234Z",
+        "like_users": [
+            2,
+            3,
+            11
+        ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 15,
+    "fields": {
+        "content": "```c\r\n#include<iostream>\r\n\r\nusing namespace std;\r\n\r\nint main()\r\n{\r\n    /*\r\n             ,r'\"7\r\n    r`-_   ,'  ,/\r\n     \\. \". L_r'\r\n       `~\\/\r\n          |\r\n          |\r\n    */\r\n    cout << \"         ,r\\'\\\"7\" << endl;\r\n    cout << \"r`-_   ,\\'  ,/\" << endl;\r\n    cout << \" \\\\. \\\". L_r\\'\" << endl;\r\n    cout << \"   `~\\\\/\" << endl;\r\n    cout << \"      |\" << endl;\r\n    cout << \"      |\" << endl;\r\n    \r\n    return 0;\r\n}\r\n```",
+        "user": 2,
+        "problem": 10,
+        "created_at": "2023-06-15T01:26:35.454Z",
+        "updated_at": "2023-06-15T01:26:35.454Z",
+        "like_users": [
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 16,
+    "fields": {
+        "content": "```py\r\ndef solution(progresses, speeds):     \r\n    answer = []     \r\n    return answer\r\n``` \r\n\r\n어려워서 못풀겠어요,,, 😵‍💫",
+        "user": 2,
+        "problem": 9,
+        "created_at": "2023-06-15T01:29:26.776Z",
+        "updated_at": "2023-06-15T01:29:26.776Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 17,
+    "fields": {
+        "content": "```python\r\nT = int(input())\r\nfor tc in range(T):\r\n    s = input().strip()\r\n    length = len(s)\r\n    ls = list(s)\r\n    mid_line = \"#.\" + \".#.\".join(ls) + \".#\"\r\n    first_line = \"..\" + \"...\".join(list(\"#\"*length)) + \"..\"\r\n    second_line = \".\" + \"#.\" * length*2\r\n    print(first_line, second_line, mid_line, second_line, first_line, sep=\"\\n\")\r\n\r\n```\r\n\r\n이게뭐야..",
+        "user": 3,
+        "problem": 13,
+        "created_at": "2023-06-15T01:29:57.075Z",
+        "updated_at": "2023-06-15T01:29:57.075Z",
+        "like_users": [
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 18,
+    "fields": {
+        "content": "```js\r\nconst fs = require('fs');\r\nconst input = fs.readFileSync('/dev/stdin').toString().split(' ');\r\nconst num = parseInt(input[0]);\r\n \r\nvar towers = [\r\n  [],\r\n  [],\r\n  []\r\n]\r\nvar moveCount = 0;\r\nvar output = []\r\n \r\nconst hanoi = (num) => {\r\n  // init\r\n  for(let i = 0; i < num; i++) {\r\n    towers[0].push(i)\r\n  }\r\n \r\n  //num개를 0부터 2까지 옮겨라\r\n  moveVia(num, 0, 2, 1)\r\n \r\n  console.log(moveCount)\r\n  console.log(output.join('\\n'))\r\n}\r\n \r\nconst move = (from, to) => {\r\n  const tmp = towers[from].pop()\r\n  towers[to].push(tmp)\r\n  moveCount++;\r\n  output.push(`${from+1} ${to+1}`)\r\n  return;\r\n}\r\n \r\nconst moveVia = (num, from, to, via) => {\r\n  if(num == 1) {\r\n    return move(from, to)\r\n  }\r\n \r\n  moveVia(num-1, from, via, to);\r\n  move(from, to)\r\n  moveVia(num-1, via, to, from)\r\n}\r\n \r\n \r\nhanoi(num)\r\n```\r\n\r\n- 이번 문제가 너무 어려워서 다른 코드를 참고해서 작성하였습니다. 아래는 참고한 사이트 입니다.\r\n\r\n[https://chunghyup.tistory.com/69](https://chunghyup.tistory.com/69)",
+        "user": 11,
+        "problem": 12,
+        "created_at": "2023-06-15T01:30:44.359Z",
+        "updated_at": "2023-06-15T01:30:44.359Z",
+        "like_users": [
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "reviews.review",
+    "pk": 19,
+    "fields": {
+        "content": "```py\r\n# 4751. 다솔이의 다이아몬드 장식\r\n\r\ntest_case = int(input())\r\nfor tc in range(1, test_case+1):\r\n    word = input()\r\n    line_edge = '.' + '.#..' * len(word) + '\\n'\r\n    line_middle = '.' + '#.#.' * len(word) + '\\n'\r\n    line_center = '#'\r\n    for c in word:\r\n        line_center += '.' + c +'.#'\r\n    line_center += '\\n'\r\n    \r\n    answer = line_edge + line_middle + line_center + line_middle + line_edge\r\n    print(answer, end='')\r\n```",
+        "user": 2,
+        "problem": 13,
+        "created_at": "2023-06-15T01:43:01.776Z",
+        "updated_at": "2023-06-15T01:43:01.776Z",
+        "like_users": []
     }
 }
 ]

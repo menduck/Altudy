@@ -11,12 +11,52 @@
 },
 {
     "model": "studies.studycomment",
-    "pk": 2,
+    "pk": 3,
+    "fields": {
+        "study": 12,
+        "user": 15,
+        "content": "문제는 어떤 걸로 푸실 생각이신가요?",
+        "created_at": "2023-06-15T00:41:14.250Z"
+    }
+},
+{
+    "model": "studies.studycomment",
+    "pk": 4,
+    "fields": {
+        "study": 12,
+        "user": 11,
+        "content": "tae0514님 프로그래머스로 진행될 생각입니다!",
+        "created_at": "2023-06-15T00:47:22.908Z"
+    }
+},
+{
+    "model": "studies.studycomment",
+    "pk": 5,
+    "fields": {
+        "study": 14,
+        "user": 15,
+        "content": "이미 모집이 끝났네요ㅠㅠ 아쉽습니다",
+        "created_at": "2023-06-15T00:52:38.040Z"
+    }
+},
+{
+    "model": "studies.studycomment",
+    "pk": 6,
     "fields": {
         "study": 14,
         "user": 13,
-        "content": "알터디 못참아; 당장 가입 진행시켜@!$%",
-        "created_at": "2023-06-13T02:07:03.390Z"
+        "content": "ㅠㅠ 다음 기회에 다시 뵙겠습니다!",
+        "created_at": "2023-06-15T02:04:59.857Z"
+    }
+},
+{
+    "model": "studies.studycomment",
+    "pk": 7,
+    "fields": {
+        "study": 7,
+        "user": 2,
+        "content": "Grit 참여해보고 싶습니다!",
+        "created_at": "2023-06-15T02:05:55.807Z"
     }
 }
 ]

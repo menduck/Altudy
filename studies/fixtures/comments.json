@@ -46,5 +46,161 @@
         "updated_at": "2023-06-13T02:04:49.952Z",
         "like_users": []
     }
+},
+{
+    "model": "reviews.comment",
+    "pk": 5,
+    "fields": {
+        "content": "js에서 다중정렬을 저렇게 쓸 수 있군요! 한 수 배워갑니다",
+        "user": 15,
+        "review": 4,
+        "created_at": "2023-06-15T00:49:32.681Z",
+        "updated_at": "2023-06-15T00:49:32.681Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 6,
+    "fields": {
+        "content": "엥 .. 멋진 새싹을 보여주려 했는데 ..",
+        "user": 1,
+        "review": 9,
+        "created_at": "2023-06-15T01:03:51.542Z",
+        "updated_at": "2023-06-15T01:03:51.542Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 7,
+    "fields": {
+        "content": "이게 새싹..?",
+        "user": 12,
+        "review": 9,
+        "created_at": "2023-06-15T01:03:54.646Z",
+        "updated_at": "2023-06-15T01:03:54.646Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 8,
+    "fields": {
+        "content": "너무 .. 어려운데요 선생님 또륵",
+        "user": 1,
+        "review": 8,
+        "created_at": "2023-06-15T01:04:49.779Z",
+        "updated_at": "2023-06-15T01:04:49.779Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 9,
+    "fields": {
+        "content": "코드 베껴갑니다~",
+        "user": 12,
+        "review": 8,
+        "created_at": "2023-06-15T01:05:28.943Z",
+        "updated_at": "2023-06-15T01:05:28.943Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 10,
+    "fields": {
+        "content": "도전인가요?",
+        "user": 1,
+        "review": 9,
+        "created_at": "2023-06-15T01:08:38.584Z",
+        "updated_at": "2023-06-15T01:08:38.584Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 11,
+    "fields": {
+        "content": "민선님의 이니셜은 앞으로 JS로 하시죠 ..",
+        "user": 1,
+        "review": 13,
+        "created_at": "2023-06-15T01:09:18.442Z",
+        "updated_at": "2023-06-15T01:09:18.442Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 12,
+    "fields": {
+        "content": "코드 제출왕 민선님",
+        "user": 1,
+        "review": 11,
+        "created_at": "2023-06-15T01:10:00.548Z",
+        "updated_at": "2023-06-15T01:10:00.548Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 13,
+    "fields": {
+        "content": "헉... 몇 시간 걸려서 푼 문제인데 너무하신거 아닌가요??ㅠㅠ",
+        "user": 11,
+        "review": 12,
+        "created_at": "2023-06-15T01:10:46.642Z",
+        "updated_at": "2023-06-15T01:10:46.642Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 14,
+    "fields": {
+        "content": "현석님 언제 언어를 바꾸셨나요.",
+        "user": 1,
+        "review": 12,
+        "created_at": "2023-06-15T01:11:22.778Z",
+        "updated_at": "2023-06-15T01:11:22.778Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 15,
+    "fields": {
+        "content": "Jㅣㄴ Sㅓㄴ 님,,,",
+        "user": 2,
+        "review": 13,
+        "created_at": "2023-06-15T01:20:08.730Z",
+        "updated_at": "2023-06-15T01:20:08.730Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 16,
+    "fields": {
+        "content": "어려워요",
+        "user": 3,
+        "review": 14,
+        "created_at": "2023-06-15T01:31:36.041Z",
+        "updated_at": "2023-06-15T01:31:36.041Z",
+        "like_users": []
+    }
+},
+{
+    "model": "reviews.comment",
+    "pk": 17,
+    "fields": {
+        "content": "집나간 현석님 잡으러 왔습니다,,, 여기서 표절하고 계셨군요,,,",
+        "user": 2,
+        "review": 3,
+        "created_at": "2023-06-15T01:34:13.682Z",
+        "updated_at": "2023-06-15T01:34:13.682Z",
+        "like_users": []
+    }
 }
 ]
