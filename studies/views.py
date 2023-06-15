@@ -333,7 +333,7 @@ def mainboard(request, study_pk: int):
     # 메인보드에서는 이번주에 추가된 문제만 보여주도록
     start_of_week = timezone.now().date() - timedelta(days=datetime.now().weekday())
     end_of_week = start_of_week + timedelta(days=6)
-    problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week)).order_by('-pk')
+    problems = Problem.objects.filter(study=study, created_at__range=(start_of_week, end_of_week)).order_by('-pk')[:5]
 
     # 유저별 리뷰 수, 백분율 (그래프에 사용)
     user_reviews = {}
