@@ -1,0 +1,26 @@
+[
+{
+    "model": "socialaccount.socialapp",
+    "pk": 1,
+    "fields": {
+        "provider": "github",
+        "name": "Github Allauth",
+        "client_id": "21fdc27a6953e4613324",
+        "secret": "adf2853d21a47afa47a76f619ae4b90fb2f3bdb7",
+        "key": "",
+        "sites": []
+    }
+},
+{
+    "model": "socialaccount.socialapp",
+    "pk": 2,
+    "fields": {
+        "provider": "google",
+        "name": "Google Allauth",
+        "client_id": "221025152572-1h77eb4ek46si5gjh3rjqf0t171v7hg3.apps.googleusercontent.com",
+        "secret": "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",
+        "key": "",
+        "sites": []
+    }
+}
+]
