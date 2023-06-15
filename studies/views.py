@@ -48,7 +48,7 @@ def index(request):
         for lang in selected_langs_list:
             filter_query |= Q(language__regex=r'\b{}\b'.format(re.escape(lang.strip())))
         studies = studies.filter(filter_query).distinct()
-        print(studies)
+        # print(studies)
     
     if category :
         studies = studies.filter(category__name__iexact=category)
@@ -372,8 +372,8 @@ def mainboard(request, study_pk: int):
     # 상위 3명의 유저
     user_percentages = sorted(user_percentages.items(), key=lambda x: x[1], reverse=True)[:3]
     user_review_likes_percentage = sorted(user_review_likes_percentage.items(), key=lambda x: x[1], reverse=True)[:3]
-    print(user_percentages)
-    print(user_review_likes_percentage)
+    # print(user_percentages)
+    # print(user_review_likes_percentage)
 
     # 메인보드에서 보여줄 공지
     announcements = Announcement.objects.filter(study=study).order_by('-created_at')[:2]
@@ -400,7 +400,7 @@ def member(request, study_pk: int):
     users = study.studying_users.all().order_by('-studying__permission')
     join_requests = study.join_request.all()
     study_members = Studying.objects.filter(study=study)
-    print(study_members)
+    # print(study_members)
 
     context = {
         'study': study,
