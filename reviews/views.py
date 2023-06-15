@@ -267,6 +267,7 @@ def comment_update(request, comment_pk):
     )
     context = {
         'comment': comment,
+        'review': comment.review,
     }    
     if request.user != comment.user:
         return render(request, 'reviews/comments/item.html', context)
