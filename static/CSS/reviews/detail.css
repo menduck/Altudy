@@ -105,6 +105,7 @@ hgroup {
 .problem-url___container{
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .problem-url___container h3{
@@ -116,6 +117,10 @@ hgroup {
   color: var(--color-gray-6);
   border-radius: 10px;
   margin-left: 5px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .problem-url:hover{
@@ -366,6 +371,41 @@ hgroup {
   border: none;
   background-color: var(--color-gray-6);
 }
+
+/* 버튼 */
+.homebutton {
+  width: 150px;
+  padding: 10px;
+  margin: 20px 0;
+  background-color: var(--color-green);
+  color: var(--color-white);
+  border: 1px solid var(--color-green);
+  text-align: center;
+  line-height: 10px;
+}
+
+.homebutton:hover {
+  background-color: var(--color-white);
+  color: var(--color-green);
+  font-weight: var(--weight-semi-bold);
+  transform: scale(1.05);
+}
+
+/* .mainboardbutton {
+  width: 150px;
+  padding: 10px;
+  margin: 20px 0;
+  background-color: var(--color-gray-6);
+  color: var(--color-white);
+  border: 1px solid var(--color-gray-6);
+  text-align: center;
+  line-height: 10px;
+}
+
+.mainboardbutton:hover {
+  font-weight: var(--weight-semi-bold);
+  transform: scale(1.05);
+} */
 
 /* null 메시지 */
 .null-message{

@@ -22,6 +22,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
 {% endblock style %} 
 {% block content %}
 <div class="main__container">
+  <div style="margin-right: auto;">
+    <a href="{% url 'studies:mainboard' study.pk %}" class="homebutton button-small">< MAINBOARD</a>
+    {% comment %} {% if request.user in study.studying_users.all %} {% endcomment %}
+    {% comment %} <a href="{% url 'studies:mainboard' study.pk %}"><p class="mainboardbutton button-small">MAINBOARD ></p></a> {% endcomment %}
+    {% comment %} {% endif %} {% endcomment %}
+  </div>
   <div class="probelm-box">
     <hgroup>
       <h1 class="problem-title">{{ problem.title }}</h1>
