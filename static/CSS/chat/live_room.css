@@ -102,6 +102,9 @@
   padding: 10px 15px;
   border: 0;
   line-height: 40px;
+  outline: none;
+  cursor: default;
+  resize: none;
 }
 
 #chat-close-btn {
