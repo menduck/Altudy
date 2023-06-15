@@ -39,6 +39,7 @@
           <div class="label">{{ form.capacity.label }}</div>
           {{ form.capacity }}
           <div class="help-text">{{ form.capacity.help_text }}</div>
+        </div>
         {% comment %} 시작일, 종료일 {% endcomment %}
           <div class="flex">
           <div class="margin-right">
@@ -61,7 +62,12 @@
             {{ form.end_time }}
           </div>
         </div>
-      </div>
+        {% comment %} 요일 {% endcomment %}
+        <div class="days-box">
+          <div class="label">{{ form.days.label }}</div>
+          {{ form.days }}
+        </div>
+      
       {% comment %} 버튼 {% endcomment %}
       <div class="button-box">
         <a href="{% url 'studies:index' %}" class="button-small list">스터디 목록</a>
@@ -69,6 +75,7 @@
       </div>
     </form>
   </div>
+</div>
 </div>
 
 {% endblock content %}

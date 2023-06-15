@@ -74,7 +74,8 @@
 .end_date,
 .start_time,
 .end_time,
-.join_condition {
+.join_condition,
+.days {
   width: 100%;
   margin-bottom: 30px;
   background-color: var(--color-white);
@@ -106,6 +107,10 @@
 .label-small{
   width: 20%;
   text-align: center;
+}
+
+.days-box select{
+  display: block;
 }
 
 /* 버튼 */
